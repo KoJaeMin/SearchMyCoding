@@ -1,0 +1,50 @@
+#result {
+    display: none;
+    background-color: white;
+    width: 80%;
+    text-align: center;
+    border-radius: 20px;
+}
+
+#shareResult {
+    background-color: white;
+    width: 80%;
+    text-align: center;
+    border-radius: 20px;
+}
+
+.kakao {
+    color: white;
+    background-color: cornflowerblue;
+    font-size: 20px;
+    border: 0px;
+    border-radius: 20px;
+}
+
+.kakao:hover,
+.kakao:focus {
+    background-color: whitesmoke;
+    color: cornflowerblue;
+}
+
+.gohome {
+    color: white;
+    background-color: cornflowerblue;
+    font-size: 20px;
+    border: 0px;
+    border-radius: 20px;
+}
+
+.gohome:hover,
+.gohome:focus {
+    background-color: whitesmoke;
+    color: cornflowerblue;
+}
+
+.resultname {
+    font-size: 20px;
+}
+
+.resultDesc {
+    font-size: 20px;
+}
