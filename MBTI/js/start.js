@@ -2,11 +2,26 @@ const main = document.querySelector("#main");
 const qna = document.querySelector("#qna");
 const result = document.querySelector("#result");
 const endPoint = 12;
-const select = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+const select = [0, 0, 0, 0, 0, 0, 0, 0];
+//['ESTP', 'ESTJ', 'ESFP', 'ESFJ', 'ENTP', 'ENTJ', 'ENFP', 'ENFJ', 'ISTP', 'ISTJ', 'ISFP', 'ISFJ', 'INTP', 'INTJ', 'INFP', 'INFJ'];
 
 function calcResult() {
     console.log(select);
-    var result = select.indexOf(Math.max(...select));
+
+    var result = 0
+    if (select[1] > select[0]) { //I
+        result = 8
+    }
+    if (select[3] > select[2]) { //N
+        result += 4
+    }
+    if (select[5] > select[4]) { //F
+        result += 2
+    }
+    if (select[7] > select[6]) { //J
+        result += 1
+    }
+
     return result;
 }
 
@@ -84,7 +99,7 @@ function goNext(qIdx) {
         addAnswer(qnaList[qIdx].a[i].answer, qIdx, i);
     }
     var status = document.querySelector('.statusBar');
-    status.style.width = (100 / endPoint) * (qIdx + 1) + '%';
+    status.style.width = (100 / endPoint) * (qIdx) + '%';
 }
 
 function begin() {

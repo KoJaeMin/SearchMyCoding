@@ -13,9 +13,13 @@
     border-radius: 20px;
 }
 
+#resultImg {
+    width: 70%;
+}
+
 .kakao {
     color: white;
-    background-color: cornflowerblue;
+    background-color: slategray;
     font-size: 20px;
     border: 0px;
     border-radius: 20px;
@@ -23,13 +27,13 @@
 
 .kakao:hover,
 .kakao:focus {
-    background-color: whitesmoke;
-    color: cornflowerblue;
+    background-color: lightgray;
+    color: slategray;
 }
 
 .gohome {
     color: white;
-    background-color: cornflowerblue;
+    background-color: slategray;
     font-size: 20px;
     border: 0px;
     border-radius: 20px;
@@ -37,12 +41,13 @@
 
 .gohome:hover,
 .gohome:focus {
-    background-color: whitesmoke;
-    color: cornflowerblue;
+    background-color: lightgray;
+    color: slategray;
 }
 
 .resultname {
-    font-size: 20px;
+    font-size: 30px;
+    font-weight: bold;
 }
 
 .resultDesc {

@@ -21,16 +21,18 @@
 
 .answerList:hover,
 .answerList:focus {
-    background-color: slateblue;
+    background-color: slategray;
     color: white;
 }
 
 .status {
     height: 20px;
     background-color: white;
+    border-radius: 10px;
 }
 
 .statusBar {
     height: 100%;
-    background-color: cornflowerblue;
+    background-color: lightslategray;
+    border-radius: 10px;
 }

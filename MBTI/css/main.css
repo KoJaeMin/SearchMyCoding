@@ -8,3 +8,17 @@
 p {
     font-size: 20px;
 }
+
+.start_button {
+    color: white;
+    background-color: slategray;
+    font-size: 20px;
+    border: 0px;
+    border-radius: 20px;
+}
+
+.start_button:hover,
+.start_button:focus {
+    background-color: lightgray;
+    color: slategray;
+}
