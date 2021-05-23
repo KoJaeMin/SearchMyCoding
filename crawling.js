@@ -6,16 +6,17 @@ const cheerio = require('cheerio');
         headless: false,
     });
     const page = await browser.newPage();
+    /*
     page.setViewport({
         width: 1200,
         height: 700,
     });
+    */
     await page.goto("https://www.inflearn.com/courses");
-    /*await page.evaluate(()=>{
-        document.querySelector(".tag more button").click();
+    await page.evaluate(()=>{
+        document.getElementsByClassName("tag more button")[0].click();
     })
-    */ 
-    //await page.waitForSelector()
+    //page.waitForSelector("button.tag more button")
     //await page.click("button");
     //}
     
