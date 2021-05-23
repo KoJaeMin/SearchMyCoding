@@ -1,0 +1,23 @@
+.menubar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 120px;
+    height: 100%;
+    border-right: 1px solid black;
+    z-index: 1;
+}
+
+.menu_content {
+    display: block;
+    padding-bottom: 10px;
+}
+
+.menu_content_home {
+    top: 0px;
+}
+
+ul {
+    list-style: none;
+    padding-left: 10px;
+}
