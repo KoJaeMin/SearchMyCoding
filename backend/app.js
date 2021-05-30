@@ -1,15 +1,17 @@
 var express = require('express')
 var app = express()
 var path = require('path')
-//var fs = require('fs')
-//var qs = require('querystring');
 var cookieParser = require('cookie-parser');
-//var bodyParser = require('body-parser');
-//var methodOverride = require('method-override');
 
-const base_dir='../home'
 
 const port = 8000
+//var qs = require('querystring');
+//var fs = require('fs')
+//var bodyParser = require('body-parser');
+//var methodOverride = require('method-override');
+//const base_dir='../home'
+
+
 //node app.set("port",port)
 ////오류처리
 //app.use(bodyParser());
@@ -17,8 +19,6 @@ const port = 8000
 //app.use(logErrors);
 //app.use(clientErrorHandler);
 //app.use(errorHandler);
-
-
 ////
 
 
@@ -90,4 +90,5 @@ app.use((req,res,next)=>{
     next();
 });
 
-app.listen(port,()=>{console.log(`Exaple app listening at http://localhost:${port}`)})
+let server =app.listen(port,()=>{console.log(`Exaple app listening at http://localhost:${port}`)})
+server.close()

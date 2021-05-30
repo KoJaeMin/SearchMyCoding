@@ -1,5 +1,14 @@
 const puppeteer = require("puppeteer");
 const cheerio = require('cheerio');
+var sqlite3 = require('sqlite3').verbose();
+
+var db = new sqlite3.Database('../db/main.db',(err)=>{
+    if (err) {
+        return console.error(err.message);
+      }
+      console.log('Connected to the in-memory SQlite database.');
+});
+//db.run('CREATE TABLE category(id integer primary key autoincrement, name text not null unique, data text)');
 
 (async () => {
     const browser = await puppeteer.launch({
@@ -29,8 +38,21 @@ const cheerio = require('cheerio');
             title: $(this).attr('name'),
             content:$(this).attr('fxd-data'),
         };
+        db.run(`INSERT INTO category(name,data) VALUES('${ulList[index].title}','${ulList[index].content}')`,()=>{
+            console.log('suc');
+        });
         console.log(ulList[index]);
     });
     browser.close();
+    db.close((err) => {
+        if (err) {
+            return console.error(err.message);
+        }
+        console.log('Close the database connection.');
+    });
     
-})();  
+})();
+
+
+
+
