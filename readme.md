@@ -7,4 +7,5 @@ README.md
 
 ### 기술 stack
 Frontend : HTML/CSS, Javascript
+
 Backend : Node.js
