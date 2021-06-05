@@ -1,6 +1,6 @@
 .menubar {
     background-color: white;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 140px;
@@ -15,17 +15,16 @@
     padding-top: 13px;
     padding-bottom: 10px;
     padding-left: 3px;
-    text-decoration: none;
 }
 
-a:link{
+li a:link{
     color:black;
 }
-a:visited {
+li a:visited {
     color: black;
 }
 
-a:hover {
+li a:hover {
     color: black;
 }
 
@@ -36,4 +35,8 @@ ul {
 
 * {
     font-family: 'Black Han Sans', sans-serif;
+}
+
+a {
+    text-decoration: none;
 }
