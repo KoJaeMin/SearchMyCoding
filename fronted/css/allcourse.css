@@ -1,0 +1,8 @@
+.body_middle {
+    display:block;
+    position: absolute;
+    top: 0;
+    left: 140px;
+    height: 100%;
+    font-size: 20px;
+}

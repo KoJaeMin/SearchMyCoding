@@ -1,0 +1,44 @@
+#qna {
+    display: none;
+}
+
+.qBox {
+    margin:3px;
+    padding-left:30px;
+    padding-right:30px;
+    border:2px solid slategray;
+    text-align: center;
+    border-radius: 40px;
+    font-size: 30px;
+    width:90%;
+    font-weight: lighter;
+}
+
+.answerList {
+    background-color: white;
+    border-radius: 20px;
+    display: block;
+    width: 90%;
+    border: 0px;
+    font-size: 25px;
+    font-weight: lighter;
+}
+
+.answerList:hover,
+.answerList:focus {
+    background-color: slategray;
+    color: white;
+}
+
+.status {
+    height: 20px;
+    background-color: white;
+    border-radius: 10px;
+    width:90%;
+}
+
+.statusBar {
+    height: 100%;
+    background-color: lightslategray;
+    border-radius: 10px;
+}

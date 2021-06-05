@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, inital-scale=1">
+    <meta name="author" content="NoJam">
+    <meta name="keywords" content="MBTI 개발자 유형">
+    <meta name="description" content="MBTI 개발자 유형">
+
+    <!-- sns share-->
+    <meta propety="og:url" content="https://musing-bardeen-a0dec4.netlify.app" />
+    <meta propety="og:title" content="MBTI 개발자 유형" />
+    <meta propety="og:type" content="website" />
+    <meta propety="og:image" content="../image/confused.jpg" />
+    <meta propety="og:description" content="MBTI 테스트로 알아보는 개발자 유형" />
+
+    <!--favicion-->
+    <link rel="shortcut icon" href="../image/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" href="../image/favicon.ico">
+    <title>MBTI 개발자 유형</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/mbti/default.css">
+    <link rel="stylesheet" href="../../css/mbti/result.css">
+    <link rel="stylesheet" href="../../css/mbti/main.css">
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    <script>
+        Kakao.init('7de6db35b41393f4e9903b2ad79aef30');
+        Kakao.isInitialized();
+    </script>
+</head>
+
+<body style="overflow-x:hidden;">
+    <div class="menubar">
+        <ul>
+            <li><a href="../AllCourse.html" class="menu_content">전체 강좌</a></li>
+            <li><a href="../MBTI.html" class="menu_content">MBTI 검사</a></li>
+            <li><a href="../FreeCourse.html" class="menu_content">무료 강좌</a></li>
+            <br>
+            <li><a href="./Q&A.html" class="menu_content">Q&A</a></li>
+            <li>
+                <a href="../../home.html" class="menu_content_home"> <img src="../../image/searchmycoding.jpg" style="max-width: 90%; height: auto; float:left;position:absolute;top:78%;"></a>
+            </li>
+        </ul>
+    </div>
+    <div class="container">
+        <section id="shareResult" class="mx-auto  my-5 py-5 px-3">
+            <h2>당신의 결과는? </h2>
+            <div class="resultname">
+                풀스택 개발자(INFJ)
+            </div>
+            <div id="resultImg" class="mx-auto">
+                <img src="../../image/mbti/image-15.jpg" alt="0" style="max-width: 25%; height: auto;">
+            </div>
+            <div class="resultDesc">
+                ◾ 생각이 많아.. 싸우는 거 싫어.. 사람 좋은데 혼자 있는 시간이 필요해..<br/>◾ 사소한 것에 감동하기도 서운해하기도 해서 자주 우는 편.<br/>◾ 뛰어난 집중력과 모든 것을 작업할 수 있는 능력을 가진 당신은 풀스택 개발자가 안성맞춤!
+            </div>
+            <script type="text/javascript">
+                function moveHome() {
+                    location.href = "../MBTI.html";
+                }
+            </script>
+            <button type="button" class="gohome mt-3" onclick="js:moveHome()">테스트하러 가기 ></button>
+        </section>
+    </div>
+</body>
+
+</html>

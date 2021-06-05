@@ -1,0 +1,54 @@
+h3 {
+    font-weight: 900;
+}
+
+.menubar {
+    display:block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 140px;
+    height: 100%;
+    font-size: 20px;
+    border-right: 2px solid black;
+    z-index: 1;
+}
+
+.menu_content {
+    display: block;
+    padding-top: 13px;
+    padding-bottom: 10px;
+    padding-left: 3px;
+    text-decoration: none;
+}
+
+a:link{
+    color:black;
+}
+a:visited {
+    color: black;
+}
+
+a:hover {
+    color: black;
+}
+
+ul {
+    list-style: none;
+    padding-left: 10px;
+}
+
+.container {
+    background-color:lightgray;
+    display:block;
+    position: absolute;
+    min-height:100%;
+    height:auto;
+    top: 0;
+    left: 140px;
+    font-size: 20px;
+}
+
+* {
+    font-family: 'Black Han Sans', sans-serif;
+}

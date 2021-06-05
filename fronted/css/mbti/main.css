@@ -1,0 +1,30 @@
+#main {
+    width: 80%;
+    text-align: center;
+}
+
+
+
+
+
+p {
+    font-size: 20px;
+}
+
+.start_button {
+    color: white;
+    background-color: slategray;
+    font-size: 30px;
+    border: 0px;
+    border-radius: 40px;
+    padding:10px;
+    padding-left:70px;
+    padding-right:70px;
+}
+
+.start_button:hover,
+.start_button:focus {
+    background-color: lightgray;
+    color: slategray;
+    border:2px solid black;
+}

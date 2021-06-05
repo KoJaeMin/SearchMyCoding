@@ -1,0 +1,13 @@
+.body_middle {
+    display:block;
+    position: absolute;
+    top: 0;
+    left: 140px;
+    height: 100%;
+    font-size: 20px;
+}
+
+.body_middle li {
+    border-bottom:2px solid slategray;
+    margin-top:10px;
+}
