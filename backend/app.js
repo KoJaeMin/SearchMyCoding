@@ -5,27 +5,19 @@ var cookieParser = require('cookie-parser');
 
 
 const port = 8000
-//var qs = require('querystring');
-//var fs = require('fs')
-//var bodyParser = require('body-parser');
-//var methodOverride = require('method-override');
-//const base_dir='../home'
 
-
-//node app.set("port",port)
-////오류처리
-//app.use(bodyParser());
-//app.use(methodOverride());
-//app.use(logErrors);
-//app.use(clientErrorHandler);
-//app.use(errorHandler);
-////
 
 
 app.get('/',(req,res) =>{
     res.sendFile(path.join(__dirname,'/../home/home.html'))
 });//insert main html file
 app.get('/MBTI',(req,res)=>{res.sendFile(path.join(__dirname,'/../MBTI/index.html'));});
+app.get('/MBTI/:testId',(req,res)=>{
+    switch(req.params.testId){
+        //case
+    };
+
+});
 app.get('/MBTI/result/:resultId',(req,res)=>{
     switch(req.params.resultId){
         case '0':
