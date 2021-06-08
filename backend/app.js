@@ -1,12 +1,25 @@
 var express = require('express')
 var app = express()
 var path = require('path')
-var cookieParser = require('cookie-parser');
+var sqlite3 = require('sqlite3').verbose();
+var db = new sqlite3.Database('../db/main.db',(err)=>{
+    if (err) {
+        return console.error(err.message);
+      }
+      console.log('Connected to the in-memory SQlite database.');
+});
 
 
 const port = 8000
 
-
+const select_content = 'SELECT content FROM inflean_category';
+/*db.each(select_content,(err,data)=>{
+    if (err) {
+        throw err;
+    }else{
+        //console.log(data.content)
+    }
+})*/
 
 app.get('/',(req,res) =>{
     res.sendFile(path.join(__dirname,'/../home/home.html'))
@@ -78,9 +91,8 @@ app.post('/', (req, res)=>{res.send('Got a POST request');});
 app.put('/',(req,res)=>{res.send('Got a PUT request')});
 app.delete('/',(req,res)=>{res.send('Got a DELETE request')});
 app.use((req,res,next)=>{
-    console.log('Request Type',req.method);
+    console.log('Request Type',req.method,req.path);
     next();
 });
 
 let server =app.listen(port,()=>{console.log(`Exaple app listening at http://localhost:${port}`)})
-server.close()
