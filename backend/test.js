@@ -10,7 +10,7 @@ var db = new sqlite3.Database('../db/main.db',(err)=>{
 });
 
 //inflean_lecture 테이블 만드는 코드 시작 : 이미 실행을 하였기 때문에 할 필요가 없다
-//db.run('CREATE TABLE inflean_lecture(id integer primary key autoincrement, title text not null unique, link text, link_img text, pice text, rating text)');
+//db.run('CREATE TABLE inflean_lecture(id integer primary key autoincrement, title text not null unique, link text, link_img text, price text, rating text)');
 //inflean_lecture 테이블 만드는 코드 끝 : 이미 실행을 하였기 때문에 할 필요가 없다
 
 (async () => {
