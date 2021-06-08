@@ -1,31 +1,36 @@
 var express = require('express')
 var app = express()
 var path = require('path')
-var cookieParser = require('cookie-parser');
+var sqlite3 = require('sqlite3').verbose();
+var db = new sqlite3.Database('../db/main.db',(err)=>{
+    if (err) {
+        return console.error(err.message);
+      }
+      console.log('Connected to the in-memory SQlite database.');
+});
 
 
 const port = 8000
-//var qs = require('querystring');
-//var fs = require('fs')
-//var bodyParser = require('body-parser');
-//var methodOverride = require('method-override');
-//const base_dir='../home'
 
-
-//node app.set("port",port)
-////오류처리
-//app.use(bodyParser());
-//app.use(methodOverride());
-//app.use(logErrors);
-//app.use(clientErrorHandler);
-//app.use(errorHandler);
-////
-
+const select_content = 'SELECT content FROM inflean_category';
+/*db.each(select_content,(err,data)=>{
+    if (err) {
+        throw err;
+    }else{
+        //console.log(data.content)
+    }
+})*/
 
 app.get('/',(req,res) =>{
     res.sendFile(path.join(__dirname,'/../home/home.html'))
 });//insert main html file
 app.get('/MBTI',(req,res)=>{res.sendFile(path.join(__dirname,'/../MBTI/index.html'));});
+app.get('/MBTI/:testId',(req,res)=>{
+    switch(req.params.testId){
+        //case
+    };
+
+});
 app.get('/MBTI/result/:resultId',(req,res)=>{
     switch(req.params.resultId){
         case '0':
@@ -86,9 +91,8 @@ app.post('/', (req, res)=>{res.send('Got a POST request');});
 app.put('/',(req,res)=>{res.send('Got a PUT request')});
 app.delete('/',(req,res)=>{res.send('Got a DELETE request')});
 app.use((req,res,next)=>{
-    console.log('Request Type',req.method);
+    console.log('Request Type',req.method,req.path);
     next();
 });
 
 let server =app.listen(port,()=>{console.log(`Exaple app listening at http://localhost:${port}`)})
-server.close()
