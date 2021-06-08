@@ -7,7 +7,7 @@ h3 {
     position: fixed;
     top: 0;
     left: 0;
-    width: 140px;
+    width: 12%;
     height: 100%;
     font-size: 20px;
     border-right: 2px solid black;
@@ -45,7 +45,7 @@ ul {
     min-height:100%;
     height:auto;
     top: 0;
-    left: 140px;
+    left: 12%;
     font-size: 20px;
 }
 
