@@ -19,7 +19,7 @@ app.get('/inflean_data',(req,res)=>{
         if (err) {
             throw err;
         }
-        res.render(path.join(__dirname,'/../fronted/page/FreeCourse.html'),datas)
+        res.send(datas)
     })
 });
 
@@ -103,4 +103,4 @@ app.use((req,res,next)=>{
     next();
 });
 
-//let server =app.listen(port,()=>{console.log(`Exaple app listening at http://localhost:${port}`)})
+let server =app.listen(port,()=>{console.log(`Exaple app listening at http://localhost:${port}`)})
