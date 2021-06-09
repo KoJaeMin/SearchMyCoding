@@ -59,3 +59,14 @@
     font-size: 25px;
     margin:5px;
 }
+
+.recom_box{
+    color: black;
+    background-color: darkgray;
+    font-size: 25px;
+    border: 0px;
+    border-radius: 30px;
+    padding:10px;
+    padding-left:30px;
+    padding-right:30px;
+}

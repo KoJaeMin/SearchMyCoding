@@ -41,7 +41,10 @@ function setResult() {
 
     const resultDesc = document.querySelector('.resultDesc');
     resultDesc.innerHTML = infoList[point].desc;
+    document.querySelector(".recom").href = infoList[point].recom;
 }
+
+
 
 function goResult() {
     qna.style.WebkitAnimation = "fadeOut 0.5s";
