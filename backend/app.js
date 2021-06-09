@@ -14,6 +14,7 @@ const port = 8000
 
 const inflearn_lecture = 'SELECT link,link_img as image,title,pice as price ,rating from inflean_lecture;';
 const opentutorial = 'SELECT name as title, link from opentutorials_category;';
+const free_inflearn_lecture = "SELECT link,link_img as image,title,pice as price ,rating from inflean_lecture where pice='무료';";
 app.get('/inflean_data',(req,res)=>{
     db.all(inflearn_lecture,[],(err,datas)=>{
         if (err) {
@@ -22,8 +23,16 @@ app.get('/inflean_data',(req,res)=>{
         res.send(datas)
     });
 });
-app.get('/opentutorial',(req,res)=>{
+app.get('/opentutorials',(req,res)=>{
     db.all(opentutorial,[],(err,data)=>{
+        if(err){
+            throw err;
+        }
+        res.send(data);
+    });
+});
+app.get('/free_inflearn_lecture',(req,res)=>{
+    db.all(free_inflearn_lecture,[],(err,data)=>{
         if(err){
             throw err;
         }
