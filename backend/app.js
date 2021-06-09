@@ -10,7 +10,7 @@ var db = new sqlite3.Database('../db/main.db',(err)=>{
 });
 
 
-const port = 8000
+const port = 80
 
 const inflearn_lecture = 'SELECT link,link_img as image,title,pice as price ,rating from inflean_lecture;';
 const opentutorial = 'SELECT name as title, link from opentutorials_category;';
