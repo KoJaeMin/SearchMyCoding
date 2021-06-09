@@ -112,6 +112,61 @@ app.get('/MBTI/result/:resultId',(req,res)=>{
             break;
     }
 });
+app.get('/MBTI/image/:imageId',(req,res)=>{
+    switch(req.params.imageId){
+        case '0':
+            res.send(path.join(__dirname,'/../fronted/image/mbti/image-0.jpg'));
+            break;
+        case '1':
+            res.send(path.join(__dirname,'/../fronted/image/mbti/image-1.jpg'));
+            break;
+        case '2':
+            res.send(path.join(__dirname,'/../fronted/image/mbti/image-2.jpg'));
+            break;
+        case '3':
+            res.send(path.join(__dirname,'/../fronted/image/mbti/image-3.jpg'));
+            break;
+        case '4':
+            res.send(path.join(__dirname,'/../fronted/image/mbti/image-4.jpg'));
+            break;
+        case '5':
+            res.send(path.join(__dirname,'/../fronted/image/mbti/image-5.jpg'));
+            break;
+        case '6':
+            res.send(path.join(__dirname,'/../fronted/image/mbti/image-6.jpg'));
+            break;
+        case '7':
+            res.send(path.join(__dirname,'/../fronted/image/mbti/image-7.jpg'));
+            break;
+        case '8':
+            res.send(path.join(__dirname,'/../fronted/image/mbti/image-8.jpg'));
+            break;
+        case '9':
+            res.send(path.join(__dirname,'/../fronted/image/mbti/image-9.jpg'));
+            break;
+        case '10':
+            res.send(path.join(__dirname,'/../fronted/image/mbti/image-10.jpg'));
+            break;
+        case '11':
+            res.send(path.join(__dirname,'/../fronted/image/mbti/image-11.jpg'));
+            break;
+        case '12':
+            res.send(path.join(__dirname,'/../fronted/image/mbti/image-12.jpg'));
+            break;
+        case '13':
+            res.send(path.join(__dirname,'/../fronted/image/mbti/image-13.jpg'));
+            break;
+        case '14':
+            res.send(path.join(__dirname,'/../fronted/image/mbti/image-14.jpg'));
+            break;
+        case '15':
+            res.send(path.join(__dirname,'/../fronted/image/mbti/image-15.jpg'));
+            break;
+        default:
+            res.send(path.join(__dirname,'/../fronted/image/searchmycoding.jpg'))
+            break;
+    }
+});
 app.post('/', (req, res)=>{res.send('Got a POST request');});
 app.put('/',(req,res)=>{res.send('Got a PUT request')});
 app.delete('/',(req,res)=>{res.send('Got a DELETE request')});
