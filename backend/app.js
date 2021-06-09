@@ -13,14 +13,22 @@ var db = new sqlite3.Database('../db/main.db',(err)=>{
 const port = 8000
 
 const inflearn_lecture = 'SELECT link,link_img as image,title,pice as price ,rating from inflean_lecture;';
-const opentutorial = 'SELECT name, link from opentutorials_category;';
+const opentutorial = 'SELECT name as title, link from opentutorials_category;';
 app.get('/inflean_data',(req,res)=>{
     db.all(inflearn_lecture,[],(err,datas)=>{
         if (err) {
             throw err;
         }
         res.send(datas)
-    })
+    });
+});
+app.get('/opentutorial',(req,res)=>{
+    db.all(opentutorial,[],(err,data)=>{
+        if(err){
+            throw err;
+        }
+        res.send(data);
+    });
 });
 
 /*db.each(inflearn_lecture,(err,data)=>{
