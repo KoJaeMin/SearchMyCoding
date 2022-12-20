@@ -13,26 +13,29 @@ Search My Coding은 코딩 강좌를 조회할 수 있는 사이트입니다.
 
 ### Getting Started
 1. Clone
-```
+```console
 git clone git@github.com:KoJaeMin/SearchMyCoding.git
 ```
 
 2. Package Install
-```
+```console
 cd backend
 npm install
 ```
 
 3. Start Node Server
-```
+```console
 node app.js
 ```
 
 ## Usage
 > MBTI test
-> ![MBTI_Image](img/MBTI_Image.png)
+
+![MBTI_Image](img/MBTI_Image.png)
+
 > 전체 강좌 / 무료 강좌 조회
-> ![Course_Image](img/Course_Image.png)
+
+![Course_Image](img/Course_Image.png)
 
 ## Contributing
 1. Fork the Project
