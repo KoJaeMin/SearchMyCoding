@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
 import { QuestionType } from "./questiontypes.entity";
 
 @Entity('questions')
@@ -7,6 +7,9 @@ export class Question{
     id : number;
 
     @ManyToOne((type) => QuestionType, (questiontpye) => questiontpye.id)
+    @JoinColumn({
+        name : 'typeId'
+    })
     typeId : number;
 
     @Column({ 
