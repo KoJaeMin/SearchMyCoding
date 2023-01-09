@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
 import { typeORMConfig } from './config/typeorm.config';
 import { QuestionsModule } from './questions/questions.module';
 import { ConfigModule } from '@nestjs/config';
@@ -10,6 +9,11 @@ import { ConfigModule } from '@nestjs/config';
   controllers: [],
   providers: [],
 })
-export class AppModule {
-  constructor (private readonly dataSource :DataSource){}
-}
+export class AppModule {}
+
+// @Module({
+//   imports: [TypeOrmModule.forRoot(typeORMConfig), QuestionsModule, MbtiModule, CoursesModule,],
+//   controllers: [],
+//   providers: [],
+// })
+// export class AppModule {}
