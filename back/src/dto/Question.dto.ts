@@ -1,6 +1,6 @@
 import {IsString, IsNumber} from 'class-validator';
 
-export class CreateQuestionDto{
+export class QuestionDto{
     @IsNumber()
     readonly typeId : number;
 
