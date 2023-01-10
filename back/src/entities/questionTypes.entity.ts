@@ -6,5 +6,5 @@ export class QuestionType{
     id : number;
 
     @Column()
-    name : number;
+    TypeName : string;
 }
