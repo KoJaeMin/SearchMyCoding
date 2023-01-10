@@ -5,15 +5,14 @@ import { QuestionsModule } from './questions/questions.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeORMConfig), QuestionsModule, ConfigModule.forRoot()],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRoot(typeORMConfig),
+    QuestionsModule,
+  ],
   controllers: [],
   providers: [],
 })
 export class AppModule {}
-
-// @Module({
-//   imports: [TypeOrmModule.forRoot(typeORMConfig), QuestionsModule, MbtiModule, CoursesModule,],
-//   controllers: [],
-//   providers: [],
-// })
-// export class AppModule {}
