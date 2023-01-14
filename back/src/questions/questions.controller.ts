@@ -25,7 +25,6 @@ export class QuestionsController {
 
     @Post('type')
     createQuestionType(@Body() questionTypeDto : QuestionTypeDto){
-        console.log(questionTypeDto)
         return this.questionService.createQuestionType(questionTypeDto);
     }
 
