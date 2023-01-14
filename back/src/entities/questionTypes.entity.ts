@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { Question } from "./questions.entity";
 
 @Entity('questiontypes')
 export class QuestionType{
@@ -6,5 +7,14 @@ export class QuestionType{
     id : number;
 
     @Column()
-    TypeName : string;
+    typename : string;
+
+    @Column({
+        type : "varchar",
+        length : 1000
+    })
+    description : string;
+
+    @OneToMany((type) => Question, (question : Question) => question.typeId)
+    questions: Question[]
 }
