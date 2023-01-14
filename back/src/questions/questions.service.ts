@@ -34,14 +34,16 @@ export class QuestionsService {
             degree : degree,
             contents : contents
         })
-        await this.questionsRepository.insert(newQuestion)
+        await this.questionsRepository.insert(newQuestion);
     }
 
     async createQuestionType(questionTypeDto : QuestionTypeDto) : Promise<void>{
-        const {TypeName} = questionTypeDto;
+        const {TypeName, Description} = questionTypeDto;
         const newQuestionType : QuestionType = this.questionTypeRepository.create({
-            TypeName : TypeName,
+            typename : TypeName,
+            description : Description
         })
+        await this.questionTypeRepository.insert(newQuestionType);
     }
 
     async patchQuestion(questionId :number, updateQuestionData : QuestionDto) : Promise<void>{
