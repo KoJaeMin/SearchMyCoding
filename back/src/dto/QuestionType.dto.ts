@@ -2,8 +2,8 @@ import {IsString} from 'class-validator';
 
 export class QuestionTypeDto{
     @IsString()
-    readonly TypeName : string;
+    readonly typename : string;
 
     @IsString()
-    readonly Description : string;
+    readonly description : string;
 }
