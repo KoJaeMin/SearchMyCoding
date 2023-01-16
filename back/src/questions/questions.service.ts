@@ -1,5 +1,3 @@
-import { QuestionType } from './../entities/questionTypes.entity';
-import { QuestionTypeDto } from './../dto/QuestionType.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -10,20 +8,17 @@ import { Question } from '../entities/questions.entity';
 export class QuestionsService {
     constructor(
         @InjectRepository(Question)
-        private questionsRepository : Repository<Question>,
-        
-        @InjectRepository(QuestionType)
-        private questionTypeRepository : Repository<QuestionType>
+        private questionsRepository : Repository<Question>
     ){}
 
     getAllQuestions() : Promise<Question[]>{
         return this.questionsRepository.find();
     }
 
-    async getOneQusesion(questionId : number) : Promise<Question>{
+    async getOneQuestion(questionId : number) : Promise<Question>{
         const FoundQuestion : Question = await this.questionsRepository.findOne({id : questionId});
         if(!FoundQuestion)
-            throw new NotFoundException(`Course with Id ${questionId} is not found.`);
+            throw new NotFoundException(`Question with Id ${questionId} is not found.`);
         return FoundQuestion;
     }
 
@@ -37,18 +32,9 @@ export class QuestionsService {
         await this.questionsRepository.insert(newQuestion);
     }
 
-    async createQuestionType(questionTypeDto : QuestionTypeDto) : Promise<void>{
-        const {TypeName, Description} = questionTypeDto;
-        const newQuestionType : QuestionType = this.questionTypeRepository.create({
-            typename : TypeName,
-            description : Description
-        })
-        await this.questionTypeRepository.insert(newQuestionType);
-    }
-
     async patchQuestion(questionId :number, updateQuestionData : QuestionDto) : Promise<void>{
         try{
-            this.getOneQusesion(questionId);
+            this.getOneQuestion(questionId);
         }catch(err){}
         await this.questionsRepository.update({id : questionId},updateQuestionData);
     }
