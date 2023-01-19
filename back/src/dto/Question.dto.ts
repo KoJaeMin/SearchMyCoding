@@ -1,4 +1,4 @@
-import {IsString, IsNumber} from 'class-validator';
+import {IsString, IsNumber, IsBoolean} from 'class-validator';
 
 export class QuestionDto{
     @IsNumber()
@@ -9,4 +9,7 @@ export class QuestionDto{
 
     @IsString()
     readonly contents : string;
+
+    @IsBoolean()
+    readonly activate : boolean;
 }

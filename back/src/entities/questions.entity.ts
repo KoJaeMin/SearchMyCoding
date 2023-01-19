@@ -23,4 +23,10 @@ export class Question{
         length : 500
     })
     contents : string;
+
+    @Column({
+        type : "boolean",
+        default : true
+    })
+    activate : boolean;
 }
