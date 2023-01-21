@@ -1,6 +1,6 @@
 import { QuestionType } from 'src/entities/questiontypes.entity';
 import { QuestionTypesService } from './questiontypes.service';
-import { QuestionTypeDto } from './../dto/QuestionType.dto';
+import { QuestionTypeDto } from '../dto/QuestionType.dto';
 import { Controller, Post, Body, Get, Param, Patch } from '@nestjs/common';
 
 @Controller('questiontypes')
