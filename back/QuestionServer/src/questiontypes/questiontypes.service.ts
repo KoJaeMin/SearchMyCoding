@@ -1,5 +1,5 @@
 import { QuestionTypeDto } from '../dto/QuestionType.dto';
-import { QuestionType } from 'src/entities/questiontypes.entity';
+import { QuestionType } from '../entities/questiontypes.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
