@@ -11,8 +11,8 @@ export class QuestionTypesService {
         private questionTypeRepository : Repository<QuestionType>
     ){}
 
-    getAllQuestionTypes() : Promise<QuestionType[]>{
-        return this.questionTypeRepository.find();
+    async getAllQuestionTypes() : Promise<QuestionType[]>{
+        return await this.questionTypeRepository.find();
     }
 
     async getOneQuestionType(questionTypeId : number) : Promise<QuestionType>{
