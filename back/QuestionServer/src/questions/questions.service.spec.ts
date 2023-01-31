@@ -64,7 +64,7 @@ describe('QuestionsService', () => {
 
   describe('getOneQuestion', ()=>{
     const findId : number = 1;
-    
+    const findErrorId : number = 999;
     it('should find a question',async ()=>{
       questionRepository.findOne.mockResolvedValue(mockedQuestion);
 
@@ -76,7 +76,7 @@ describe('QuestionsService', () => {
 
     it("should return a NotFoundException", async () => {
       try{
-        await service.getOneQuestion(999);
+        await service.getOneQuestion(findErrorId);
       }catch(e){
         expect(e).toBeInstanceOf(NotFoundException);
       }
@@ -84,13 +84,13 @@ describe('QuestionsService', () => {
   });
 
   describe("createQuestion",()=>{
+    const mockedCreateQuestionDto : CreateQuestionDto = {
+      typeId : 1,
+      degree : 1,
+      contents : '노는 것을 좋아한다.',
+      activate : true
+    }
     it("should create a question", async () => {
-      const mockedCreateQuestionDto : CreateQuestionDto = {
-        typeId : 1,
-        degree : 1,
-        contents : '노는 것을 좋아한다.',
-        activate : true
-      }
       questionRepository.find.mockResolvedValue([]);
       const BeforeCreate = (await service.getAllQuestions()).length;
       expect(questionRepository.find).toHaveBeenCalledTimes(1);
@@ -106,18 +106,20 @@ describe('QuestionsService', () => {
   });
 
   describe("patchQuestion", ()=>{
+    const mockedUpdateQuestionId : number = 1;
+    const mockedErrorUpdateQuestionId : number = 999;
+    const mockedUpdateQuestionDto : UpdateQuestionDto = {
+      activate : false
+    }
+    const mockedUpdateQuestion : Question = {
+      id : 1,
+      typeId : 1,
+      degree : 1,
+      contents : '노는 것을 좋아한다.',
+      activate : false
+    };
+
     it("should patch a question", async () => {
-      const mockedUpdateQuestionId : number = 1;
-      const mockedUpdateQuestionDto : UpdateQuestionDto = {
-        activate : false
-      }
-      const mockedUpdateQuestion : Question = {
-        id : 1,
-        typeId : 1,
-        degree : 1,
-        contents : '노는 것을 좋아한다.',
-        activate : false
-      };
       questionRepository.findOne.mockResolvedValue(mockedQuestion);
       const BeforeUpdate = await service.getOneQuestion(mockedUpdateQuestionId);
       expect(questionRepository.findOne).toHaveBeenCalledTimes(1);
@@ -136,6 +138,17 @@ describe('QuestionsService', () => {
       expect(BeforeUpdate.activate).toBeTruthy();
       expect(mockedUpdateQuestionDto.activate).toBeFalsy();
       expect(AfterUpdate.activate).toBeFalsy();
-    })
+    });
+    
+    it("should return a NotFoundException", async () => {
+      questionRepository.findOne.mockResolvedValue(mockedQuestion);
+      const BeforeUpdate = await service.getOneQuestion(mockedUpdateQuestionId);
+      expect(questionRepository.findOne).toHaveBeenCalledTimes(1);
+      try{
+        await service.patchQuestion(mockedErrorUpdateQuestionId, mockedUpdateQuestionDto);
+      }catch(e){
+        expect(e).toBeInstanceOf(NotFoundException);
+      }
+    });
   });
 });
