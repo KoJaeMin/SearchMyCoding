@@ -1,6 +1,6 @@
 import { QuestionType } from 'src/entities/questiontypes.entity';
 import { QuestionTypesService } from './questiontypes.service';
-import { QuestionTypeDto } from '../dto/QuestionType.dto';
+import { CreateQuestionTypeDto } from '../dto/CreateQuestionType.dto';
 import { Controller, Post, Body, Get, Param, Patch } from '@nestjs/common';
 
 @Controller('questiontypes')
@@ -18,12 +18,12 @@ export class QuestionTypesController {
     }
 
     @Post('type')
-    createQuestionType(@Body() questionTypeDto : QuestionTypeDto){
+    createQuestionType(@Body() questionTypeDto : CreateQuestionTypeDto){
         return this.questionTypesService.createQuestionType(questionTypeDto);
     }
 
     @Patch(':id')
-    patchQuestion(@Param('id') questionId : number,@Body() questionTypeDto : QuestionTypeDto){
+    patchQuestion(@Param('id') questionId : number,@Body() questionTypeDto : CreateQuestionTypeDto){
         return this.questionTypesService.patchQuestionType(questionId, questionTypeDto);
     }
 }

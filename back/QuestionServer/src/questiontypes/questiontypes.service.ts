@@ -1,4 +1,5 @@
-import { QuestionTypeDto } from '../dto/QuestionType.dto';
+import { UpdateQuestionTypeDto } from './../dto/UpdateQuestionType.dto';
+import { CreateQuestionTypeDto } from '../dto/CreateQuestionType.dto';
 import { QuestionType } from '../entities/questiontypes.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -22,7 +23,7 @@ export class QuestionTypesService {
         return FoundQuestion;
     }
 
-    async createQuestionType(questionTypeDto : QuestionTypeDto) : Promise<void>{
+    async createQuestionType(questionTypeDto : CreateQuestionTypeDto) : Promise<void>{
         const {typename, description} = questionTypeDto;
         const newQuestionType : QuestionType = this.questionTypeRepository.create({
             typename : typename,
@@ -31,7 +32,7 @@ export class QuestionTypesService {
         await this.questionTypeRepository.insert(newQuestionType);
     }
 
-    async patchQuestionType(questionTypeId :number, updateQuestionTypeData : QuestionTypeDto) : Promise<void>{
+    async patchQuestionType(questionTypeId :number, updateQuestionTypeData : UpdateQuestionTypeDto) : Promise<void>{
         try{
             this.getOneQuestionType(questionTypeId);
         }catch(err){}
