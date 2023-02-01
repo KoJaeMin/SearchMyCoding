@@ -1,6 +1,6 @@
 import {IsString} from 'class-validator';
 
-export class QuestionTypeDto{
+export class CreateQuestionTypeDto{
     @IsString()
     readonly typename : string;
 
