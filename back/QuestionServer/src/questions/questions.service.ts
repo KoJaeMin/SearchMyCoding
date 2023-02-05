@@ -24,12 +24,11 @@ export class QuestionsService {
     }
 
     async createQuestion(createQuestionDto : CreateQuestionDto) : Promise<void>{
-        const {typeId, degree, contents, activate} = createQuestionDto;
+        const {type, contents, activate} = createQuestionDto;
         const newQuestion : Question = this.questionsRepository.create({
-            typeId : typeId,
-            degree : degree,
+            type : type,
             contents : contents,
-            activate : activate??true
+            activate : activate
         })
         await this.questionsRepository.insert(newQuestion);
     }

@@ -3,16 +3,10 @@ import {IsString, IsNumber, IsBoolean, IsOptional} from 'class-validator';
 
 export class CreateQuestionDto{
     @ApiProperty({
-        description : "외래키"
+        description : "질문 유형"
     })
-    @IsNumber()
-    readonly typeId : number;
-
-    @ApiProperty({
-        description : "질문 정도"
-    })
-    @IsNumber()
-    readonly degree : number;
+    @IsString()
+    readonly type : string;
 
     @ApiProperty({
         description : "질문 내용"

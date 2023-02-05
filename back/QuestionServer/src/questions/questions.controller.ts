@@ -24,7 +24,7 @@ export class QuestionsController {
     }
 
     @Patch(':id')
-    patchQuestion(@Param('id') questionId : number,@Body() questionDto : UpdateQuestionDto){
+    patchQuestion(@Param('id') questionId : number, @Body() questionDto : UpdateQuestionDto){
         return this.questionService.patchQuestion(questionId, questionDto);
     }
 }

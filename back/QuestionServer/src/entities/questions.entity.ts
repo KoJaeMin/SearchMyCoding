@@ -1,22 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
-import { QuestionType } from "./questiontypes.entity";
+import { Entity, Column, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Answer } from "./answers.entity";
 
 @Entity('questions')
 export class Question{
     @PrimaryGeneratedColumn()
     id : number;
-
-    @ManyToOne((type) => QuestionType, (questionType) => questionType.id)
-    @JoinColumn({
-        name : 'typeId'
-    })
-    typeId : number;
-
-    @Column({ 
-        type: "int",
-        nullable: false
-    })
-    degree : number;
 
     @Column({
         type : "varchar",
@@ -25,8 +13,17 @@ export class Question{
     contents : string;
 
     @Column({
+        type : "varchar",
+        length : 20
+    })
+    type : string;
+
+    @Column({
         type : "boolean",
         default : true
     })
     activate : boolean;
+
+    @OneToMany((type) => Answer, (answer) => answer.question)
+    answer? : Answer[]
 }

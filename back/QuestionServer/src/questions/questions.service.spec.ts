@@ -39,9 +39,8 @@ describe('QuestionsService', () => {
     );
     mockedQuestion = {
       id : 1,
-      typeId : 1,
-      degree : 1,
-      contents : '노는 것을 좋아한다.',
+      type : 'EI',
+      contents : '한 달 동안 공부, 프로젝트에 매진해 있어서 제대로 쉰 날이 하루도 없다... <br/>가까스로 다 끝낸 뒤 나는?',
       activate : true
     };
   });
@@ -85,9 +84,8 @@ describe('QuestionsService', () => {
 
   describe("createQuestion",()=>{
     const mockedCreateQuestionDto : CreateQuestionDto = {
-      typeId : 1,
-      degree : 1,
-      contents : '노는 것을 좋아한다.',
+      type : 'EI',
+      contents : '한 달 동안 공부, 프로젝트에 매진해 있어서 제대로 쉰 날이 하루도 없다... <br/>가까스로 다 끝낸 뒤 나는?',
       activate : true
     }
     it("should create a question", async () => {
@@ -113,9 +111,8 @@ describe('QuestionsService', () => {
     }
     const mockedUpdateQuestion : Question = {
       id : 1,
-      typeId : 1,
-      degree : 1,
-      contents : '노는 것을 좋아한다.',
+      type : "EI",
+      contents : '한 달 동안 공부, 프로젝트에 매진해 있어서 제대로 쉰 날이 하루도 없다... <br/>가까스로 다 끝낸 뒤 나는?',
       activate : false
     };
 
@@ -132,8 +129,6 @@ describe('QuestionsService', () => {
       expect(questionRepository.findOne).toHaveBeenCalledTimes(3);
 
       expect(BeforeUpdate.id).toEqual(AfterUpdate.id);
-      expect(BeforeUpdate.typeId).toEqual(AfterUpdate.typeId);
-      expect(BeforeUpdate.degree).toEqual(AfterUpdate.degree);
       expect(BeforeUpdate.contents).toEqual(AfterUpdate.contents);
       expect(BeforeUpdate.activate).toBeTruthy();
       expect(mockedUpdateQuestionDto.activate).toBeFalsy();
