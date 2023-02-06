@@ -24,9 +24,9 @@ export class AnswersService {
     }
 
     async createAnswer(createAnswerDto : CreateAnswerDto) : Promise<void>{
-        const {type, question, contents} = createAnswerDto;
+        const {answerType: type, question, contents} = createAnswerDto;
         const newAnswer : Answer = this.answerRepository.create({
-            type : type,
+            answerType : type,
             question : question,
             contents : contents
         })

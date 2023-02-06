@@ -1,8 +1,8 @@
 import { ConfigService } from '@nestjs/config';
 import 'dotenv/config';
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
-import { QuestionType } from 'src/entities/questiontypes.entity';
-import { Question } from 'src/entities/questions.entity';
+import { Answer } from '../entities/answers.entity';
+import { Question } from '../entities/questions.entity';
 
 const config : ConfigService = new ConfigService();
 
@@ -13,6 +13,6 @@ export const typeORMConfig : TypeOrmModuleOptions = {
         username: config.get<ConfigService>('DATABASE_USERNAME'),
         password: config.get<ConfigService>('DATABASE_PASSWORD'),
         database: config.get<ConfigService>('DATABASE_DATABASE'),
-        entities: [Question, QuestionType],
+        entities: [Question, Answer],
         synchronize : false
 }

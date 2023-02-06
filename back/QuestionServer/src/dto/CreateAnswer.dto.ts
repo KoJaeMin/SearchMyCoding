@@ -5,7 +5,7 @@ export class CreateAnswerDto{
     readonly question : string;
 
     @IsString()
-    readonly type : string;
+    readonly answerType : string;
 
     @IsString()
     readonly contents : string;

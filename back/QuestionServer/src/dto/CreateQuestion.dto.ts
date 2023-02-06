@@ -6,7 +6,7 @@ export class CreateQuestionDto{
         description : "질문 유형"
     })
     @IsString()
-    readonly type : string;
+    readonly questionType : string;
 
     @ApiProperty({
         description : "질문 내용"

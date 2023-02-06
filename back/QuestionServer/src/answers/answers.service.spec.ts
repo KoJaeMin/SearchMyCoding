@@ -40,7 +40,7 @@ describe('AnswersService', () => {
     );
     mockedAnswer = {
       id : 1,
-      type : 'E',
+      answerType : 'E',
       contents : '한 달 동안 못 논 게 한이다! 친구들과 만나 파워 수다!',
       question : '한 달 동안 공부, 프로젝트에 매진해 있어서 제대로 쉰 날이 하루도 없다... <br/>가까스로 다 끝낸 뒤 나는?'
     };
@@ -85,7 +85,7 @@ describe('AnswersService', () => {
 
   describe("createAnswer",()=>{
     const mockedCreateAnswerDto : CreateAnswerDto = {
-      type : 'E',
+      answerType : 'E',
       contents : '한 달 동안 못 논 게 한이다! 친구들과 만나 파워 수다!',
       question : '한 달 동안 공부, 프로젝트에 매진해 있어서 제대로 쉰 날이 하루도 없다... <br/>가까스로 다 끝낸 뒤 나는?'
     }
@@ -108,12 +108,12 @@ describe('AnswersService', () => {
     const mockedUpdateAnswerId : number = 1;
     const mockedErrorUpdateAnswerId : number = 999;
     const mockedUpdateAnswerDto : UpdateAnswerDto = {
-      type : 'I',
+      answerType : 'I',
       contents : '에너지 충전해야해.. 집콕.. 침대 최고...'
     }
     const mockedUpdateAnswer : Answer = {
       id : 1,
-      type : 'I',
+      answerType : 'I',
       contents : '에너지 충전해야해.. 집콕.. 침대 최고...',
       question : '한 달 동안 공부, 프로젝트에 매진해 있어서 제대로 쉰 날이 하루도 없다... <br/>가까스로 다 끝낸 뒤 나는?'
     };

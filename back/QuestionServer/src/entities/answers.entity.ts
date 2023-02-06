@@ -13,7 +13,7 @@ export class Answer{
         type : "varchar",
         length : 50
     })
-    type : string;
+    answerType : string;
 
     @Column({
         type : "varchar",

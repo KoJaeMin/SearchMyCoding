@@ -14,9 +14,9 @@ export class Question{
 
     @Column({
         type : "varchar",
-        length : 20
+        length : 20,
     })
-    type : string;
+    questionType : string;
 
     @Column({
         type : "boolean",
