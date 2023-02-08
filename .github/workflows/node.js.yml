@@ -9,6 +9,10 @@ on:
   pull_request:
     branches: [ "master" ]
 
+defaults:
+  run:
+    working-directory: './back/QuestionServer'
+
 jobs:
   build:
 
@@ -28,6 +32,4 @@ jobs:
         cache: 'npm'
         cache-dependency-path: './back/QuestionServer/package-lock.json'
     - run: npm ci
-      working-directory: './back/QuestionServer'
     - run: npm run test
-      working-directory: './back/QuestionServer'
