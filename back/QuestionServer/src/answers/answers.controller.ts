@@ -9,7 +9,7 @@ export class AnswerController {
 
     @Get()
     getAllQuestionTypes(){
-        this.questionTypesService.getAllAnswer()
+        return this.questionTypesService.getAllAnswer();
     }
 
     @Get(':id')

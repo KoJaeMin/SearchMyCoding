@@ -10,7 +10,7 @@ export class QuestionsController {
 
     @Get()
     getAllQuestions(){
-        this.questionService.getAllQuestions()
+        return this.questionService.getAllQuestions();
     }
 
     @Get(':id')
