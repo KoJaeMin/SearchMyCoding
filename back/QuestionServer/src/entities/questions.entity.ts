@@ -24,6 +24,6 @@ export class Question{
     })
     activate : boolean;
 
-    @OneToMany((type) => Answer, (answer) => answer.question)
+    @OneToMany((type) => Answer, (answer : Answer) => answer.questionId)
     answer? : Answer[]
 }

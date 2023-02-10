@@ -42,7 +42,7 @@ describe('AnswersService', () => {
       id : 1,
       answerType : 'E',
       contents : '한 달 동안 못 논 게 한이다! 친구들과 만나 파워 수다!',
-      question : '한 달 동안 공부, 프로젝트에 매진해 있어서 제대로 쉰 날이 하루도 없다... <br/>가까스로 다 끝낸 뒤 나는?'
+      questionId : 1
     };
   });
 
@@ -65,7 +65,7 @@ describe('AnswersService', () => {
   describe('getOneAnswer', ()=>{
     const findId : number = 1;
     const findErrorId : number = 999;
-    it('should find a question type',async ()=>{
+    it('should find an answer',async ()=>{
       answerRepository.findOne.mockResolvedValue(mockedAnswer);
 
       const result = await service.getOneAnswer(findId);
@@ -83,11 +83,31 @@ describe('AnswersService', () => {
     });
   });
 
+  describe("getAnswerAboutQuestion", () =>{
+    const temp = null;
+    const mockedQuestionId : number = 1;
+    const mockedErrorQuestionId : number = 999;
+
+    it("should find answers anbout question",async () => {
+      answerRepository.find.mockResolvedValue(mockedAnswer);
+      const result = await service.getAnswerAboutQuestion(mockedQuestionId);
+      expect(answerRepository.find).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(mockedAnswer);
+    });
+    it("should return a NotFoundException", async () => {
+      try{
+        await service.getOneAnswer(mockedErrorQuestionId);
+      }catch(e){
+        expect(e).toBeInstanceOf(NotFoundException);
+      }
+    });
+  });
+  
   describe("createAnswer",()=>{
     const mockedCreateAnswerDto : CreateAnswerDto = {
       answerType : 'E',
       contents : '한 달 동안 못 논 게 한이다! 친구들과 만나 파워 수다!',
-      question : '한 달 동안 공부, 프로젝트에 매진해 있어서 제대로 쉰 날이 하루도 없다... <br/>가까스로 다 끝낸 뒤 나는?'
+      questionId : 1
     }
     it("should create an answer", async () => {
       answerRepository.find.mockResolvedValue([]);
@@ -115,7 +135,7 @@ describe('AnswersService', () => {
       id : 1,
       answerType : 'I',
       contents : '에너지 충전해야해.. 집콕.. 침대 최고...',
-      question : '한 달 동안 공부, 프로젝트에 매진해 있어서 제대로 쉰 날이 하루도 없다... <br/>가까스로 다 끝낸 뒤 나는?'
+      questionId : 1
     };
 
     it("should patch an answer", async () => {
@@ -132,7 +152,7 @@ describe('AnswersService', () => {
 
       expect(BeforeUpdate.id).toEqual(AfterUpdate.id);
       expect(BeforeUpdate.contents).toEqual(mockedAnswer.contents);
-      expect(BeforeUpdate.question).toEqual(AfterUpdate.question);
+      expect(BeforeUpdate.questionId).toEqual(AfterUpdate.questionId);
       expect(AfterUpdate.id).toEqual(mockedUpdateAnswer.id);
       expect(AfterUpdate.contents).toEqual(mockedUpdateAnswer.contents);
     });

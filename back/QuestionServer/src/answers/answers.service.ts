@@ -23,11 +23,22 @@ export class AnswersService {
         return FoundAnswer;
     }
 
+    async getAnswerAboutQuestion(questionId : number) : Promise<Answer[]>{
+        const FoundAnswers : Answer[] = await this.answerRepository.find({
+            where : {
+                questionId : questionId
+            }
+        })
+        if(!FoundAnswers)
+            throw new NotFoundException(`Answer About Question with Id ${questionId} is not found`);
+        return FoundAnswers;
+    }
+
     async createAnswer(createAnswerDto : CreateAnswerDto) : Promise<void>{
-        const {answerType: type, question, contents} = createAnswerDto;
+        const {answerType, questionId, contents} = createAnswerDto;
         const newAnswer : Answer = this.answerRepository.create({
-            answerType : type,
-            question : question,
+            answerType : answerType,
+            questionId : questionId,
             contents : contents
         })
         await this.answerRepository.insert(newAnswer);

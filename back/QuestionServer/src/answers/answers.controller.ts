@@ -5,25 +5,30 @@ import { Controller, Post, Body, Get, Param, Patch } from '@nestjs/common';
 
 @Controller('answers')
 export class AnswerController {
-    constructor(private readonly questionTypesService : AnswersService){}
+    constructor(private readonly answerService : AnswersService){}
 
     @Get()
-    getAllQuestionTypes(){
-        return this.questionTypesService.getAllAnswer();
+    getAllAnswers(){
+        return this.answerService.getAllAnswer();
     }
 
     @Get(':id')
-    async getOneQuestionType(@Param("id") questionId : number) : Promise<Answer>{
-        return await this.questionTypesService.getOneAnswer(questionId);
+    async getOneAnswer(@Param("id") answerId : number) : Promise<Answer>{
+        return await this.answerService.getOneAnswer(answerId);
+    }
+
+    @Get('question/:id')
+    async getAnswerAboutQuestion(@Param("id") questionId : number) : Promise<Answer[]> {
+        return await this.answerService.getAnswerAboutQuestion(questionId);
     }
 
     @Post('type')
-    createQuestionType(@Body() questionTypeDto : CreateAnswerDto){
-        return this.questionTypesService.createAnswer(questionTypeDto);
+    createAnswer(@Body() questionTypeDto : CreateAnswerDto){
+        return this.answerService.createAnswer(questionTypeDto);
     }
 
     @Patch(':id')
-    patchQuestion(@Param('id') questionId : number,@Body() questionTypeDto : CreateAnswerDto){
-        return this.questionTypesService.patchAnswer(questionId, questionTypeDto);
+    patchAnswer(@Param('id') questionId : number,@Body() questionTypeDto : CreateAnswerDto){
+        return this.answerService.patchAnswer(questionId, questionTypeDto);
     }
 }
