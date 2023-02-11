@@ -23,6 +23,17 @@ export class QuestionsService {
         return FoundQuestion;
     }
 
+    async getQuestionsWithType(questionType : string) : Promise<Question[]>{
+        const FoundQuestions : Question[] = await this.questionsRepository.find({
+            where : {
+                questionType : questionType
+            }
+        })
+        if(!FoundQuestions)
+            throw new NotFoundException(`Questions with type ${questionType} is not found.`);
+        return FoundQuestions;
+    }
+
     async createQuestion(createQuestionDto : CreateQuestionDto) : Promise<void>{
         const {questionType, contents, activate} = createQuestionDto;
         const newQuestion : Question = this.questionsRepository.create({

@@ -9,13 +9,18 @@ export class QuestionsController {
     constructor(private readonly questionService : QuestionsService){}
 
     @Get()
-    getAllQuestions(){
-        return this.questionService.getAllQuestions();
+    async getAllQuestions(){
+        return await this.questionService.getAllQuestions();
     }
 
     @Get(':id')
     async getOneQuestion(@Param("id") questionId : number) : Promise<Question>{
         return await this.questionService.getOneQuestion(questionId);
+    }
+
+    @Get('type/:type')
+    async getQuestionsWithType(@Param("type") questionType : string) : Promise<Question[]>{
+        return await this.questionService.getQuestionsWithType(questionType);
     }
 
     @Post()

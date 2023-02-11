@@ -8,8 +8,8 @@ export class AnswerController {
     constructor(private readonly answerService : AnswersService){}
 
     @Get()
-    getAllAnswers(){
-        return this.answerService.getAllAnswer();
+    async getAllAnswers(){
+        return await this.answerService.getAllAnswer();
     }
 
     @Get(':id')

@@ -82,6 +82,28 @@ describe('QuestionsService', () => {
     });
   });
 
+  describe("getQuestionsWithType", ()=>{
+    const findQuestionType : string = 'EI';
+    const findErrorQuestionType : string = 'SN';
+    it('should find questions with Type',async ()=>{
+      questionRepository.find.mockResolvedValue([mockedQuestion]);
+
+      const result = await service.getQuestionsWithType(findQuestionType);
+      expect(questionRepository.find).toHaveBeenCalledTimes(1);
+
+      expect(result.length).toEqual(1);
+      expect(result[0].questionType).toEqual('EI');
+    });
+
+    it("should return a NotFoundException", async () => {
+      try{
+        await service.getQuestionsWithType(findErrorQuestionType);
+      }catch(e){
+        expect(e).toBeInstanceOf(NotFoundException);
+      }
+    });
+  })
+
   describe("createQuestion",()=>{
     const mockedCreateQuestionDto : CreateQuestionDto = {
       questionType : 'EI',
