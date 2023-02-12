@@ -22,7 +22,7 @@ export class AnswerController {
         return await this.answerService.getAnswerAboutQuestion(questionId);
     }
 
-    @Post('type')
+    @Post('')
     createAnswer(@Body() questionTypeDto : CreateAnswerDto){
         return this.answerService.createAnswer(questionTypeDto);
     }
