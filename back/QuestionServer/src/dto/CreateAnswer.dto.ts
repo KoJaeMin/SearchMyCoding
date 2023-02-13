@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {IsString} from 'class-validator';
+import { IsString, IsNumber } from 'class-validator';
 
 export class CreateAnswerDto{
     @ApiProperty({
         description : "질문"
     })
-    @IsString()
+    @IsNumber()
     readonly questionId : number;
 
     @ApiProperty({
