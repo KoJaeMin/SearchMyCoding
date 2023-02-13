@@ -29,7 +29,7 @@ export class QuestionsService {
                 questionType : questionType
             }
         })
-        if(!FoundQuestions)
+        if(!FoundQuestions || FoundQuestions.length === 0)
             throw new NotFoundException(`Questions with type ${questionType} is not found.`);
         return FoundQuestions;
     }
