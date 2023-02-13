@@ -1,3 +1,4 @@
+import { UpdateAnswerDto } from './../dto/UpdateAnswer.dto';
 import { Answer } from 'src/entities/answers.entity';
 import { AnswersService } from './answers.service';
 import { CreateAnswerDto } from '../dto/CreateAnswer.dto';
@@ -23,12 +24,12 @@ export class AnswerController {
     }
 
     @Post('')
-    createAnswer(@Body() questionTypeDto : CreateAnswerDto){
-        return this.answerService.createAnswer(questionTypeDto);
+    createAnswer(@Body() createAnswerDto : CreateAnswerDto){
+        return this.answerService.createAnswer(createAnswerDto);
     }
 
     @Patch(':id')
-    patchAnswer(@Param('id') questionId : number,@Body() questionTypeDto : CreateAnswerDto){
-        return this.answerService.patchAnswer(questionId, questionTypeDto);
+    patchAnswer(@Param('id') answerId : number,@Body() updateAnswerDto : UpdateAnswerDto){
+        return this.answerService.patchAnswer(answerId, updateAnswerDto);
     }
 }
