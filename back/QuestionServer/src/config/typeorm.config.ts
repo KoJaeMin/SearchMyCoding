@@ -16,3 +16,14 @@ export const typeORMConfig : TypeOrmModuleOptions = {
         entities: [Question, Answer],
         synchronize : false
 }
+
+export const testTypeORMConfig : TypeOrmModuleOptions = {
+        type: 'postgres',
+        host: config.get<ConfigService>('TEST_DATABASE_HOST'),
+        port: config.get<ConfigService>('TEST_DATABASE_PORT'),
+        username: config.get<ConfigService>('TEST_DATABASE_USERNAME'),
+        password: config.get<ConfigService>('TEST_DATABASE_PASSWORD'),
+        database: config.get<ConfigService>('TEST_DATABASE_DATABASE'),
+        entities: [Question, Answer],
+        synchronize : true
+}

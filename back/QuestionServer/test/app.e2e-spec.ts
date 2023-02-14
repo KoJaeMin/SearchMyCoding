@@ -1,10 +1,17 @@
+import { UpdateAnswerDto } from './../src/dto/UpdateAnswer.dto';
+import { testTypeORMConfig } from './../src/config/typeorm.config';
+import { AnswersModule } from './../src/answers/answers.module';
+import { QuestionsModule } from './../src/questions/questions.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+import { CreateAnswerDto } from './../src/dto/CreateAnswer.dto';
 import { UpdateQuestionDto } from './../src/dto/UpdateQuestion.dto';
 import { validationConfig } from './../src/config/validation.config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from '../src/app.module';
 import { CreateQuestionDto } from 'src/dto/CreateQuestion.dto';
+import { clearDB } from './testHelper';
 describe('AppController (e2e)', () => {
   let app: INestApplication;
 
@@ -13,7 +20,14 @@ describe('AppController (e2e)', () => {
   /// 한 번 app 생성 후 데이터를 유지하기 위해 beforEach -> beforeAll
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [
+        ConfigModule.forRoot({
+          isGlobal: true,
+        }),
+        TypeOrmModule.forRoot(testTypeORMConfig),
+        QuestionsModule,
+        AnswersModule,
+      ],
     }).compile();
 
     /// beforeEach시
@@ -28,6 +42,7 @@ describe('AppController (e2e)', () => {
 
   /// 모든 것이 끝나면 app 종료
   afterAll(async ()=>{
+    await clearDB();
     await app.close();
   })
 
@@ -41,7 +56,7 @@ describe('AppController (e2e)', () => {
     });
 
     it("POST / (201)", ()=>{
-      const mockedCreateQuestionDto : CreateQuestionDto = {
+      const createQuestionDto : CreateQuestionDto = {
         questionType : 'EI',
         contents : '한 달 동안 공부, 프로젝트에 매진해 있어서 제대로 쉰 날이 하루도 없다... <br/>가까스로 다 끝낸 뒤 나는?',
         activate : true
@@ -49,7 +64,7 @@ describe('AppController (e2e)', () => {
 
       return request(app.getHttpServer())
         .post(defaultPath)
-        .send(mockedCreateQuestionDto)
+        .send(createQuestionDto)
         .expect(201);
     })
     
@@ -84,23 +99,76 @@ describe('AppController (e2e)', () => {
     });
 
     it("PATCH /:id (200)", ()=>{
-      const mockedUpdateQuestionId : number = 1;
-      const mockedUpdateQuestionDto : UpdateQuestionDto = {
+      const updateQuestionId : number = 1;
+      const updateQuestionDto : UpdateQuestionDto = {
         activate : false
       };
       return request(app.getHttpServer())
-        .get(defaultPath+`/${mockedUpdateQuestionId}`)
-        .send(mockedUpdateQuestionDto)
+        .patch(defaultPath+`/${updateQuestionId}`)
+        .send(updateQuestionDto)
         .expect(200);
     });
   });
 
   describe("/answers", ()=>{
-    
-    it.todo("GET /");
-    it.todo("POST /");
-    it.todo("GET /:id");
-    it.todo("GET /question/:id");
-    it.todo("PATCH /:id");
+    const defaultPath = '/answers'
+    it("GET / (200)", ()=>{
+      return request(app.getHttpServer())
+        .get(defaultPath)
+        .expect(200);
+    });
+
+    it("POST / (201)", ()=>{
+      const createAnswerDto : CreateAnswerDto = {
+        answerType : 'E',
+        contents : '한 달 동안 못 논 게 한이다! 친구들과 만나 파워 수다!',
+        questionId : 1
+      }
+
+      return request(app.getHttpServer())
+        .post(defaultPath)
+        .send(createAnswerDto)
+        .expect(201);
+    });
+
+    it("GET /:id (200)", ()=>{
+      const findId = 1;
+      return request(app.getHttpServer())
+        .get(defaultPath+`/${findId}`)
+        .expect(200);
+    });
+
+    it("GET /:id (404)", ()=>{
+      const findErrorId = 999;
+      return request(app.getHttpServer())
+        .get(defaultPath+`/${findErrorId}`)
+        .expect(404);
+    });
+
+    it("GET /question/:id (200)", ()=>{
+      const findQuestionId = 1;
+      return request(app.getHttpServer())
+        .get(defaultPath+`/question/${findQuestionId}`)
+        .expect(200);
+    });
+
+    it("GET /question/:id (404)", ()=>{
+      const findErrorQuestionId = 999;
+      return request(app.getHttpServer())
+        .get(defaultPath+`/question/${findErrorQuestionId}`)
+        .expect(404);
+    });
+
+    it("PATCH /:id (200)", ()=>{
+      const updateAnswerId : number = 1;
+      const updateAnswerDto : UpdateAnswerDto = {
+        answerType : 'I',
+        contents : '에너지 충전해야해.. 집콕.. 침대 최고...'
+      }
+      return request(app.getHttpServer())
+        .patch(defaultPath+`/${updateAnswerId}`)
+        .send(updateAnswerDto)
+        .expect(200);
+    });
   })
 });

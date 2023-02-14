@@ -29,7 +29,7 @@ export class AnswersService {
                 questionId : questionId
             }
         })
-        if(!FoundAnswers)
+        if(!FoundAnswers || FoundAnswers.length === 0)
             throw new NotFoundException(`Answer About Question with Id ${questionId} is not found`);
         return FoundAnswers;
     }
