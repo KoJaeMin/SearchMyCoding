@@ -66,7 +66,21 @@ describe('AppController (e2e)', () => {
         .post(defaultPath)
         .send(createQuestionDto)
         .expect(201);
-    })
+    });
+
+    it("POST / (400)", ()=>{
+      const createErrorQuestionDto = {
+        questionType : 'EI',
+        contents : '한 달 동안 공부, 프로젝트에 매진해 있어서 제대로 쉰 날이 하루도 없다... <br/>가까스로 다 끝낸 뒤 나는?',
+        activate : true,
+        author : "Jaemin"
+      }
+
+      return request(app.getHttpServer())
+        .post(defaultPath)
+        .send(createErrorQuestionDto)
+        .expect(400);
+    });
     
     it("GET /:id (200)", ()=>{
       const findId : number = 1;
@@ -108,6 +122,29 @@ describe('AppController (e2e)', () => {
         .send(updateQuestionDto)
         .expect(200);
     });
+
+    it("PATCH /:id (404)", ()=>{
+      const updateErrorQuestionId : number = 999;
+      const updateQuestionDto : UpdateQuestionDto = {
+        activate : false
+      };
+      return request(app.getHttpServer())
+        .patch(defaultPath+`/${updateErrorQuestionId}`)
+        .send(updateQuestionDto)
+        .expect(404);
+    });
+
+    it("PATCH /:id (400)", ()=>{
+      const updateQuestionId : number = 1;
+      const updateErrorQuestionDto = {
+        activate : false,
+        author : "Jaemin"
+      };
+      return request(app.getHttpServer())
+        .patch(defaultPath+`/${updateQuestionId}`)
+        .send(updateErrorQuestionDto)
+        .expect(400);
+    });
   });
 
   describe("/answers", ()=>{
@@ -129,6 +166,20 @@ describe('AppController (e2e)', () => {
         .post(defaultPath)
         .send(createAnswerDto)
         .expect(201);
+    });
+
+    it("POST / (400)", ()=>{
+      const createErrorAnswerDto = {
+        answerType : 'E',
+        contents : '한 달 동안 못 논 게 한이다! 친구들과 만나 파워 수다!',
+        questionId : 1,
+        author : "Jaemin"
+      }
+
+      return request(app.getHttpServer())
+        .post(defaultPath)
+        .send(createErrorAnswerDto)
+        .expect(400);
     });
 
     it("GET /:id (200)", ()=>{
@@ -169,6 +220,31 @@ describe('AppController (e2e)', () => {
         .patch(defaultPath+`/${updateAnswerId}`)
         .send(updateAnswerDto)
         .expect(200);
+    });
+
+    it("PATCH /:id (400)", ()=>{
+      const updateAnswerId : number = 1;
+      const updateErrorAnswerDto = {
+        answerType : 'I',
+        contents : '에너지 충전해야해.. 집콕.. 침대 최고...',
+        author : "Jaemin"
+      }
+      return request(app.getHttpServer())
+        .patch(defaultPath+`/${updateAnswerId}`)
+        .send(updateErrorAnswerDto)
+        .expect(400);
+    });
+
+    it("PATCH /:id (404)", ()=>{
+      const updateErrorAnswerId : number = 999;
+      const updateAnswerDto : UpdateAnswerDto = {
+        answerType : 'I',
+        contents : '에너지 충전해야해.. 집콕.. 침대 최고...'
+      }
+      return request(app.getHttpServer())
+        .patch(defaultPath+`/${updateErrorAnswerId}`)
+        .send(updateAnswerDto)
+        .expect(404);
     });
   })
 });

@@ -46,8 +46,10 @@ export class AnswersService {
 
     async patchAnswer(answerId :number, updateAnswerDto : UpdateAnswerDto) : Promise<void>{
         try{
-            this.getOneAnswer(answerId);
-        }catch(err){}
+            await this.getOneAnswer(answerId);
+        }catch(err){
+            throw err;
+        }
         await this.answerRepository.update({id : answerId}, updateAnswerDto);
     }
 }
