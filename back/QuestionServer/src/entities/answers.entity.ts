@@ -17,7 +17,8 @@ export class Answer{
 
     @Column({
         type : "varchar",
-        length : 500
+        length : 500,
+        unique: true
     })
     contents : string
 }
