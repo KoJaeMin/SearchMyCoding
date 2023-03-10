@@ -12,7 +12,7 @@ export class Category{
         unique: true,
         nullable : false
     })
-    title : string;
+    name : string;
 
     @ManyToOne((type) => Course, (course : Course) => course.id)
     courseId : number;
