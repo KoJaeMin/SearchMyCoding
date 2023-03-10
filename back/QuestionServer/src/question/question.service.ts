@@ -1,30 +1,30 @@
-import { UpdateQuestionDto } from './../dto/UpdateQuestion.dto';
+import { UpdateQuestionDto } from '../dto/UpdateQuestion.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateQuestionDto } from '../dto/CreateQuestion.dto';
-import { Question } from '../entities/questions.entity';
+import { Question } from '../entities/question.entity';
 
 @Injectable()
-export class QuestionsService {
+export class QuestionService {
     constructor(
         @InjectRepository(Question)
-        private questionsRepository : Repository<Question>
+        private questionRepository : Repository<Question>
     ){}
 
     async getAllQuestions() : Promise<Question[]>{
-        return await this.questionsRepository.find();
+        return await this.questionRepository.find();
     }
 
     async getOneQuestion(questionId : number) : Promise<Question>{
-        const FoundQuestion : Question = await this.questionsRepository.findOne({id : questionId});
+        const FoundQuestion : Question = await this.questionRepository.findOne({id : questionId});
         if(!FoundQuestion)
             throw new NotFoundException(`Question with Id ${questionId} is not found.`);
         return FoundQuestion;
     }
 
     async getQuestionsWithType(questionType : string) : Promise<Question[]>{
-        const FoundQuestions : Question[] = await this.questionsRepository.find({
+        const FoundQuestions : Question[] = await this.questionRepository.find({
             where : {
                 questionType : questionType
             }
@@ -36,12 +36,12 @@ export class QuestionsService {
 
     async createQuestion(createQuestionDto : CreateQuestionDto) : Promise<void>{
         const {questionType, contents, activate} = createQuestionDto;
-        const newQuestion : Question = this.questionsRepository.create({
+        const newQuestion : Question = this.questionRepository.create({
             questionType : questionType,
             contents : contents,
             activate : activate
         })
-        await this.questionsRepository.insert(newQuestion);
+        await this.questionRepository.insert(newQuestion);
     }
 
     async patchQuestion(questionId :number, updateQuestionData : UpdateQuestionDto) : Promise<void>{
@@ -50,6 +50,6 @@ export class QuestionsService {
         }catch(err){
             throw err;
         }
-        await this.questionsRepository.update({id : questionId},updateQuestionData);
+        await this.questionRepository.update({id : questionId},updateQuestionData);
     }
 }

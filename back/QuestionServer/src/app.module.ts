@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeORMConfig } from './config/typeorm.config';
-import { QuestionsModule } from './questions/questions.module';
+import { QuestionModule } from './question/question.module';
 import { ConfigModule } from '@nestjs/config';
-import { AnswersModule } from './answers/answers.module';
+import { AnswerModule } from './answer/answer.module';
 
 @Module({
   imports: [
@@ -11,8 +11,8 @@ import { AnswersModule } from './answers/answers.module';
       isGlobal: true,
     }),
     TypeOrmModule.forRoot(typeORMConfig),
-    QuestionsModule,
-    AnswersModule,
+    QuestionModule,
+    AnswerModule,
   ],
   controllers: [],
   providers: [],

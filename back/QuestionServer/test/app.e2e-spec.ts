@@ -1,7 +1,7 @@
 import { UpdateAnswerDto } from './../src/dto/UpdateAnswer.dto';
 import { testTypeORMConfig } from './../src/config/typeorm.config';
-import { AnswersModule } from './../src/answers/answers.module';
-import { QuestionsModule } from './../src/questions/questions.module';
+import { AnswerModule } from '../src/answer/answer.module';
+import { QuestionModule } from './../src/question/question.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { CreateAnswerDto } from './../src/dto/CreateAnswer.dto';
@@ -25,8 +25,8 @@ describe('AppController (e2e)', () => {
           isGlobal: true,
         }),
         TypeOrmModule.forRoot(testTypeORMConfig),
-        QuestionsModule,
-        AnswersModule,
+        QuestionModule,
+        AnswerModule,
       ],
     }).compile();
 

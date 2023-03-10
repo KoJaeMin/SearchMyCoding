@@ -2,10 +2,10 @@ import { UpdateAnswerDto } from '../dto/UpdateAnswer.dto';
 import { CreateAnswerDto } from '../dto/CreateAnswer.dto';
 import { NotFoundException } from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Answer } from '../entities/answers.entity';
+import { Answer } from '../entities/answer.entity';
 import { Repository } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AnswersService } from './answers.service';
+import { AnswerService } from './answer.service';
 
 const mockAnswerRepository = () => ({
   find: jest.fn(),
@@ -19,14 +19,14 @@ type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 
 
 describe('AnswersService', () => {
-  let service: AnswersService;
+  let service: AnswerService;
   let answerRepository: MockRepository<Answer>;
   let mockedAnswer : Answer;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        AnswersService,
+        AnswerService,
         {
           provide : getRepositoryToken(Answer),
           useValue : mockAnswerRepository()
@@ -34,7 +34,7 @@ describe('AnswersService', () => {
       ],
     }).compile();
 
-    service = module.get<AnswersService>(AnswersService);
+    service = module.get<AnswerService>(AnswerService);
     answerRepository = module.get<MockRepository<Answer>>(
       getRepositoryToken(Answer),
     );

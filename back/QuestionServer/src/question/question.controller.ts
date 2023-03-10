@@ -1,14 +1,14 @@
-import { UpdateQuestionDto } from './../dto/UpdateQuestion.dto';
+import { UpdateQuestionDto } from '../dto/UpdateQuestion.dto';
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
-import { Question } from 'src/entities/questions.entity';
+import { Question } from 'src/entities/question.entity';
 import { CreateQuestionDto } from '../dto/CreateQuestion.dto';
-import { QuestionsService } from './questions.service';
+import { QuestionService } from './question.service';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
 @Controller('questions')
 @ApiTags('질문 API')
-export class QuestionsController {
-    constructor(private readonly questionService : QuestionsService){}
+export class QuestionController {
+    constructor(private readonly questionService : QuestionService){}
 
     @Get()
     @ApiOperation({

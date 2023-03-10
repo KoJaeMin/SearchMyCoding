@@ -1,7 +1,7 @@
 import { Entity, Column, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Question } from "./questions.entity";
+import { Question } from "./question.entity";
 
-@Entity('answers')
+@Entity('answer')
 export class Answer{
     @PrimaryGeneratedColumn()
     id : number;

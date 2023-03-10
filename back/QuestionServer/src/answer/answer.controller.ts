@@ -1,14 +1,14 @@
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { UpdateAnswerDto } from './../dto/UpdateAnswer.dto';
-import { Answer } from 'src/entities/answers.entity';
-import { AnswersService } from './answers.service';
+import { UpdateAnswerDto } from '../dto/UpdateAnswer.dto';
+import { Answer } from 'src/entities/answer.entity';
+import { AnswerService } from './answer.service';
 import { CreateAnswerDto } from '../dto/CreateAnswer.dto';
 import { Controller, Post, Body, Get, Param, Patch } from '@nestjs/common';
 
 @Controller('answers')
 @ApiTags("답변 API")
 export class AnswerController {
-    constructor(private readonly answerService : AnswersService){}
+    constructor(private readonly answerService : AnswerService){}
 
     @Get()
     @ApiOperation({

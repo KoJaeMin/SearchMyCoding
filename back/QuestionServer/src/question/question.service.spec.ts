@@ -1,10 +1,10 @@
 import { NotFoundException } from '@nestjs/common';
-import { UpdateQuestionDto } from './../dto/UpdateQuestion.dto';
-import { CreateQuestionDto } from './../dto/CreateQuestion.dto';
-import { Question } from '../entities/questions.entity';
+import { UpdateQuestionDto } from '../dto/UpdateQuestion.dto';
+import { CreateQuestionDto } from '../dto/CreateQuestion.dto';
+import { Question } from '../entities/question.entity';
 import { Repository } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
-import { QuestionsService } from './questions.service';
+import { QuestionService } from './question.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
 const mockQuestionRepository = () => ({
@@ -18,14 +18,14 @@ const mockQuestionRepository = () => ({
 type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 
 describe('QuestionsService', () => {
-  let service: QuestionsService;
+  let service: QuestionService;
   let questionRepository: MockRepository<Question>;
   let mockedQuestion : Question;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        QuestionsService,
+        QuestionService,
         {
           provide : getRepositoryToken(Question),
           useValue : mockQuestionRepository()
@@ -33,7 +33,7 @@ describe('QuestionsService', () => {
       ],
     }).compile();
 
-    service = module.get<QuestionsService>(QuestionsService);
+    service = module.get<QuestionService>(QuestionService);
     questionRepository = module.get<MockRepository<Question>>(
       getRepositoryToken(Question),
     );

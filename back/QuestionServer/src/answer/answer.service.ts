@@ -1,12 +1,12 @@
 import { UpdateAnswerDto } from '../dto/UpdateAnswer.dto';
 import { CreateAnswerDto } from '../dto/CreateAnswer.dto';
-import { Answer } from '../entities/answers.entity';
+import { Answer } from '../entities/answer.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class AnswersService {
+export class AnswerService {
     constructor(
         @InjectRepository(Answer)
         private answerRepository : Repository<Answer>
