@@ -38,7 +38,7 @@ export class AnswerService {
         const {answerType, questionId, contents} = createAnswerDto;
         const newAnswer : Answer = this.answerRepository.create({
             answerType : answerType,
-            questionId : questionId,
+            question : questionId,
             contents : contents
         })
         await this.answerRepository.insert(newAnswer);

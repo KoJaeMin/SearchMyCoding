@@ -7,7 +7,7 @@ export class Answer{
     id : number;
 
     @ManyToOne((type) => Question, (question : Question) => question.id)
-    questionId : number;
+    question : number;
 
     @Column({
         type : "varchar",
