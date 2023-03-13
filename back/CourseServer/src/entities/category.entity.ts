@@ -1,5 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
-import { Course } from "./course.entity";
+import { Entity, Column, PrimaryGeneratedColumn} from "typeorm";
 
 @Entity('category')
 export class Category{
@@ -13,7 +12,4 @@ export class Category{
         nullable : false
     })
     name : string;
-
-    @ManyToOne((type) => Course, (course : Course) => course.id)
-    courseId : number;
 }

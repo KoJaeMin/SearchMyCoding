@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from "typeorm";
 import { Category } from "./category.entity";
 
 @Entity('course')
@@ -39,6 +39,7 @@ export class Course{
     })
     rating : number;
 
-    @OneToMany((type) => Category, (category : Category) => category)
-    category : Category[]
+    @ManyToMany(() => Category)
+    @JoinTable({name: 'course_category'})
+    category? : Category[]
 }
