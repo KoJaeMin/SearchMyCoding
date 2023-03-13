@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from "typeorm";
 import { Category } from "./category.entity";
+import { CourseCategory } from "./coursecategory.entity";
 
 @Entity('course')
 export class Course{
@@ -39,7 +40,20 @@ export class Course{
     })
     rating : number;
 
-    @ManyToMany(() => Category)
-    @JoinTable({name: 'course_category'})
-    category? : Category[]
+    @ManyToMany(
+        () => Category, 
+        category => category.course, //optional
+        {onDelete: 'NO ACTION', onUpdate: 'NO ACTION'})
+        @JoinTable({
+          name: 'course_category',
+          joinColumn: {
+            name: 'course_id',
+            referencedColumnName: 'id',
+          },
+          inverseJoinColumn: {
+            name: 'category_id',
+            referencedColumnName: 'id',
+          },
+        })
+        category?: Category[];
 }

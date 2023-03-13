@@ -1,6 +1,9 @@
 import { ConfigService } from '@nestjs/config';
 import 'dotenv/config';
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
+import { Course } from 'src/entities/course.entity';
+import { Category } from 'src/entities/category.entity';
+import { CourseCategory } from 'src/entities/coursecategory.entity';
 
 const config : ConfigService = new ConfigService();
 
@@ -11,7 +14,7 @@ export const typeORMConfig : TypeOrmModuleOptions = {
         username: config.get<string>('DATABASE_USERNAME'),
         password: config.get<string>('DATABASE_PASSWORD'),
         database: config.get<string>('DATABASE_DATABASE'),
-        // entities: [],
+        entities: [Course, Category, CourseCategory],
         synchronize : false
 }
 
@@ -22,6 +25,6 @@ export const testTypeORMConfig : TypeOrmModuleOptions = {
         username: config.get<string>('TEST_DATABASE_USERNAME'),
         password: config.get<string>('TEST_DATABASE_PASSWORD'),
         database: config.get<string>('TEST_DATABASE_DATABASE'),
-        // entities: [],
+        entities: [Course, Category, CourseCategory],
         synchronize : true
 }

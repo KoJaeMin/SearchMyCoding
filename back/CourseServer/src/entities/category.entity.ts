@@ -1,4 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn} from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany} from "typeorm";
+import { Course } from "./course.entity";
+import { CourseCategory } from "./coursecategory.entity";
 
 @Entity('category')
 export class Category{
@@ -12,4 +14,11 @@ export class Category{
         nullable : false
     })
     name : string;
+
+    @ManyToMany(
+        () => Course,
+        course => course.category,
+        {onDelete: 'NO ACTION', onUpdate: 'NO ACTION',},
+      )
+      course?: Course[];
 }
