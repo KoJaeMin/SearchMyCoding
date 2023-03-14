@@ -42,7 +42,7 @@ describe('AnswersService', () => {
       id : 1,
       answerType : 'E',
       contents : '한 달 동안 못 논 게 한이다! 친구들과 만나 파워 수다!',
-      questionId : 1
+      question : 1
     };
   });
 
@@ -135,7 +135,7 @@ describe('AnswersService', () => {
       id : 1,
       answerType : 'I',
       contents : '에너지 충전해야해.. 집콕.. 침대 최고...',
-      questionId : 1
+      question : 1
     };
 
     it("should patch an answer", async () => {
@@ -152,7 +152,7 @@ describe('AnswersService', () => {
 
       expect(BeforeUpdate.id).toEqual(AfterUpdate.id);
       expect(BeforeUpdate.contents).toEqual(mockedAnswer.contents);
-      expect(BeforeUpdate.questionId).toEqual(AfterUpdate.questionId);
+      expect(BeforeUpdate.question).toEqual(AfterUpdate.question);
       expect(AfterUpdate.id).toEqual(mockedUpdateAnswer.id);
       expect(AfterUpdate.contents).toEqual(mockedUpdateAnswer.contents);
     });
