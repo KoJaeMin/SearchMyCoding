@@ -46,12 +46,12 @@ describe('AppController (e2e)', () => {
     await app.close();
   })
 
-  describe('/questions', () => {
-    const defaultPath = '/questions';
+  describe('/question', () => {
+    const defaultPath = '/question';
     
     it("GET / (200)", ()=>{
       return request(app.getHttpServer())
-        .get('/questions')
+        .get(defaultPath)
         .expect(200);
     });
 
@@ -147,8 +147,8 @@ describe('AppController (e2e)', () => {
     });
   });
 
-  describe("/answers", ()=>{
-    const defaultPath = '/answers'
+  describe("/answer", ()=>{
+    const defaultPath = '/answer'
     it("GET / (200)", ()=>{
       return request(app.getHttpServer())
         .get(defaultPath)

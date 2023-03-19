@@ -5,7 +5,7 @@ import { AnswerService } from './answer.service';
 import { CreateAnswerDto } from '../dto/CreateAnswer.dto';
 import { Controller, Post, Body, Get, Param, Patch } from '@nestjs/common';
 
-@Controller('answers')
+@Controller('answer')
 @ApiTags("답변 API")
 export class AnswerController {
     constructor(private readonly answerService : AnswerService){}

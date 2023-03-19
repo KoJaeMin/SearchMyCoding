@@ -25,9 +25,7 @@ export class AnswerService {
 
     async getAnswerAboutQuestion(questionId : number) : Promise<Answer[]>{
         const FoundAnswers : Answer[] = await this.answerRepository.find({
-            where : {
-                questionId : questionId
-            }
+            question : questionId
         })
         if(!FoundAnswers || FoundAnswers.length === 0)
             throw new NotFoundException(`Answer About Question with Id ${questionId} is not found`);
