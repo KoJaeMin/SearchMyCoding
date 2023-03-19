@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeORMConfig } from './config/typeorm.config';
 import { CourseModule } from './course/course.module';
 import { CategoryModule } from './category/category.module';
+import { CoursecategoryModule } from './coursecategory/coursecategory.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { CategoryModule } from './category/category.module';
     TypeOrmModule.forRoot(typeORMConfig),
     CourseModule,
     CategoryModule,
+    CoursecategoryModule,
   ],
   controllers: [],
   providers: [],
