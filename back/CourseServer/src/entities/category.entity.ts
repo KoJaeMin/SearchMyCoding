@@ -15,10 +15,9 @@ export class Category{
     })
     name : string;
 
-    @ManyToMany(
-        () => Course,
-        course => course.category,
-        {onDelete: 'NO ACTION', onUpdate: 'NO ACTION',},
-      )
-      course?: Course[];
+    @OneToMany(
+        (type) => CourseCategory,
+        (coursecategory : CourseCategory) => coursecategory.course
+    )
+    course? : Course[]
 }

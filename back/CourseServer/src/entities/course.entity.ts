@@ -40,20 +40,9 @@ export class Course{
     })
     rating : number;
 
-    @ManyToMany(
-        () => Category, 
-        category => category.course, //optional
-        {onDelete: 'NO ACTION', onUpdate: 'NO ACTION'})
-        @JoinTable({
-          name: 'course_category',
-          joinColumn: {
-            name: 'course_id',
-            referencedColumnName: 'id',
-          },
-          inverseJoinColumn: {
-            name: 'category_id',
-            referencedColumnName: 'id',
-          },
-        })
-        category?: Category[];
+    @OneToMany(
+      (type) => CourseCategory,
+      (coursecategory : CourseCategory) => coursecategory.category
+    )
+    category? : Category[]
 }
