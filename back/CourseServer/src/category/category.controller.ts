@@ -3,7 +3,6 @@ import { ApiOperation } from '@nestjs/swagger';
 import { CreateCategoryDto } from 'src/dto/CreateCategory.dto';
 import { UpdateCategoryDto } from 'src/dto/UpdateCategory.dto';
 import { Category } from 'src/entities/category.entity';
-import { CourseCategory } from 'src/entities/coursecategory.entity';
 import { CategoryService } from './category.service';
 
 @Controller('category')

@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateCategoryDto } from 'src/dto/CreateCategory.dto';
 import { UpdateCategoryDto } from 'src/dto/UpdateCategory.dto';
 import { Category } from 'src/entities/category.entity';
-import { CourseCategory } from 'src/entities/coursecategory.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
