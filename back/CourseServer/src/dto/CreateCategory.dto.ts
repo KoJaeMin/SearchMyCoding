@@ -7,10 +7,4 @@ export class CreateCategoryDto{
     })
     @IsString()
     readonly name : string;
-
-    @ApiProperty({
-        description : "강의"
-    })
-    @IsNumber()
-    readonly courseId : number;
 }
