@@ -10,19 +10,11 @@ import { Repository } from 'typeorm';
 export class CategoryService {
     constructor(
         @InjectRepository(Category)
-        private categoryRepository : Repository<Category>,
-
-        @InjectRepository(CourseCategory)
-        private coursecategoryRepository : Repository<CourseCategory>
+        private categoryRepository : Repository<Category>
     ){}
 
     async getAllCategory() : Promise<Category[]>{
         return await this.categoryRepository.find();
-    }
-
-    async getAllCourseWithCategory(categoryName : string) : Promise<CourseCategory[]>{
-        const FoundCategory = await this.getOneCategory(categoryName);
-        return await this.coursecategoryRepository.findBy({category : FoundCategory.id});
     }
 
     async getOneCategory(categoryName : string) : Promise<Category>{
