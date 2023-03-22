@@ -85,6 +85,7 @@ describe('CategoryService', () => {
     const mockedCreateCategoryDto : CreateCategoryDto = {
       name : 'web'
     };
+    
     it("should create a category", async () => {
       categoryRepository.find.mockResolvedValue([]);
       const BeforeCreate = (await service.getAllCategory()).length;
@@ -99,6 +100,7 @@ describe('CategoryService', () => {
       expect(AfterCreate).toEqual(BeforeCreate + 1);
     });
   });
+
   describe('patchCategory',()=>{
     const mockedFindName : string = 'web';
     const mockedUpdateCategoryName : string = 'app';
