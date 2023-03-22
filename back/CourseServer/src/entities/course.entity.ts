@@ -28,7 +28,7 @@ export class Course{
         length : 2000,
         nullable : true
     })
-    img_link : string;
+    img_link? : string;
 
     @Column({
         nullable : false
@@ -38,7 +38,7 @@ export class Course{
     @Column({
         nullable : true
     })
-    rating : number;
+    rating? : number;
 
     @OneToMany(
       (type) => CourseCategory,
