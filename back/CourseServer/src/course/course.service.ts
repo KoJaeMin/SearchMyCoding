@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Course } from 'src/entities/course.entity';
 import { CreateCourseDto } from 'src/dto/CreateCourse.dto';
 import { UpdateCourseDto } from 'src/dto/UpdateCourse.dto';
+import { convertValidURI, IsValidRating, IsValidURI } from 'src/utils/format';
 
 @Injectable()
 export class CourseService {
@@ -24,10 +25,10 @@ export class CourseService {
     }
 
     async createCourse(createCourseDto : CreateCourseDto) : Promise<void>{
-        const validURI = this.convertValidURI(createCourseDto.link)
-        const validIMG_URI = createCourseDto.img_link.length > 0 ? this.convertValidURI(createCourseDto.img_link) : '';
+        const validURI = convertValidURI(createCourseDto.link)
+        const validIMG_URI = createCourseDto.img_link.length > 0 ? convertValidURI(createCourseDto.img_link) : '';
 
-        if(!this.IsValidURI(validURI) || (validIMG_URI.length > 0 && !this.IsValidURI(validIMG_URI)) || !this.IsValidRating(createCourseDto.rating))
+        if(!IsValidURI(validURI) || (validIMG_URI.length > 0 && !IsValidURI(validIMG_URI)) || !IsValidRating(createCourseDto.rating))
             throw new BadRequestException(`Bad Format`);
         
         const newCreateCourseDto : CreateCourseDto = {
@@ -49,18 +50,5 @@ export class CourseService {
             throw err;
         }
         await this.courseRepository.update({title : courseTitle},updateCourseDto);
-    }
-
-    IsValidURI(uri : string) : boolean{
-        const URIFormatChecker : RegExp = /^(https|http):\/\/[^\s$.?#].[^\s]*$/g;
-        return URIFormatChecker.test(uri);
-    }
-    
-    IsValidRating(rating : number) : boolean{
-        return rating >= 0 && rating <= 100;
-    }
-
-    convertValidURI(uri : string) : string{
-        return /^(https|http)/.test(uri) ? uri : 'https//' + uri;
     }
 }
