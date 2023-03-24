@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Course } from 'src/entities/course.entity';
@@ -24,8 +24,22 @@ export class CourseService {
     }
 
     async createCourse(createCourseDto : CreateCourseDto) : Promise<void>{
-        const newCategory : Course = this.courseRepository.create(createCourseDto)
-        await this.courseRepository.insert(newCategory);
+        const validURI = this.convertValidURI(createCourseDto.link)
+        const validIMG_URI = createCourseDto.img_link.length > 0 ? this.convertValidURI(createCourseDto.img_link) : '';
+
+        if(!this.IsValidURI(validURI) || (validIMG_URI.length > 0 && !this.IsValidURI(validIMG_URI)) || !this.IsValidRating(createCourseDto.rating))
+            throw new BadRequestException(`Bad Format`);
+        
+        const newCreateCourseDto : CreateCourseDto = {
+            title : createCourseDto.title,
+            link : validURI,
+            price : createCourseDto.price,
+            img_link : validIMG_URI??null,
+            rating : Math.floor(createCourseDto.rating)??null
+        }
+
+        const newCourse : Course = this.courseRepository.create(createCourseDto);
+        await this.courseRepository.insert(newCourse);
     }
 
     async patchCourse(courseTitle : string, updateCourseDto : UpdateCourseDto) : Promise<void>{
@@ -36,5 +50,17 @@ export class CourseService {
         }
         await this.courseRepository.update({title : courseTitle},updateCourseDto);
     }
+
+    IsValidURI(uri : string) : boolean{
+        const URIFormatChecker : RegExp = /^(https|http):\/\/[^\s$.?#].[^\s]*$/g;
+        return URIFormatChecker.test(uri);
+    }
     
+    IsValidRating(rating : number) : boolean{
+        return rating >= 0 && rating <= 100;
+    }
+
+    convertValidURI(uri : string) : string{
+        return /^(https|http)/.test(uri) ? uri : 'https//' + uri;
+    }
 }

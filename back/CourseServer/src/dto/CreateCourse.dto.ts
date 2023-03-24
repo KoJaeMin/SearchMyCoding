@@ -32,5 +32,5 @@ export class CreateCourseDto{
     })
     @IsOptional()
     @IsNumber()
-    readonly rating : number;
+    readonly rating? : number;
 }
