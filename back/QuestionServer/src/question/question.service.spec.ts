@@ -110,6 +110,7 @@ describe('QuestionsService', () => {
       contents : '한 달 동안 공부, 프로젝트에 매진해 있어서 제대로 쉰 날이 하루도 없다... <br/>가까스로 다 끝낸 뒤 나는?',
       activate : true
     }
+
     it("should create a question", async () => {
       questionRepository.find.mockResolvedValue([]);
       const BeforeCreate = (await service.getAllQuestions()).length;
@@ -123,6 +124,8 @@ describe('QuestionsService', () => {
 
       expect(AfterCreate).toEqual(BeforeCreate + 1);
     });
+
+    it.todo("dto error : should return a BadRequestException");
   });
 
   describe("patchQuestion", ()=>{
@@ -167,5 +170,7 @@ describe('QuestionsService', () => {
         expect(e).toBeInstanceOf(NotFoundException);
       }
     });
+
+    it.todo("dto error : should return a BadRequestException");
   });
 });

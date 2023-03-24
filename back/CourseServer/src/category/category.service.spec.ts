@@ -99,6 +99,8 @@ describe('CategoryService', () => {
 
       expect(AfterCreate).toEqual(BeforeCreate + 1);
     });
+
+    it.todo("dto error : should return a BadRequestException");
   });
 
   describe('patchCategory',()=>{

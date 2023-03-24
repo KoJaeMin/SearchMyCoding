@@ -94,6 +94,7 @@ describe('AnswersService', () => {
       expect(answerRepository.find).toHaveBeenCalledTimes(1);
       expect(result).toEqual(mockedAnswer);
     });
+    
     it("should return a NotFoundException", async () => {
       try{
         await service.getOneAnswer(mockedErrorQuestionId);
@@ -109,6 +110,7 @@ describe('AnswersService', () => {
       contents : '한 달 동안 못 논 게 한이다! 친구들과 만나 파워 수다!',
       questionId : 1
     }
+
     it("should create an answer", async () => {
       answerRepository.find.mockResolvedValue([]);
       const BeforeCreate = (await service.getAllAnswer()).length;
@@ -119,9 +121,10 @@ describe('AnswersService', () => {
       answerRepository.find.mockResolvedValue([mockedAnswer]);
       const AfterCreate = (await service.getAllAnswer()).length;
       expect(answerRepository.find).toHaveBeenCalledTimes(2);
-
       expect(AfterCreate).toEqual(BeforeCreate + 1);
     });
+
+    it.todo("dto error : should return a BadRequestException");
   });
 
   describe("patchAnswer", ()=>{
@@ -167,5 +170,7 @@ describe('AnswersService', () => {
         expect(e).toBeInstanceOf(NotFoundException);
       }
     });
+
+    it.todo("dto error : should return a BadRequestException");
   });
 });
