@@ -8,5 +8,5 @@ export function IsValidRating(rating : number) : boolean{
 }
 
 export function convertValidURI(uri : string) : string{
-    return /^(https|http)/.test(uri) ? uri : 'https//' + uri;
+    return /^(https|http):\/\//.test(uri) ? uri : 'https://' + uri;
 }
