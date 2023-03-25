@@ -25,18 +25,17 @@ export class CourseService {
     }
 
     async createCourse(createCourseDto : CreateCourseDto) : Promise<void>{
-        const validURI = convertValidURI(createCourseDto.link)
-        const validIMG_URI = createCourseDto.img_link.length > 0 ? convertValidURI(createCourseDto.img_link) : '';
+        const [validURI, validIMG_URI] = await this.convertFormat(createCourseDto.link, createCourseDto.img_link);
 
-        if(!IsValidURI(validURI) || (validIMG_URI.length > 0 && !IsValidURI(validIMG_URI)) || !IsValidRating(createCourseDto.rating))
+        if(!IsValidURI(validURI))
             throw new BadRequestException(`Bad Format`);
         
         const newCreateCourseDto : CreateCourseDto = {
             title : createCourseDto.title,
             link : validURI,
             price : createCourseDto.price,
-            img_link : validIMG_URI??null,
-            rating : Math.floor(createCourseDto.rating)??null
+            img_link : IsValidURI(validIMG_URI) ? validIMG_URI : null,
+            rating : IsValidRating(createCourseDto.rating) ? Math.floor(createCourseDto.rating) : null
         }
 
         const newCourse : Course = this.courseRepository.create(createCourseDto);
@@ -49,6 +48,20 @@ export class CourseService {
         }catch(err){
             throw err;
         }
+        const [validURI, validIMG_URI] = await this.convertFormat(updateCourseDto.link, updateCourseDto.img_link);
+        
+        if(validURI !== null && !IsValidURI(validURI))
+            throw new BadRequestException(`Bad Format`);
+
+        if(validIMG_URI !== null && !IsValidURI(validIMG_URI))
+            throw new BadRequestException(`Bad Format`);
+
         await this.courseRepository.update({title : courseTitle},updateCourseDto);
+    }
+
+    async convertFormat(link : string | null, img_link : string | null){
+        const validURI = !!link ? convertValidURI(link) : null;
+        const validIMG_URI = !!img_link ? convertValidURI(img_link) : null;
+        return [validURI, validIMG_URI];
     }
 }
