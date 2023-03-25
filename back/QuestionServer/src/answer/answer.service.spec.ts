@@ -1,6 +1,6 @@
 import { UpdateAnswerDto } from '../dto/UpdateAnswer.dto';
 import { CreateAnswerDto } from '../dto/CreateAnswer.dto';
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Answer } from '../entities/answer.entity';
 import { Repository } from 'typeorm';
@@ -111,6 +111,11 @@ describe('AnswersService', () => {
       questionId : 1
     }
 
+    const mockedErrorCreateAnswerDto = {
+      contents : '한 달 동안 못 논 게 한이다! 친구들과 만나 파워 수다!',
+      questionId : 1
+    }
+
     it("should create an answer", async () => {
       answerRepository.find.mockResolvedValue([]);
       const BeforeCreate = (await service.getAllAnswer()).length;
@@ -124,7 +129,13 @@ describe('AnswersService', () => {
       expect(AfterCreate).toEqual(BeforeCreate + 1);
     });
 
-    it.todo("dto error : should return a BadRequestException");
+    it("should return a BadRequestException", async () => {
+      try{
+        await service.createAnswer(mockedErrorCreateAnswerDto as CreateAnswerDto);
+      }catch(e){
+        expect(e).toBeInstanceOf(BadRequestException);
+      }
+    });
   });
 
   describe("patchAnswer", ()=>{
@@ -140,6 +151,11 @@ describe('AnswersService', () => {
       contents : '에너지 충전해야해.. 집콕.. 침대 최고...',
       question : 1
     };
+    const mockedErrorUpdateAnswerDto = {
+      contents : '한 달 동안 못 논 게 한이다! 친구들과 만나 파워 수다!',
+      questionId : 1,
+      author : "hacker"
+    }
 
     it("should patch an answer", async () => {
       answerRepository.findOne.mockResolvedValue(mockedAnswer);
@@ -171,6 +187,15 @@ describe('AnswersService', () => {
       }
     });
 
-    it.todo("dto error : should return a BadRequestException");
+    it("should return a BadRequestException", async () => {
+      answerRepository.findOne.mockResolvedValue(mockedAnswer);
+      const BeforeUpdate = await service.getOneAnswer(mockedUpdateAnswerId);
+      expect(answerRepository.findOne).toHaveBeenCalledTimes(1);
+      try{
+        await service.patchAnswer(mockedUpdateAnswerId, mockedErrorUpdateAnswerDto as UpdateAnswerDto);
+      }catch(e){
+        expect(e).toBeInstanceOf(BadRequestException);
+      }
+    });
   });
 });

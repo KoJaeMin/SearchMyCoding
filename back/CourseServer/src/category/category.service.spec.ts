@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CreateCategoryDto } from 'src/dto/CreateCategory.dto';
@@ -85,6 +85,11 @@ describe('CategoryService', () => {
     const mockedCreateCategoryDto : CreateCategoryDto = {
       name : 'web'
     };
+
+    const mockedErrorCreateCategoryDto = {
+      name : 'app',
+      link : 'www.example.abc'
+    }
     
     it("should create a category", async () => {
       categoryRepository.find.mockResolvedValue([]);
@@ -100,7 +105,13 @@ describe('CategoryService', () => {
       expect(AfterCreate).toEqual(BeforeCreate + 1);
     });
 
-    it.todo("dto error : should return a BadRequestException");
+    it("should return a BadRequestException", async () => {
+      try{
+        await service.createCategory(mockedErrorCreateCategoryDto as CreateCategoryDto);
+      }catch(e){
+        expect(e).toBeInstanceOf(BadRequestException);
+      }
+    });
   });
 
   describe('patchCategory',()=>{
@@ -114,6 +125,11 @@ describe('CategoryService', () => {
       id : 1,
       name : 'app'
     };
+
+    const mockedErrorUpdateCategoryDto = {
+      name : 'app',
+      link : 'www.example.abc'
+    }
 
     it("should patch a category", async () => {
       categoryRepository.findOneBy.mockResolvedValue(mockedCategory);
@@ -139,6 +155,17 @@ describe('CategoryService', () => {
         await service.patchCategory(mockedErrorUpdateCategoryName, mockedUpdateCategoryDto);
       }catch(e){
         expect(e).toBeInstanceOf(NotFoundException);
+      }
+    });
+
+    it("should return a BadRequestException", async () => {
+      categoryRepository.findOneBy.mockResolvedValue(mockedCategory);
+      const BeforeUpdate = await service.getOneCategory(mockedFindName);
+      expect(categoryRepository.findOneBy).toHaveBeenCalledTimes(1);
+      try{
+        await service.patchCategory(mockedFindName, mockedErrorUpdateCategoryDto as UpdateCategoryDto);
+      }catch(e){
+        expect(e).toBeInstanceOf(BadRequestException);
       }
     });
   });

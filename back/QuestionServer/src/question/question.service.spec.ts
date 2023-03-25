@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { UpdateQuestionDto } from '../dto/UpdateQuestion.dto';
 import { CreateQuestionDto } from '../dto/CreateQuestion.dto';
 import { Question } from '../entities/question.entity';
@@ -111,6 +111,10 @@ describe('QuestionsService', () => {
       activate : true
     }
 
+    const mockedErrorCreateQuestionDto = {
+      questionType : 'EI'
+    }
+
     it("should create a question", async () => {
       questionRepository.find.mockResolvedValue([]);
       const BeforeCreate = (await service.getAllQuestions()).length;
@@ -125,7 +129,13 @@ describe('QuestionsService', () => {
       expect(AfterCreate).toEqual(BeforeCreate + 1);
     });
 
-    it.todo("dto error : should return a BadRequestException");
+    it("should return a BadRequestException", async () => {
+      try{
+        await service.createQuestion(mockedErrorCreateQuestionDto as CreateQuestionDto);
+      }catch(e){
+        expect(e).toBeInstanceOf(BadRequestException);
+      }
+    });
   });
 
   describe("patchQuestion", ()=>{
@@ -140,6 +150,9 @@ describe('QuestionsService', () => {
       contents : '한 달 동안 공부, 프로젝트에 매진해 있어서 제대로 쉰 날이 하루도 없다... <br/>가까스로 다 끝낸 뒤 나는?',
       activate : false
     };
+    const mockedErrorUpdateQuestionDto = {
+      author : "noname"
+    }
 
     it("should patch a question", async () => {
       questionRepository.findOne.mockResolvedValue(mockedQuestion);
@@ -171,6 +184,15 @@ describe('QuestionsService', () => {
       }
     });
 
-    it.todo("dto error : should return a BadRequestException");
+    it("should return a BadRequestException", async () => {
+      questionRepository.findOne.mockResolvedValue(mockedQuestion);
+      const BeforeUpdate = await service.getOneQuestion(mockedUpdateQuestionId);
+      expect(questionRepository.findOne).toHaveBeenCalledTimes(1);
+      try{
+        await service.patchQuestion(mockedUpdateQuestionId, mockedErrorUpdateQuestionDto as UpdateQuestionDto);
+      }catch(e){
+        expect(e).toBeInstanceOf(BadRequestException);
+      }
+    });
   });
 });
