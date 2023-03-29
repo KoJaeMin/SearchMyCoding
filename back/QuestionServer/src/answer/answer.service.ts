@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 export class AnswerService {
     constructor(
         @InjectRepository(Answer)
-        private answerRepository : Repository<Answer>
+        private readonly answerRepository : Repository<Answer>
     ){}
 
     async getAllAnswer() : Promise<Answer[]>{

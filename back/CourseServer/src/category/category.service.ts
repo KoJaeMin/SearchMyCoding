@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 export class CategoryService {
     constructor(
         @InjectRepository(Category)
-        private categoryRepository : Repository<Category>
+        private readonly categoryRepository : Repository<Category>
     ){}
 
     async getAllCategory() : Promise<Category[]>{

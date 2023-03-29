@@ -9,7 +9,7 @@ import { Question } from '../entities/question.entity';
 export class QuestionService {
     constructor(
         @InjectRepository(Question)
-        private questionRepository : Repository<Question>
+        private readonly questionRepository : Repository<Question>
     ){}
 
     async getAllQuestions() : Promise<Question[]>{

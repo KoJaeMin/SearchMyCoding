@@ -10,7 +10,7 @@ import { convertValidURI, IsValidRating, IsValidURI } from 'src/utils/format';
 export class CourseService {
     constructor(
         @InjectRepository(Course)
-        private courseRepository : Repository<Course>
+        private readonly courseRepository : Repository<Course>
     ){}
 
     async getAllCourse() : Promise<Course[]>{
