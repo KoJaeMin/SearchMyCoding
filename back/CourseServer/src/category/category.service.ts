@@ -16,7 +16,14 @@ export class CategoryService {
         return await this.categoryRepository.find();
     }
 
-    async getOneCategory(categoryName : string) : Promise<Category>{
+    async getOneCategoryById(categoryId : number) : Promise<Category>{
+        const FoundCategory : Category = await this.categoryRepository.findOneBy({id : categoryId})
+        if(!FoundCategory)
+            throw new NotFoundException(`Category with Name ${categoryId} is not found.`);
+        return FoundCategory;
+    }
+
+    async getOneCategoryByName(categoryName : string) : Promise<Category>{
         const FoundCategory : Category = await this.categoryRepository.findOneBy({name : categoryName})
         if(!FoundCategory)
             throw new NotFoundException(`Category with Name ${categoryName} is not found.`);
@@ -33,7 +40,7 @@ export class CategoryService {
 
     async patchCategory(categoryName : string, updateCategoryDto : UpdateCategoryDto) : Promise<void>{
         try{
-            await this.getOneCategory(categoryName);
+            await this.getOneCategoryByName(categoryName);
         }catch(err){
             throw err;
         }

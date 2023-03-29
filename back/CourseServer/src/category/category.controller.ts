@@ -20,15 +20,23 @@ export class CategoryController {
         return await this.categoryService.getAllCategory();
     }
 
+    @Get(':id')
+    @ApiOperation({
+        "summary" : "Id를 이용한 카테고리 조회하는 요청",
+        "description" : "Id를 이용하여 카테고리을 조회하고 json 형태로 반환한다.(단, 이름에 맞는 카테고리을 찾지 못한다면 에러를 반환한다.)"
+    })
+    async getOneCategoryById(@Param("id") categoryId : number) : Promise<Category>{
+        return await this.categoryService.getOneCategoryById(categoryId);
+    }
+
     @Get(':name')
     @ApiOperation({
         "summary" : "이름을 이용한 카테고리 조회하는 요청",
         "description" : "이름을 이용하여 카테고리을 조회하고 json 형태로 반환한다.(단, 이름에 맞는 카테고리을 찾지 못한다면 에러를 반환한다.)"
     })
-    async getOneCategory(@Param("name") categoryName : string) : Promise<Category>{
-        return await this.categoryService.getOneCategory(categoryName);
+    async getOneCategoryByName(@Param("name") categoryName : string) : Promise<Category>{
+        return await this.categoryService.getOneCategoryByName(categoryName);
     }
-
 
     @Post('')
     @ApiOperation({
