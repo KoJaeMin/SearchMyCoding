@@ -64,13 +64,13 @@ describe('CoursesService', () => {
   });
 
   describe('getOneCourse',()=>{
-    const findTitle : string = '웹의 이해';
-    const findErrorTitle : string = '앱의 이해';
+    const findId : number = 1;
+    const findErrorId : number = 999;
 
     it('should find a course',async ()=>{
       courseRepository.findOneBy.mockResolvedValue(mockedCourse);
 
-      const result = await service.getOneCourse(findTitle);
+      const result = await service.getOneCourseById(findId);
       expect(courseRepository.findOneBy).toHaveBeenCalledTimes(1);
 
       expect(result).toEqual(mockedCourse);
@@ -78,7 +78,29 @@ describe('CoursesService', () => {
 
     it("should return a NotFoundException", async () => {
       try{
-        await service.getOneCourse(findErrorTitle);
+        await service.getOneCourseById(findErrorId);
+      }catch(e){
+        expect(e).toBeInstanceOf(NotFoundException);
+      }
+    });
+  });
+
+  describe('getOneCourseTitle',()=>{
+    const findTitle : string = '웹의 이해';
+    const findErrorTitle : string = '앱의 이해';
+
+    it('should find a course',async ()=>{
+      courseRepository.findOneBy.mockResolvedValue(mockedCourse);
+
+      const result = await service.getOneCourseByTitle(findTitle);
+      expect(courseRepository.findOneBy).toHaveBeenCalledTimes(1);
+
+      expect(result).toEqual(mockedCourse);
+    });
+
+    it("should return a NotFoundException", async () => {
+      try{
+        await service.getOneCourseByTitle(findErrorTitle);
       }catch(e){
         expect(e).toBeInstanceOf(NotFoundException);
       }
@@ -143,13 +165,13 @@ describe('CoursesService', () => {
 
     it("should patch a course", async () => {
       courseRepository.findOneBy.mockResolvedValue(mockedCourse);
-      const BeforeUpdate = await service.getOneCourse(mockedFindTitle);
+      const BeforeUpdate = await service.getOneCourseByTitle(mockedFindTitle);
       expect(courseRepository.findOneBy).toHaveBeenCalledTimes(1);
       
       const result = await service.patchCourse(mockedFindTitle, mockedUpdateCourseDto)
 
       courseRepository.findOneBy.mockResolvedValue(mockedUpdateCourse);
-      const AfterUpdate = await service.getOneCourse(mockedUpdateCourseTitle);
+      const AfterUpdate = await service.getOneCourseByTitle(mockedUpdateCourseTitle);
       expect(courseRepository.findOneBy).toHaveBeenCalledTimes(3);
 
       expect(BeforeUpdate.id).toEqual(AfterUpdate.id);
@@ -159,7 +181,7 @@ describe('CoursesService', () => {
     
     it("should return a NotFoundException", async () => {
       courseRepository.findOneBy.mockResolvedValue(mockedCourse);
-      const BeforeUpdate = await service.getOneCourse(mockedFindTitle);
+      const BeforeUpdate = await service.getOneCourseByTitle(mockedFindTitle);
       expect(courseRepository.findOneBy).toHaveBeenCalledTimes(1);
       try{
         await service.patchCourse(mockedErrorUpdateCourseTitle, mockedUpdateCourseDto);
@@ -170,7 +192,7 @@ describe('CoursesService', () => {
     
     it("should return a BadRequestException", async () => {
       courseRepository.findOneBy.mockResolvedValue(mockedCourse);
-      const BeforeUpdate = await service.getOneCourse(mockedFindTitle);
+      const BeforeUpdate = await service.getOneCourseByTitle(mockedFindTitle);
       expect(courseRepository.findOneBy).toHaveBeenCalledTimes(1);
       try{
         await service.patchCourse(mockedFindTitle, mockedErrorPatchCourseDto as UpdateCourseDto);

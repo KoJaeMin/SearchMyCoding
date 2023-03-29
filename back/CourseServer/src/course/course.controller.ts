@@ -20,13 +20,22 @@ export class CourseController {
         return await this.courseService.getAllCourse();
     }
 
+    @Get(':id')
+    @ApiOperation({
+        "summary" : "Id를 이용한 강의 조회하는 요청",
+        "description" : "Id를 이용하여 강의을 조회하고 json 형태로 반환한다.(단, 제목에 맞는 강의을 찾지 못한다면 에러를 반환한다.)"
+    })
+    async getOneCourseById(@Param("id") courseId : number) : Promise<Course>{
+        return await this.courseService.getOneCourseById(courseId);
+    }
+
     @Get(':title')
     @ApiOperation({
         "summary" : "제목을 이용한 강의 조회하는 요청",
         "description" : "제목을 이용하여 강의을 조회하고 json 형태로 반환한다.(단, 제목에 맞는 강의을 찾지 못한다면 에러를 반환한다.)"
     })
-    async getOneCourse(@Param("title") courseTitle : string) : Promise<Course>{
-        return await this.courseService.getOneCourse(courseTitle);
+    async getOneCourseByTitle(@Param("title") courseTitle : string) : Promise<Course>{
+        return await this.courseService.getOneCourseByTitle(courseTitle);
     }
 
 

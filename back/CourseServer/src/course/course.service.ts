@@ -17,7 +17,14 @@ export class CourseService {
         return await this.courseRepository.find();
     }
 
-    async getOneCourse(courseTitle : string) : Promise<Course>{
+    async getOneCourseById(courseId : number) : Promise<Course>{
+        const FoundCourse : Course = await this.courseRepository.findOneBy({id : courseId})
+        if(!FoundCourse)
+            throw new NotFoundException(`Course with Id ${courseId} is not found.`);
+        return FoundCourse;
+    }
+
+    async getOneCourseByTitle(courseTitle : string) : Promise<Course>{
         const FoundCourse : Course = await this.courseRepository.findOneBy({title : courseTitle})
         if(!FoundCourse)
             throw new NotFoundException(`Course with Title ${courseTitle} is not found.`);
@@ -44,7 +51,7 @@ export class CourseService {
 
     async patchCourse(courseTitle : string, updateCourseDto : UpdateCourseDto) : Promise<void>{
         try{
-            await this.getOneCourse(courseTitle);
+            await this.getOneCourseByTitle(courseTitle);
         }catch(err){
             throw err;
         }
