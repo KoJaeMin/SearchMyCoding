@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
-import { ApiOperation } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { CreateCourseDto } from 'src/dto/CreateCourse.dto';
 import { UpdateCourseDto } from 'src/dto/UpdateCourse.dto';
 import { Course } from 'src/entities/course.entity';
@@ -12,6 +12,17 @@ export class CourseController {
     ){}
 
     @Get()
+    @ApiOperation({
+        "summary" : "모든 강의 조회하는 요청",
+        "description" : "모든 강의 배열 형태로 반환한다."
+    })
+    @ApiQuery({ name: 'order', required: false, type: String })
+    async getCourseList(@Query('list') listNumber : number, @Query('numberOfCourseInList') numberOfCourseInList : number, @Query('order') order? : 'asc' | 'desc') : Promise<Course[]>{
+        return await this.courseService.getCourseList(listNumber, numberOfCourseInList, order);
+    }
+
+
+    @Get('/all')
     @ApiOperation({
         "summary" : "모든 강의 조회하는 요청",
         "description" : "모든 강의 배열 형태로 반환한다."

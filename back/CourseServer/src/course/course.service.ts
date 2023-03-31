@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { Course } from 'src/entities/course.entity';
 import { CreateCourseDto } from 'src/dto/CreateCourse.dto';
 import { UpdateCourseDto } from 'src/dto/UpdateCourse.dto';
@@ -21,6 +21,18 @@ export class CourseService {
         const FoundCourse : Course = await this.courseRepository.findOneBy({id : courseId})
         if(!FoundCourse)
             throw new NotFoundException(`Course with Id ${courseId} is not found.`);
+        return FoundCourse;
+    }
+
+    async getCourseList(listNumber : number, numberOfCourseInList : number, order : 'asc' | 'desc' | undefined | null) : Promise<Course[]>{
+        const findOption : FindManyOptions<Course> = {
+            skip : (listNumber - 1) * numberOfCourseInList,
+            take : numberOfCourseInList
+        }
+
+        findOption.order = order === 'desc' ? {title : 'DESC', id : 'ASC'} : {title : 'ASC', id : 'ASC'};
+
+        const FoundCourse : Course[] = await this.courseRepository.find(findOption);
         return FoundCourse;
     }
 

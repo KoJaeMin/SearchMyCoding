@@ -63,6 +63,21 @@ describe('CoursesService', () => {
     });
   });
 
+  describe('getCourseList',()=>{
+    const mockedCourseList : Course[] = new Array<Course>(10);
+    const mockedListNumber : number = 1;
+    const mockedNumberOfCourseInList : number = 10;
+
+    it(`should find ${mockedNumberOfCourseInList} course`, async ()=>{
+      courseRepository.find.mockResolvedValue(mockedCourseList);
+      const result = await service.getCourseList(mockedListNumber, mockedNumberOfCourseInList, null);
+
+      expect(courseRepository.find).toHaveBeenCalledTimes(1);
+
+      expect(result.length).toEqual(mockedNumberOfCourseInList);
+    })
+  })
+
   describe('getOneCourse',()=>{
     const findId : number = 1;
     const findErrorId : number = 999;
