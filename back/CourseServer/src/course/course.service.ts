@@ -29,10 +29,17 @@ export class CourseService {
             skip : (listNumber - 1) * numberOfCourseInList,
             take : numberOfCourseInList
         }
-
         findOption.order = order === 'desc' ? {title : 'DESC', id : 'ASC'} : {title : 'ASC', id : 'ASC'};
 
         const FoundCourse : Course[] = await this.courseRepository.find(findOption);
+        return FoundCourse;
+    }
+
+    async getCourseListByIdList(idArray : number[]) : Promise<Course[]>{
+        const FoundCourse : Course[] = await this.courseRepository
+            .createQueryBuilder('clbi')
+            .where("id in (:array)", {array : idArray})
+            .getMany();
         return FoundCourse;
     }
 
