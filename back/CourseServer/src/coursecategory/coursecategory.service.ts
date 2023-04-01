@@ -7,7 +7,7 @@ import { UpdateCourseCategoryDto } from 'src/dto/UpdateCourseCatgory.dto';
 import { Category } from 'src/entities/category.entity';
 import { Course } from 'src/entities/course.entity';
 import { CourseCategory } from 'src/entities/coursecategory.entity';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 
 @Injectable()
 export class CoursecategoryService {
@@ -18,14 +18,29 @@ export class CoursecategoryService {
         private readonly categoryService : CategoryService
     ){}
 
-    async getAllCourseIdWithCategoryName(categoryName : string) : Promise<CourseCategory[]>{
+    async getCourseByCategoryName(categoryName : string, start : number, count : number) : Promise<Course[]>{
         const FoundCategory : Category = await this.categoryService.getOneCategoryByName(categoryName);
-        return await this.coursecategoryRepository.findBy({category : FoundCategory.id});
+        const CourseIdList : CourseCategory[] = await this.coursecategoryRepository
+                            .createQueryBuilder('cil')
+                            .select('course')
+                            .where(`category = ${FoundCategory.id}`)
+                            .distinct()
+                            .skip(start - 1)
+                            .take(count)
+                            .getMany();
+        
+        //// courseIdList에서 나온 아이디들을 course 배열로 전환
+        const FoundCourseIdList : number[] = CourseIdList.map((courseObj)=>courseObj.course);
+        const FoundCourse : Course[] = await this.courseService.getCourseListByIdList(FoundCourseIdList);
+        return FoundCourse;
     }
 
-    async getAllCategoryIdWithCourseTitle(courseTitle : string) : Promise<CourseCategory[]>{
+    async getAllCategoryIdByCourseTitle(courseTitle : string) : Promise<CourseCategory[]>{
         const FoundCourse : Course = await this.courseService.getOneCourseByTitle(courseTitle);
-        return await this.coursecategoryRepository.findBy({course : FoundCourse.id});
+        const FoundOption : FindManyOptions<CourseCategory> = {
+            where : {course : FoundCourse.id}
+        };
+        return await this.coursecategoryRepository.find(FoundOption);
     }
 
     async createCourseCategory(createCourseCategory : CreateCourseCategoryDto) : Promise<void>{
