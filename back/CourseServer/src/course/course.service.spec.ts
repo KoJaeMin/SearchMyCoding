@@ -12,7 +12,14 @@ const mockCourseRepository = () => ({
   findOneBy: jest.fn(),
   create: jest.fn(),
   update: jest.fn(),
-  insert: jest.fn()
+  insert: jest.fn(),
+  createQueryBuilder: jest.fn().mockReturnValue({
+  //   /// mockReturnThis()은  jest.fn(()=>this)의 Sugar Function으로 this를 반환하여 chained method를 mocking하는 것이 가능하도록 해줍니다.
+  //   /// 출처 : https://velog.io/@hkja0111/NestJS-11-Unit-Test-QueryBuilder
+  //   ///
+    where: jest.fn().mockReturnThis(),
+    getMany: jest.fn().mockReturnThis()
+  })
 });
 
 type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
@@ -20,7 +27,7 @@ type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 describe('CoursesService', () => {
   let service: CourseService;
   let courseRepository: MockRepository<Course>;
-  let mockedCourse : Course;
+  let mockedCourse: Course;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -63,22 +70,7 @@ describe('CoursesService', () => {
     });
   });
 
-  describe('getCourseList',()=>{
-    const mockedCourseList : Course[] = new Array<Course>(10);
-    const mockedListNumber : number = 1;
-    const mockedNumberOfCourseInList : number = 10;
-
-    it(`should find ${mockedNumberOfCourseInList} course`, async ()=>{
-      courseRepository.find.mockResolvedValue(mockedCourseList);
-      const result = await service.getCourseList(mockedListNumber, mockedNumberOfCourseInList, null);
-
-      expect(courseRepository.find).toHaveBeenCalledTimes(1);
-
-      expect(result.length).toEqual(mockedNumberOfCourseInList);
-    })
-  })
-
-  describe('getOneCourse',()=>{
+  describe('getOneCourseById',()=>{
     const findId : number = 1;
     const findErrorId : number = 999;
 
@@ -100,7 +92,40 @@ describe('CoursesService', () => {
     });
   });
 
-  describe('getOneCourseTitle',()=>{
+  describe('getCourseList',()=>{
+    const mockedCourseList : Course[] = new Array<Course>(10);
+    const mockedListNumber : number = 1;
+    const mockedNumberOfCourseInList : number = 10;
+
+    it(`should find ${mockedNumberOfCourseInList} course`, async ()=>{
+      courseRepository.find.mockResolvedValue(mockedCourseList);
+      const result = await service.getCourseList(mockedListNumber, mockedNumberOfCourseInList, null);
+
+      expect(courseRepository.find).toHaveBeenCalledTimes(1);
+
+      expect(result.length).toEqual(mockedNumberOfCourseInList);
+    })
+  });
+
+  describe('getCourseListByIdList', ()=>{
+    /// https://stackoverflow.com/questions/66904523/what-would-be-a-proper-way-to-test-typeorms-querybuilder-chaining-methods
+    const mockedCourseList : Course[] = [];
+    const mockedIdList : number[] = [];
+    it('should find course list by id list', async()=>{
+      /// courseRepository.createQueryBuilder.getMany.mockResolvedValue(mockedIdList);
+      /// 위와 같이 그냥 jest.fn()으로 하면 where에서 에러 발생
+      /// 
+      jest
+        .spyOn(courseRepository.createQueryBuilder(),'getMany')/// Creates a mock function similar to jest.fn but also tracks calls to object[methodName]
+        .mockResolvedValue(mockedCourseList);
+      const result = await service.getCourseListByIdList(mockedIdList);
+      expect(courseRepository.createQueryBuilder().getMany).toHaveBeenCalled();
+      console.log(result)
+      expect(result.length).toEqual(mockedCourseList.length)
+    });
+  })
+
+  describe('getOneCourseByTitle',()=>{
     const findTitle : string = '웹의 이해';
     const findErrorTitle : string = '앱의 이해';
 
