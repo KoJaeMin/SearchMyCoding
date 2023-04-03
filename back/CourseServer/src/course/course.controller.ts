@@ -12,7 +12,7 @@ export class CourseController {
         private readonly courseService : CourseService
     ){}
 
-    @Get()
+    @Get('bundle')
     @ApiOperation({
         "summary" : "일정 범위의 강의 조회하는 요청",
         "description" : "일정 범위를 지정 후 강의 배열 형태로 반환한다."
@@ -22,7 +22,7 @@ export class CourseController {
         return await this.courseService.getCourseList(listNumber, numberOfCourseInList, order);
     }
 
-    @Get()
+    @Get('/list')
     @ApiOperation({
         "summary" : "Id List에 해당하는 강의 리스트를 조회하는 요청",
         "description" : "Id List에 해당하는 강의들을 배열 형태로 반환한다."

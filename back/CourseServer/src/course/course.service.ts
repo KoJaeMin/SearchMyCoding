@@ -35,10 +35,10 @@ export class CourseService {
         return FoundCourse;
     }
 
-    async getCourseListByIdList(idArray : number[]) : Promise<Course[]>{
+    async getCourseListByIdList(idList : number[]) : Promise<Course[]>{
         const FoundCourse : Course[] = await this.courseRepository
-            .createQueryBuilder('clbi')
-            .where("id in (:array)", {array : idArray})
+            .createQueryBuilder('clbil')
+            .where("id in (:...array)", {array : idList})
             .getMany();
         return FoundCourse;
     }
