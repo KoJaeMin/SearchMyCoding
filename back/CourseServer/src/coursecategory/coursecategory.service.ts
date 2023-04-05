@@ -20,7 +20,7 @@ export class CoursecategoryService {
 
     async getCourseByCategoryName(categoryName : string, start : number, count : number) : Promise<Course[]>{
         const FoundCategory : Category = await this.categoryService.getOneCategoryByName(categoryName);
-        const CourseIdList : CourseCategory[] = await this.coursecategoryRepository
+        const CourseList : CourseCategory[] = await this.coursecategoryRepository
                             .createQueryBuilder('cil')
                             .select('course')
                             .where(`category = ${FoundCategory.id}`)
@@ -30,17 +30,20 @@ export class CoursecategoryService {
                             .getMany();
         
         //// courseIdList에서 나온 아이디들을 course 배열로 전환
-        const FoundCourseIdList : number[] = CourseIdList.map((courseObj)=>courseObj.course);
+        const FoundCourseIdList : number[] = CourseList.map((courseObj)=>courseObj.course);
         const FoundCourse : Course[] = await this.courseService.getCourseListByIdList(FoundCourseIdList);
         return FoundCourse;
     }
 
-    async getAllCategoryIdByCourseTitle(courseTitle : string) : Promise<CourseCategory[]>{
+    async getAllCategoryIdByCourseTitle(courseTitle : string) : Promise<Category[]>{
         const FoundCourse : Course = await this.courseService.getOneCourseByTitle(courseTitle);
         const FoundOption : FindManyOptions<CourseCategory> = {
             where : {course : FoundCourse.id}
         };
-        return await this.coursecategoryRepository.find(FoundOption);
+        const CategoryList : CourseCategory[] = await this.coursecategoryRepository.find(FoundOption);
+        const FoundCategoryIdList : number[] = CategoryList.map((categoryObj)=>categoryObj.category);
+        const FoundCategoryList : Category[] = await this.categoryService.getCategoryListByIdList(FoundCategoryIdList);
+        return FoundCategoryList;
     }
 
     async createCourseCategory(createCourseCategory : CreateCourseCategoryDto) : Promise<void>{
