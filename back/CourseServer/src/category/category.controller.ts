@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { CreateCategoryDto } from 'src/dto/CreateCategory.dto';
+import { SelectNumberArrayDto } from 'src/dto/SelectNumberArray.dto';
 import { UpdateCategoryDto } from 'src/dto/UpdateCategory.dto';
 import { Category } from 'src/entities/category.entity';
 import { CategoryService } from './category.service';
@@ -27,6 +28,15 @@ export class CategoryController {
     })
     async getOneCategoryById(@Param("id") categoryId : number) : Promise<Category>{
         return await this.categoryService.getOneCategoryById(categoryId);
+    }
+
+    @Get('/list')
+    @ApiOperation({
+        "summary" : "Id List에 해당하는 카테고리 리스트를 조회하는 요청",
+        "description" : "Id List에 해당하는 카테고리들을 배열 형태로 반환한다."
+    })
+    async getCategoryListByIdList(@Query('list') queryData : SelectNumberArrayDto) : Promise<Category[]>{
+        return await this.categoryService.getCategoryListByIdList(queryData.numberString);
     }
 
     @Get(':name')

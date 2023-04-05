@@ -22,6 +22,14 @@ export class CategoryService {
             throw new NotFoundException(`Category with Name ${categoryId} is not found.`);
         return FoundCategory;
     }
+    
+    async getCategoryListByIdList(categoryIdList : number[]) : Promise<Category[]>{
+        const FoundCategory : Category[] = await this.categoryRepository
+                .createQueryBuilder('clbil')
+                .where("id in (:...array)", {array : categoryIdList})
+                .getMany();
+        return FoundCategory;
+    }
 
     async getOneCategoryByName(categoryName : string) : Promise<Category>{
         const FoundCategory : Category = await this.categoryRepository.findOneBy({name : categoryName})

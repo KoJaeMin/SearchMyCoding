@@ -80,6 +80,8 @@ describe('CategoryService', () => {
     });
   });
 
+  it.todo('getCategoryListByIdList');
+
   describe('getOneCategoryByName',()=>{
     const findName : string = 'web';
     const findErrorName : string = 'app';
