@@ -120,7 +120,7 @@ describe('CoursesService', () => {
         .mockResolvedValue(mockedCourseList);
       const result = await service.getCourseListByIdList(mockedIdList);
       expect(courseRepository.createQueryBuilder().getMany).toHaveBeenCalled();
-      console.log(result)
+      
       expect(result.length).toEqual(mockedCourseList.length)
     });
   })

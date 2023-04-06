@@ -27,7 +27,7 @@ export class CourseController {
         "summary" : "Id List에 해당하는 강의 리스트를 조회하는 요청",
         "description" : "Id List에 해당하는 강의들을 배열 형태로 반환한다."
     })
-    async getCourseListByIdList(@Query() queryData : SelectNumberArrayDto) : Promise<Course[]>{
+    async getCourseListByIdList(@Query('list') queryData : SelectNumberArrayDto) : Promise<Course[]>{
         return await this.courseService.getCourseListByIdList(queryData.numberString);
     }
 
