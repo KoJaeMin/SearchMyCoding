@@ -5,11 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Category } from 'src/entities/category.entity';
 import { Course } from 'src/entities/course.entity';
 import { CourseCategory } from 'src/entities/coursecategory.entity';
-import { CourseModule } from 'src/course/course.module';
-import { CategoryModule } from 'src/category/category.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Category, Course, CourseCategory]), CourseModule, CategoryModule],
+  imports: [TypeOrmModule.forFeature([Category, Course, CourseCategory])],
   providers: [CoursecategoryService],
   controllers: [CoursecategoryController]
 })
