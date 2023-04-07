@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CategoryService } from 'src/category/category.service';
 import { CourseService } from 'src/course/course.service';
@@ -14,16 +14,13 @@ export class CoursecategoryService {
     constructor(
         @InjectRepository(CourseCategory)
         private readonly coursecategoryRepository : Repository<CourseCategory>,
-        private readonly courseService : CourseService,
-        private readonly categoryService : CategoryService
     ){}
 
-    async getCourseByCategoryName(categoryName : string, start : number, count : number) : Promise<Course[]>{
-        const FoundCategory : Category = await this.categoryService.getOneCategoryByName(categoryName);
+    async getCourseIdListByCategoryId(categoryId : number, start : number, count : number) : Promise<number[]>{
         const CourseList : CourseCategory[] = await this.coursecategoryRepository
                             .createQueryBuilder('cil')
                             .select('course')
-                            .where(`category = ${FoundCategory.id}`)
+                            .where(`category = ${categoryId}`)
                             .distinct()
                             .skip(start - 1)
                             .take(count)
@@ -31,52 +28,38 @@ export class CoursecategoryService {
         
         //// courseIdList에서 나온 아이디들을 course 배열로 전환
         const FoundCourseIdList : number[] = CourseList.map((courseObj)=>courseObj.course);
-        const FoundCourse : Course[] = await this.courseService.getCourseListByIdList(FoundCourseIdList);
-        return FoundCourse;
+        return FoundCourseIdList;
     }
 
-    async getAllCategoryIdByCourseTitle(courseTitle : string) : Promise<Category[]>{
-        const FoundCourse : Course = await this.courseService.getOneCourseByTitle(courseTitle);
+    async getCategoryIdListByCourseId(courseId : number) : Promise<number[]>{
         const FoundOption : FindManyOptions<CourseCategory> = {
-            where : {course : FoundCourse.id}
+            where : {course : courseId}
         };
         const CategoryList : CourseCategory[] = await this.coursecategoryRepository.find(FoundOption);
         const FoundCategoryIdList : number[] = CategoryList.map((categoryObj)=>categoryObj.category);
-        const FoundCategoryList : Category[] = await this.categoryService.getCategoryListByIdList(FoundCategoryIdList);
-        return FoundCategoryList;
+        return FoundCategoryIdList;
     }
 
     async createCourseCategory(createCourseCategory : CreateCourseCategoryDto) : Promise<void>{
-        const FoundCategory : Category = await this.categoryService.getOneCategoryByName(createCourseCategory.category);
-        const FoundCourse : Course = await this.courseService.getOneCourseByTitle(createCourseCategory.course);
-        
         const newCourseCategory : CourseCategory = this.coursecategoryRepository.create({
-            course : FoundCourse.id,
-            category : FoundCategory.id
+            course : createCourseCategory.courseId,
+            category : createCourseCategory.categoryId
         })
         
         this.coursecategoryRepository.insert(newCourseCategory);
     }
 
-    async patchCourseByCategoryName(updateCourseCategoryDto : UpdateCourseCategoryDto) : Promise<void>{
+    async patchCourseByCategoryId(updateCourseCategoryDto : UpdateCourseCategoryDto) : Promise<void>{
         if(updateCourseCategoryDto.modified !== 'course')
             throw new BadRequestException(`It's wrong request. You cannot modify ${updateCourseCategoryDto.modified}.`);
         
-        const FoundCategory : Category = await this.categoryService.getOneCategoryByName(updateCourseCategoryDto.category);
-        const FoundCourse : Course = await this.courseService.getOneCourseByTitle(updateCourseCategoryDto.course);
-        const FoundCourseToModify : Course = await this.courseService.getOneCourseById(updateCourseCategoryDto.idToModify);
-        
-        this.coursecategoryRepository.update({category : FoundCategory.id, course : FoundCourse.id}, {course : FoundCourseToModify.id});
+        this.coursecategoryRepository.update({category : updateCourseCategoryDto.categoryId, course : updateCourseCategoryDto.courseId}, {course : updateCourseCategoryDto.idToModify});
     }
 
-    async patchCourseByCourseTitle(updateCourseCategoryDto : UpdateCourseCategoryDto) : Promise<void>{
+    async patchCourseByCourseId(updateCourseCategoryDto : UpdateCourseCategoryDto) : Promise<void>{
         if(updateCourseCategoryDto.modified !== 'category')
             throw new BadRequestException(`It's wrong request. You cannot modify ${updateCourseCategoryDto.modified}.`);
         
-        const FoundCategory : Category = await this.categoryService.getOneCategoryByName(updateCourseCategoryDto.category);
-        const FoundCourse : Course = await this.courseService.getOneCourseByTitle(updateCourseCategoryDto.course);
-        const FoundCategoryToModify : Category = await this.categoryService.getOneCategoryById(updateCourseCategoryDto.idToModify);
-        
-        this.coursecategoryRepository.update({category : FoundCategory.id, course : FoundCourse.id}, {category : FoundCategoryToModify.id});
+        this.coursecategoryRepository.update({category : updateCourseCategoryDto.categoryId, course : updateCourseCategoryDto.courseId}, {category : updateCourseCategoryDto.idToModify});
     }
 }
