@@ -1,11 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CategoryService } from 'src/category/category.service';
-import { CourseService } from 'src/course/course.service';
 import { CreateCourseCategoryDto } from 'src/dto/CreateCourseCatgory.dto';
 import { UpdateCourseCategoryDto } from 'src/dto/UpdateCourseCatgory.dto';
-import { Category } from 'src/entities/category.entity';
-import { Course } from 'src/entities/course.entity';
 import { CourseCategory } from 'src/entities/coursecategory.entity';
 import { FindManyOptions, Repository } from 'typeorm';
 
@@ -49,14 +45,14 @@ export class CoursecategoryService {
         this.coursecategoryRepository.insert(newCourseCategory);
     }
 
-    async patchCourseByCategoryId(updateCourseCategoryDto : UpdateCourseCategoryDto) : Promise<void>{
+    async patchCourseId(updateCourseCategoryDto : UpdateCourseCategoryDto) : Promise<void>{
         if(updateCourseCategoryDto.modified !== 'course')
             throw new BadRequestException(`It's wrong request. You cannot modify ${updateCourseCategoryDto.modified}.`);
         
         this.coursecategoryRepository.update({category : updateCourseCategoryDto.categoryId, course : updateCourseCategoryDto.courseId}, {course : updateCourseCategoryDto.idToModify});
     }
 
-    async patchCourseByCourseId(updateCourseCategoryDto : UpdateCourseCategoryDto) : Promise<void>{
+    async patchCategoryId(updateCourseCategoryDto : UpdateCourseCategoryDto) : Promise<void>{
         if(updateCourseCategoryDto.modified !== 'category')
             throw new BadRequestException(`It's wrong request. You cannot modify ${updateCourseCategoryDto.modified}.`);
         
