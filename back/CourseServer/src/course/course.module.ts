@@ -7,6 +7,7 @@ import { CourseService } from './course.service';
 @Module({
   imports: [TypeOrmModule.forFeature([Course])],
   controllers: [CourseController],
-  providers: [CourseService]
+  providers: [CourseService],
+  exports: [CourseService]
 })
 export class CourseModule {}
