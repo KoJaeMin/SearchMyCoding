@@ -22,7 +22,6 @@ export class CoursecategoryService {
         const FoundCourse : Category = await this.categoryService.getOneCategoryByName(categoryName);
         const CourseList : CourseCategory[] = await this.coursecategoryRepository
                             .createQueryBuilder('cil')
-                            .select('course')
                             .where(`category = ${FoundCourse.id}`)
                             .distinct()
                             .skip(start - 1)
