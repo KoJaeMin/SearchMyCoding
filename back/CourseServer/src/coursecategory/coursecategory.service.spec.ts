@@ -4,7 +4,7 @@ import { CategoryService } from 'src/category/category.service';
 import { CourseService } from 'src/course/course.service';
 import { CourseCategory } from 'src/entities/coursecategory.entity';
 import { Repository } from 'typeorm';
-import { CoursecategoryService } from './coursecategory.service';
+import { CourseCategoryService } from './coursecategory.service';
 import { createMock } from '@golevelup/ts-jest';
 import { Category } from 'src/entities/category.entity';
 import { Course } from 'src/entities/course.entity';
@@ -30,7 +30,7 @@ const mockCourseCategoryRepository = () => MockRepository;
 type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 
 describe('CoursecategoryService', () => {
-  let service: CoursecategoryService;
+  let service: CourseCategoryService;
   let courseService : CourseService;
   let categoryService : CategoryService;
   let courseCategoryRepository : MockRepository<CourseCategory>;
@@ -39,7 +39,7 @@ describe('CoursecategoryService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        CoursecategoryService,
+        CourseCategoryService,
         {
           provide : getRepositoryToken(CourseCategory),
           useValue : mockCourseCategoryRepository()
@@ -55,7 +55,7 @@ describe('CoursecategoryService', () => {
       ],
     }).compile();
 
-    service = module.get<CoursecategoryService>(CoursecategoryService);
+    service = module.get<CourseCategoryService>(CourseCategoryService);
     courseService = module.get<CourseService>(CourseService);
     categoryService = module.get<CategoryService>(CategoryService);
     courseCategoryRepository = module.get<MockRepository<CourseCategory>>(
@@ -106,7 +106,8 @@ describe('CoursecategoryService', () => {
         .spyOn(courseService, 'getCourseListByIdList')
         .mockResolvedValue(mockCourseList);
 
-      const result = await service.getCourseListByCategoryName(mockCategoryName, mockStartNumber, mockCountNumber);
+      const result : Course[] = await service.getCourseListByCategoryName(mockCategoryName, mockStartNumber, mockCountNumber);
+      
       expect(categoryService.getOneCategoryByName).toHaveBeenCalledTimes(1);
       expect(courseCategoryRepository.createQueryBuilder().getMany).toHaveBeenCalledTimes(1);
       expect(courseService.getCourseListByIdList).toHaveBeenCalledTimes(1);

@@ -10,7 +10,7 @@ import { CourseCategory } from 'src/entities/coursecategory.entity';
 import { FindManyOptions, Repository } from 'typeorm';
 
 @Injectable()
-export class CoursecategoryService {
+export class CourseCategoryService {
     constructor(
         @InjectRepository(CourseCategory)
         private readonly coursecategoryRepository : Repository<CourseCategory>,

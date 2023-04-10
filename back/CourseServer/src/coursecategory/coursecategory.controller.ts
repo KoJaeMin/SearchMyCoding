@@ -4,12 +4,12 @@ import { CreateCourseCategoryDto } from 'src/dto/CreateCourseCatgory.dto';
 import { UpdateCourseCategoryDto } from 'src/dto/UpdateCourseCatgory.dto';
 import { Category } from 'src/entities/category.entity';
 import { Course } from 'src/entities/course.entity';
-import { CoursecategoryService } from './coursecategory.service';
+import { CourseCategoryService } from './coursecategory.service';
 
 @Controller('coursecategory')
 export class CoursecategoryController {
     constructor(
-        private readonly coursecategoryService : CoursecategoryService
+        private readonly coursecategoryService : CourseCategoryService
     ){}
 
     @Get('course/:categoryName')
