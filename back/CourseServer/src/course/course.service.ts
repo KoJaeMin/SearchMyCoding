@@ -64,7 +64,7 @@ export class CourseService {
             rating : IsValidRating(createCourseDto.rating) ? Math.floor(createCourseDto.rating) : null
         }
 
-        const newCourse : Course = this.courseRepository.create(createCourseDto);
+        const newCourse : Course = this.courseRepository.create(newCreateCourseDto);
         await this.courseRepository.insert(newCourse);
     }
 
