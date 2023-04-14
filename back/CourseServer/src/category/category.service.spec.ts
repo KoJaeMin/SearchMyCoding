@@ -12,7 +12,11 @@ const mockCategoryRepository = () => ({
   findOneBy: jest.fn(),
   create: jest.fn(),
   update: jest.fn(),
-  insert: jest.fn()
+  insert: jest.fn(),
+  createQueryBuilder: jest.fn().mockReturnValue({
+      where: jest.fn().mockReturnThis(),
+      getMany: jest.fn().mockReturnThis()
+    })
 });
 
 type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
@@ -80,7 +84,23 @@ describe('CategoryService', () => {
     });
   });
 
-  it.todo('getCategoryListByIdList');
+  describe('getCategoryListByIdList', ()=>{
+    const randomListLength : number = Math.floor(Math.random() * 10) + 1;
+    const findIdList : number[] = new Array<number>(randomListLength).fill(0).map((_,index)=>index+1);
+    const mockedCategoryList : Category[] = [{
+      id : 1,
+      name : 'web'
+    }]
+    it('should find category list', async ()=>{
+      jest
+        .spyOn(categoryRepository.createQueryBuilder(),'getMany')
+        .mockResolvedValue(mockedCategoryList);
+      const result : Category[] = await service.getCategoryListByIdList(findIdList);
+      expect(categoryRepository.createQueryBuilder().getMany).toHaveBeenCalled();
+
+      expect(result.length).toEqual(mockedCategoryList.length);
+    })
+  });
 
   describe('getOneCategoryByName',()=>{
     const findName : string = 'web';
