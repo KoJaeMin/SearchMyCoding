@@ -67,10 +67,10 @@ describe('CategoryService', () => {
     const findId : number = 1;
     const findErrorId : number = 9999;
     it('should find a category',async ()=>{
-      categoryRepository.findOneBy.mockResolvedValue(mockedCategory);
+      categoryRepository.findOne.mockResolvedValue(mockedCategory);
 
       const result = await service.getOneCategoryById(findId);
-      expect(categoryRepository.findOneBy).toHaveBeenCalledTimes(1);
+      expect(categoryRepository.findOne).toHaveBeenCalledTimes(1);
 
       expect(result).toEqual(mockedCategory);
     });

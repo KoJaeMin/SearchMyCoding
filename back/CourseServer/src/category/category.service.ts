@@ -17,7 +17,7 @@ export class CategoryService {
     }
 
     async getOneCategoryById(categoryId : number) : Promise<Category>{
-        const FoundCategory : Category = await this.categoryRepository.findOneBy({id : categoryId})
+        const FoundCategory : Category = await this.categoryRepository.findOne({id : categoryId})
         if(!FoundCategory)
             throw new NotFoundException(`Category with Name ${categoryId} is not found.`);
         return FoundCategory;
@@ -32,7 +32,7 @@ export class CategoryService {
     }
 
     async getOneCategoryByName(categoryName : string) : Promise<Category>{
-        const FoundCategory : Category = await this.categoryRepository.findOneBy({name : categoryName})
+        const FoundCategory : Category = await this.categoryRepository.findOne({name : categoryName})
         if(!FoundCategory)
             throw new NotFoundException(`Category with Name ${categoryName} is not found.`);
         return FoundCategory;
