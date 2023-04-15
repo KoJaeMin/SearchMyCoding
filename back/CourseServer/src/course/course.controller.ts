@@ -12,35 +12,15 @@ export class CourseController {
         private readonly courseService : CourseService
     ){}
 
-    @Get('bundle')
+    @Post('')
     @ApiOperation({
-        "summary" : "일정 범위의 강의 조회하는 요청",
-        "description" : "일정 범위를 지정 후 강의 배열 형태로 반환한다."
+        "summary":"강의을 생성하는 요청",
+        "description":"body를 CreateCourseDto에 맞춰 요청해야한다."
     })
-    @ApiQuery({ name: 'order', required: false, type: String })
-    async getCourseList(@Query('list') listNumber : number, @Query('numberOfCourseInList') numberOfCourseInList : number, @Query('order') order? : 'asc' | 'desc') : Promise<Course[]>{
-        return await this.courseService.getCourseList(listNumber, numberOfCourseInList, order);
+    async createCourse(@Body() createCourseDto : CreateCourseDto){
+        return this.courseService.createCourse(createCourseDto);
     }
-
-    @Get('/list')
-    @ApiOperation({
-        "summary" : "Id List에 해당하는 강의 리스트를 조회하는 요청",
-        "description" : "Id List에 해당하는 강의들을 배열 형태로 반환한다."
-    })
-    async getCourseListByIdList(@Query('list') queryData : SelectNumberArrayDto) : Promise<Course[]>{
-        return await this.courseService.getCourseListByIdList(queryData.numberString);
-    }
-
-
-    @Get('/all')
-    @ApiOperation({
-        "summary" : "모든 강의 조회하는 요청",
-        "description" : "모든 강의 배열 형태로 반환한다."
-    })
-    async getAllCourse() : Promise<Course[]>{
-        return await this.courseService.getAllCourse();
-    }
-
+    
     @Get(':id')
     @ApiOperation({
         "summary" : "Id를 이용한 강의 조회하는 요청",
@@ -59,14 +39,32 @@ export class CourseController {
         return await this.courseService.getOneCourseByTitle(courseTitle);
     }
 
-
-    @Post('')
+    @Get('/all')
     @ApiOperation({
-        "summary":"강의을 생성하는 요청",
-        "description":"body를 CreateCourseDto에 맞춰 요청해야한다."
+        "summary" : "모든 강의 조회하는 요청",
+        "description" : "모든 강의 배열 형태로 반환한다."
     })
-    async createCourse(@Body() createCourseDto : CreateCourseDto){
-        return this.courseService.createCourse(createCourseDto);
+    async getAllCourse() : Promise<Course[]>{
+        return await this.courseService.getAllCourse();
+    }
+    
+    @Get('/bundle')
+    @ApiOperation({
+        "summary" : "일정 범위의 강의 조회하는 요청",
+        "description" : "일정 범위를 지정 후 강의 배열 형태로 반환한다."
+    })
+    @ApiQuery({ name: 'order', required: false, type: String })
+    async getCourseList(@Query('list') listNumber : number, @Query('numberOfCourseInList') numberOfCourseInList : number, @Query('order') order? : 'asc' | 'desc') : Promise<Course[]>{
+        return await this.courseService.getCourseList(listNumber, numberOfCourseInList, order);
+    }
+
+    @Get('/list')
+    @ApiOperation({
+        "summary" : "Id List에 해당하는 강의 리스트를 조회하는 요청",
+        "description" : "Id List에 해당하는 강의들을 배열 형태로 반환한다."
+    })
+    async getCourseListByIdList(@Query('list') queryData : SelectNumberArrayDto) : Promise<Course[]>{
+        return await this.courseService.getCourseListByIdList(queryData.numberString);
     }
 
     @Patch(':title')

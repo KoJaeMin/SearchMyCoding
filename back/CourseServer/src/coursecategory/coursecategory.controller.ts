@@ -12,7 +12,7 @@ export class CoursecategoryController {
         private readonly coursecategoryService : CourseCategoryService
     ){}
 
-    @Get('course/:categoryName')
+    @Get('/course/:categoryName')
     @ApiOperation({
         "summary" : "카테고리 이름에 해당하는 강의 리스트를 조회하는 요청",
         "description" : "카테고리 이름에 해당하는 강의들을 배열 형태로 반환한다."
@@ -21,7 +21,7 @@ export class CoursecategoryController {
         return await this.coursecategoryService.getCourseListByCategoryName(categoryName, start, count);
     }
     
-    @Get('category/:courseTitle')
+    @Get('/category/:courseTitle')
     @ApiOperation({
         "summary" : "강의 제목에 해당하는 카테고리 리스트를 조회하는 요청",
         "description" : "강의 제목에 해당하는 카테고리들을 배열 형태로 반환한다."
@@ -39,7 +39,7 @@ export class CoursecategoryController {
         return await this.coursecategoryService.createCourseCategory(createCourseCategory);
     }
 
-    @Patch('course')
+    @Patch('/course')
     @ApiOperation({
         "summary" : "카테고리와 강의 id를 이용하여 강의의 id를 수정하는 요청",
         "description" : "강의가 존재하여야 하며 body를 UpdateCourseCategoryDto에 맞춰 요청해야한다."
@@ -48,7 +48,7 @@ export class CoursecategoryController {
         return await this.coursecategoryService.patchCourseId(updateCourseCategoryDto);
     }
 
-    @Patch('category')
+    @Patch('/category')
     @ApiOperation({
         "summary" : "카테고리와 강의 id를 이용하여 카테고리의 id를 수정하는 요청",
         "description" : "카테고리가 존재하여야 하며 body를 UpdateCourseCategoryDto에 맞춰 요청해야한다."
@@ -56,6 +56,5 @@ export class CoursecategoryController {
     async patchCategoryId(@Body() updateCourseCategoryDto: UpdateCourseCategoryDto) : Promise<void>{
         return await this.coursecategoryService.patchCategoryId(updateCourseCategoryDto);
     }
-
-    
+        
 }
