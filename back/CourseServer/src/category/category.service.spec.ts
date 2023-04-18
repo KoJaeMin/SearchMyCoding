@@ -9,7 +9,7 @@ import { CategoryService } from './category.service';
 
 const mockCategoryRepository = () => ({
   find: jest.fn(),
-  findOneBy: jest.fn(),
+  findOne: jest.fn(),
   create: jest.fn(),
   update: jest.fn(),
   insert: jest.fn(),
