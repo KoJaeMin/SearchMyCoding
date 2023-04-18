@@ -18,6 +18,22 @@ export class CourseCategoryService {
         private readonly categoryService : CategoryService
     ){}
 
+    async getCategoryIdListByCourseId(courseId : number) : Promise<number[]> {
+        const FoundList : CourseCategory[] = await this.coursecategoryRepository.find({
+            where : {course : courseId}
+        });
+        const FoundCategoryIdList : number[] = FoundList.map((coursecategoryObj)=>coursecategoryObj.category);
+        return FoundCategoryIdList;
+    }
+
+    async getCourseIdListByCategoryId(categoryId : number) : Promise<number[]> {
+        const FoundList : CourseCategory[] = await this.coursecategoryRepository.find({
+            where : {course : categoryId}
+        });
+        const FoundCourseIdList : number[] = FoundList.map((coursecategoryObj)=>coursecategoryObj.course);
+        return FoundCourseIdList;
+    }
+
     async getCourseListByCategoryName(categoryName : string, start : number, count : number) : Promise<Course[]>{
         const FoundCourse : Category = await this.categoryService.getOneCategoryByName(categoryName);
         const CourseList : CourseCategory[] = await this.coursecategoryRepository
