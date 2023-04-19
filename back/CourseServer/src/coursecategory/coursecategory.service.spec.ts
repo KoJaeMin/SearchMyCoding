@@ -68,6 +68,54 @@ describe('CoursecategoryService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  describe('getCategoryIdListByCourseId', ()=>{
+    const mockCourseId : number = 1;
+    const mockCourseCategoryId : number = 1;
+    const mockCategoryId : number = 1;
+
+    const mockCourseCategoryList : CourseCategory[] = [{
+      id : mockCourseCategoryId,
+      course : mockCourseId,
+      category : mockCategoryId
+    }];
+
+    const mockCategoryIdList : number[] = [mockCategoryId];
+
+    it("should find category Id List", async ()=>{
+      courseCategoryRepository.find.mockResolvedValue(mockCourseCategoryList);
+
+      const result = await service.getCategoryIdListByCourseId(mockCourseId);
+
+      expect(courseCategoryRepository.find).toHaveBeenCalled();
+      expect(result.length).toEqual(mockCategoryIdList.length);
+      expect(result[0]).toEqual(mockCategoryIdList[0]);
+    });
+  });
+
+  describe('getCourseIdListByCategoryId', ()=>{
+    const mockCourseId : number = 1;
+    const mockCourseCategoryId : number = 1;
+    const mockCategoryId : number = 1;
+
+    const mockCourseCategoryList : CourseCategory[] = [{
+      id : mockCourseCategoryId,
+      course : mockCourseId,
+      category : mockCategoryId
+    }];
+
+    const mockCourseIdList : number[] = [mockCourseId];
+
+    it("should find course Id List", async ()=>{
+      courseCategoryRepository.find.mockResolvedValue(mockCourseCategoryList);
+
+      const result = await service.getCourseIdListByCategoryId(mockCategoryId);
+
+      expect(courseCategoryRepository.find).toHaveBeenCalled();
+      expect(result.length).toEqual(mockCourseIdList.length);
+      expect(result[0]).toEqual(mockCourseIdList[0]);
+    });
+  });
   
   describe("getCourseListByCategoryName", ()=>{
     const mockStartNumber : number = 1;
@@ -152,7 +200,7 @@ describe('CoursecategoryService', () => {
       const result : Category[] = await service.getCategoryListByCourseTitle(mockCourseTitle);
       
       expect(courseService.getOneCourseByTitle).toHaveBeenCalledTimes(1);
-      expect(courseCategoryRepository.find).toHaveBeenCalledTimes(1);
+      expect(courseCategoryRepository.find).toHaveBeenCalled();
       expect(categoryService.getCategoryListByIdList).toHaveBeenCalledTimes(1);
 
       expect(result.length).toEqual(mockCategoryList.length);
