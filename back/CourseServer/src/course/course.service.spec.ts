@@ -9,7 +9,7 @@ import { CourseService } from './course.service';
 
 const mockCourseRepository = () => ({
   find: jest.fn(),
-  findOneBy: jest.fn(),
+  findOne: jest.fn(),
   create: jest.fn(),
   update: jest.fn(),
   insert: jest.fn(),
@@ -27,7 +27,7 @@ type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 describe('CoursesService', () => {
   let service: CourseService;
   let courseRepository: MockRepository<Course>;
-  let mockedCourse: Course;
+  let mockCourse: Course;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -45,7 +45,7 @@ describe('CoursesService', () => {
       getRepositoryToken(Course),
     );
 
-    mockedCourse = {
+    mockCourse = {
       id : 1,
       title : "웹의 이해",
       link : "https://www.example.link",
@@ -75,12 +75,12 @@ describe('CoursesService', () => {
     const findErrorId : number = 999;
 
     it('should find a course',async ()=>{
-      courseRepository.findOneBy.mockResolvedValue(mockedCourse);
+      courseRepository.findOne.mockResolvedValue(mockCourse);
 
       const result = await service.getOneCourseById(findId);
-      expect(courseRepository.findOneBy).toHaveBeenCalledTimes(1);
+      expect(courseRepository.findOne).toHaveBeenCalledTimes(1);
 
-      expect(result).toEqual(mockedCourse);
+      expect(result).toEqual(mockCourse);
     });
 
     it("should return a NotFoundException", async () => {
@@ -93,35 +93,35 @@ describe('CoursesService', () => {
   });
 
   describe('getCourseList',()=>{
-    const mockedCourseList : Course[] = new Array<Course>(10);
-    const mockedListNumber : number = 1;
-    const mockedNumberOfCourseInList : number = 10;
+    const mockCourseList : Course[] = new Array<Course>(10);
+    const mockListNumber : number = 1;
+    const mockNumberOfCourseInList : number = 10;
 
-    it(`should find ${mockedNumberOfCourseInList} course`, async ()=>{
-      courseRepository.find.mockResolvedValue(mockedCourseList);
-      const result = await service.getCourseList(mockedListNumber, mockedNumberOfCourseInList, null);
+    it(`should find ${mockNumberOfCourseInList} course`, async ()=>{
+      courseRepository.find.mockResolvedValue(mockCourseList);
+      const result = await service.getCourseList(mockListNumber, mockNumberOfCourseInList, null);
 
       expect(courseRepository.find).toHaveBeenCalledTimes(1);
 
-      expect(result.length).toEqual(mockedNumberOfCourseInList);
+      expect(result.length).toEqual(mockNumberOfCourseInList);
     })
   });
 
   describe('getCourseListByIdList', ()=>{
     /// https://stackoverflow.com/questions/66904523/what-would-be-a-proper-way-to-test-typeorms-querybuilder-chaining-methods
-    const mockedCourseList : Course[] = [];
-    const mockedIdList : number[] = [];
+    const mockCourseList : Course[] = [];
+    const mockIdList : number[] = [];
     it('should find course list by id list', async()=>{
-      /// courseRepository.createQueryBuilder.getMany.mockResolvedValue(mockedIdList);
+      /// courseRepository.createQueryBuilder.getMany.mockResolvedValue(mockIdList);
       /// 위와 같이 그냥 jest.fn()으로 하면 where에서 에러 발생
       /// 
       jest
         .spyOn(courseRepository.createQueryBuilder(),'getMany')/// Creates a mock function similar to jest.fn but also tracks calls to object[methodName]
-        .mockResolvedValue(mockedCourseList);
-      const result = await service.getCourseListByIdList(mockedIdList);
+        .mockResolvedValue(mockCourseList);
+      const result = await service.getCourseListByIdList(mockIdList);
       expect(courseRepository.createQueryBuilder().getMany).toHaveBeenCalled();
       
-      expect(result.length).toEqual(mockedCourseList.length)
+      expect(result.length).toEqual(mockCourseList.length)
     });
   })
 
@@ -130,12 +130,12 @@ describe('CoursesService', () => {
     const findErrorTitle : string = '앱의 이해';
 
     it('should find a course',async ()=>{
-      courseRepository.findOneBy.mockResolvedValue(mockedCourse);
+      courseRepository.findOne.mockResolvedValue(mockCourse);
 
       const result = await service.getOneCourseByTitle(findTitle);
-      expect(courseRepository.findOneBy).toHaveBeenCalledTimes(1);
+      expect(courseRepository.findOne).toHaveBeenCalledTimes(1);
 
-      expect(result).toEqual(mockedCourse);
+      expect(result).toEqual(mockCourse);
     });
 
     it("should return a NotFoundException", async () => {
@@ -148,7 +148,7 @@ describe('CoursesService', () => {
   });
 
   describe('createCourse',()=>{
-    const mockedCreateCourseDto : CreateCourseDto = {
+    const mockCreateCourseDto : CreateCourseDto = {
       title : "웹의 이해",
       link : "https://www.example.link",
       img_link : "https://www.examplelink.link",
@@ -156,7 +156,7 @@ describe('CoursesService', () => {
       price : 0
     };
 
-    const mockedErrorCreateCourseDto = {
+    const mockErrorCreateCourseDto = {
       title : "hi",
       img_link : "wwwheefsdfdsa"
     }
@@ -166,9 +166,9 @@ describe('CoursesService', () => {
       const BeforeCreate = (await service.getAllCourse()).length;
       expect(courseRepository.find).toHaveBeenCalledTimes(1);
       
-      const result = await service.createCourse(mockedCreateCourseDto);
+      const result = await service.createCourse(mockCreateCourseDto);
 
-      courseRepository.find.mockResolvedValue([mockedCourse]);
+      courseRepository.find.mockResolvedValue([mockCourse]);
       const AfterCreate = (await service.getAllCourse()).length;
       expect(courseRepository.find).toHaveBeenCalledTimes(2);
       expect(AfterCreate).toEqual(BeforeCreate + 1);
@@ -176,7 +176,7 @@ describe('CoursesService', () => {
 
     it("should return a BadRequestException", async () => {
       try{
-        await service.createCourse(mockedErrorCreateCourseDto as CreateCourseDto);
+        await service.createCourse(mockErrorCreateCourseDto as CreateCourseDto);
       }catch(e){
         expect(e).toBeInstanceOf(BadRequestException);
       }
@@ -184,13 +184,13 @@ describe('CoursesService', () => {
   });
 
   describe('patchCourse',()=>{
-    const mockedFindTitle : string = '웹의 이해';
-    const mockedUpdateCourseTitle : string = '앱의 이해';
-    const mockedErrorUpdateCourseTitle : string = 'AI의 이해';
-    const mockedUpdateCourseDto : UpdateCourseDto = {
+    const mockFindTitle : string = '웹의 이해';
+    const mockUpdateCourseTitle : string = '앱의 이해';
+    const mockErrorUpdateCourseTitle : string = 'AI의 이해';
+    const mockUpdateCourseDto : UpdateCourseDto = {
       title : "앱의 이해"
     }
-    const mockedUpdateCourse : Course = {
+    const mockUpdateCourse : Course = {
       id : 1,
       title : "앱의 이해",
       link : "https://www.example.link",
@@ -198,44 +198,44 @@ describe('CoursesService', () => {
       rating : 0,
       price : 0
     };
-    const mockedErrorPatchCourseDto = {
+    const mockErrorPatchCourseDto = {
       title : "hi",
       img_link : "wwwheefsdfdsa"
     }
 
     it("should patch a course", async () => {
-      courseRepository.findOneBy.mockResolvedValue(mockedCourse);
-      const BeforeUpdate = await service.getOneCourseByTitle(mockedFindTitle);
-      expect(courseRepository.findOneBy).toHaveBeenCalledTimes(1);
+      courseRepository.findOne.mockResolvedValue(mockCourse);
+      const BeforeUpdate = await service.getOneCourseByTitle(mockFindTitle);
+      expect(courseRepository.findOne).toHaveBeenCalledTimes(1);
       
-      const result = await service.patchCourse(mockedFindTitle, mockedUpdateCourseDto)
+      const result = await service.patchCourse(mockFindTitle, mockUpdateCourseDto)
 
-      courseRepository.findOneBy.mockResolvedValue(mockedUpdateCourse);
-      const AfterUpdate = await service.getOneCourseByTitle(mockedUpdateCourseTitle);
-      expect(courseRepository.findOneBy).toHaveBeenCalledTimes(3);
+      courseRepository.findOne.mockResolvedValue(mockUpdateCourse);
+      const AfterUpdate = await service.getOneCourseByTitle(mockUpdateCourseTitle);
+      expect(courseRepository.findOne).toHaveBeenCalledTimes(3);
 
       expect(BeforeUpdate.id).toEqual(AfterUpdate.id);
-      expect(AfterUpdate.id).toEqual(mockedUpdateCourse.id);
-      expect(AfterUpdate.title).toEqual(mockedUpdateCourse.title);
+      expect(AfterUpdate.id).toEqual(mockUpdateCourse.id);
+      expect(AfterUpdate.title).toEqual(mockUpdateCourse.title);
     });
     
     it("should return a NotFoundException", async () => {
-      courseRepository.findOneBy.mockResolvedValue(mockedCourse);
-      const BeforeUpdate = await service.getOneCourseByTitle(mockedFindTitle);
-      expect(courseRepository.findOneBy).toHaveBeenCalledTimes(1);
+      courseRepository.findOne.mockResolvedValue(mockCourse);
+      const BeforeUpdate = await service.getOneCourseByTitle(mockFindTitle);
+      expect(courseRepository.findOne).toHaveBeenCalledTimes(1);
       try{
-        await service.patchCourse(mockedErrorUpdateCourseTitle, mockedUpdateCourseDto);
+        await service.patchCourse(mockErrorUpdateCourseTitle, mockUpdateCourseDto);
       }catch(e){
         expect(e).toBeInstanceOf(NotFoundException);
       }
     });
     
     it("should return a BadRequestException", async () => {
-      courseRepository.findOneBy.mockResolvedValue(mockedCourse);
-      const BeforeUpdate = await service.getOneCourseByTitle(mockedFindTitle);
-      expect(courseRepository.findOneBy).toHaveBeenCalledTimes(1);
+      courseRepository.findOne.mockResolvedValue(mockCourse);
+      const BeforeUpdate = await service.getOneCourseByTitle(mockFindTitle);
+      expect(courseRepository.findOne).toHaveBeenCalledTimes(1);
       try{
-        await service.patchCourse(mockedFindTitle, mockedErrorPatchCourseDto as UpdateCourseDto);
+        await service.patchCourse(mockFindTitle, mockErrorPatchCourseDto as UpdateCourseDto);
       }catch(e){
         expect(e).toBeInstanceOf(BadRequestException);
       }

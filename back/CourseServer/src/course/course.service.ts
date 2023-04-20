@@ -18,7 +18,7 @@ export class CourseService {
     }
 
     async getOneCourseById(courseId : number) : Promise<Course>{
-        const FoundCourse : Course = await this.courseRepository.findOneBy({id : courseId})
+        const FoundCourse : Course = await this.courseRepository.findOne({id : courseId})
         if(!FoundCourse)
             throw new NotFoundException(`Course with Id ${courseId} is not found.`);
         return FoundCourse;
@@ -44,7 +44,7 @@ export class CourseService {
     }
 
     async getOneCourseByTitle(courseTitle : string) : Promise<Course>{
-        const FoundCourse : Course = await this.courseRepository.findOneBy({title : courseTitle})
+        const FoundCourse : Course = await this.courseRepository.findOne({title : courseTitle})
         if(!FoundCourse)
             throw new NotFoundException(`Course with Title ${courseTitle} is not found.`);
         return FoundCourse;

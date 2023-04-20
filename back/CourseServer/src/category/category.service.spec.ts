@@ -24,7 +24,7 @@ type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 describe('CategoryService', () => {
   let service: CategoryService;
   let categoryRepository: MockRepository<Category>;
-  let mockedCategory : Category;
+  let mockCategory : Category;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -43,7 +43,7 @@ describe('CategoryService', () => {
       getRepositoryToken(Category),
     );
 
-    mockedCategory = {
+    mockCategory = {
       id : 1,
       name : 'web'
     }
@@ -67,12 +67,12 @@ describe('CategoryService', () => {
     const findId : number = 1;
     const findErrorId : number = 9999;
     it('should find a category',async ()=>{
-      categoryRepository.findOne.mockResolvedValue(mockedCategory);
+      categoryRepository.findOne.mockResolvedValue(mockCategory);
 
       const result = await service.getOneCategoryById(findId);
       expect(categoryRepository.findOne).toHaveBeenCalledTimes(1);
 
-      expect(result).toEqual(mockedCategory);
+      expect(result).toEqual(mockCategory);
     });
 
     it("should return a NotFoundException", async () => {
@@ -87,18 +87,18 @@ describe('CategoryService', () => {
   describe('getCategoryListByIdList', ()=>{
     const randomListLength : number = Math.floor(Math.random() * 10) + 1;
     const findIdList : number[] = new Array<number>(randomListLength).fill(0).map((_,index)=>index+1);
-    const mockedCategoryList : Category[] = [{
+    const mockCategoryList : Category[] = [{
       id : 1,
       name : 'web'
     }]
     it('should find category list', async ()=>{
       jest
         .spyOn(categoryRepository.createQueryBuilder(),'getMany')
-        .mockResolvedValue(mockedCategoryList);
+        .mockResolvedValue(mockCategoryList);
       const result : Category[] = await service.getCategoryListByIdList(findIdList);
       expect(categoryRepository.createQueryBuilder().getMany).toHaveBeenCalled();
 
-      expect(result.length).toEqual(mockedCategoryList.length);
+      expect(result.length).toEqual(mockCategoryList.length);
     })
   });
 
@@ -106,12 +106,12 @@ describe('CategoryService', () => {
     const findName : string = 'web';
     const findErrorName : string = 'app';
     it('should find a category',async ()=>{
-      categoryRepository.findOne.mockResolvedValue(mockedCategory);
+      categoryRepository.findOne.mockResolvedValue(mockCategory);
 
       const result = await service.getOneCategoryByName(findName);
       expect(categoryRepository.findOne).toHaveBeenCalledTimes(1);
 
-      expect(result).toEqual(mockedCategory);
+      expect(result).toEqual(mockCategory);
     });
 
     it("should return a NotFoundException", async () => {
@@ -124,11 +124,11 @@ describe('CategoryService', () => {
   });
   
   describe('createCategory',()=>{
-    const mockedCreateCategoryDto : CreateCategoryDto = {
+    const mockCreateCategoryDto : CreateCategoryDto = {
       name : 'web'
     };
 
-    const mockedErrorCreateCategoryDto = {
+    const mockErrorCreateCategoryDto = {
       name : 'app',
       link : 'www.example.abc'
     }
@@ -138,9 +138,9 @@ describe('CategoryService', () => {
       const BeforeCreate = (await service.getAllCategory()).length;
       expect(categoryRepository.find).toHaveBeenCalledTimes(1);
       
-      const result = await service.createCategory(mockedCreateCategoryDto);
+      const result = await service.createCategory(mockCreateCategoryDto);
 
-      categoryRepository.find.mockResolvedValue([mockedCategory]);
+      categoryRepository.find.mockResolvedValue([mockCategory]);
       const AfterCreate = (await service.getAllCategory()).length;
       expect(categoryRepository.find).toHaveBeenCalledTimes(2);
 
@@ -149,7 +149,7 @@ describe('CategoryService', () => {
 
     it("should return a BadRequestException", async () => {
       try{
-        await service.createCategory(mockedErrorCreateCategoryDto as CreateCategoryDto);
+        await service.createCategory(mockErrorCreateCategoryDto as CreateCategoryDto);
       }catch(e){
         expect(e).toBeInstanceOf(BadRequestException);
       }
@@ -157,55 +157,55 @@ describe('CategoryService', () => {
   });
 
   describe('patchCategory',()=>{
-    const mockedFindName : string = 'web';
-    const mockedUpdateCategoryName : string = 'app';
-    const mockedErrorUpdateCategoryName : string = 'AI';
-    const mockedUpdateCategoryDto : UpdateCategoryDto = {
+    const mockFindName : string = 'web';
+    const mockUpdateCategoryName : string = 'app';
+    const mockErrorUpdateCategoryName : string = 'AI';
+    const mockUpdateCategoryDto : UpdateCategoryDto = {
       name : 'app'
     }
-    const mockedUpdateCategory : Category = {
+    const mockUpdateCategory : Category = {
       id : 1,
       name : 'app'
     };
 
-    const mockedErrorUpdateCategoryDto = {
+    const mockErrorUpdateCategoryDto = {
       name : 'app',
       link : 'www.example.abc'
     }
 
     it("should patch a category", async () => {
-      categoryRepository.findOne.mockResolvedValue(mockedCategory);
-      const BeforeUpdate = await service.getOneCategoryByName(mockedFindName);
+      categoryRepository.findOne.mockResolvedValue(mockCategory);
+      const BeforeUpdate = await service.getOneCategoryByName(mockFindName);
       expect(categoryRepository.findOne).toHaveBeenCalledTimes(1);
       
-      const result = await service.patchCategory(mockedFindName, mockedUpdateCategoryDto)
+      const result = await service.patchCategory(mockFindName, mockUpdateCategoryDto)
 
-      categoryRepository.findOne.mockResolvedValue(mockedUpdateCategory);
-      const AfterUpdate = await service.getOneCategoryByName(mockedUpdateCategoryName);
+      categoryRepository.findOne.mockResolvedValue(mockUpdateCategory);
+      const AfterUpdate = await service.getOneCategoryByName(mockUpdateCategoryName);
       expect(categoryRepository.findOne).toHaveBeenCalledTimes(3);
 
       expect(BeforeUpdate.id).toEqual(AfterUpdate.id);
-      expect(AfterUpdate.id).toEqual(mockedUpdateCategory.id);
-      expect(AfterUpdate.name).toEqual(mockedUpdateCategory.name);
+      expect(AfterUpdate.id).toEqual(mockUpdateCategory.id);
+      expect(AfterUpdate.name).toEqual(mockUpdateCategory.name);
     });
     
     it("should return a NotFoundException", async () => {
-      categoryRepository.findOne.mockResolvedValue(mockedCategory);
-      const BeforeUpdate = await service.getOneCategoryByName(mockedFindName);
+      categoryRepository.findOne.mockResolvedValue(mockCategory);
+      const BeforeUpdate = await service.getOneCategoryByName(mockFindName);
       expect(categoryRepository.findOne).toHaveBeenCalledTimes(1);
       try{
-        await service.patchCategory(mockedErrorUpdateCategoryName, mockedUpdateCategoryDto);
+        await service.patchCategory(mockErrorUpdateCategoryName, mockUpdateCategoryDto);
       }catch(e){
         expect(e).toBeInstanceOf(NotFoundException);
       }
     });
 
     it("should return a BadRequestException", async () => {
-      categoryRepository.findOne.mockResolvedValue(mockedCategory);
-      const BeforeUpdate = await service.getOneCategoryByName(mockedFindName);
+      categoryRepository.findOne.mockResolvedValue(mockCategory);
+      const BeforeUpdate = await service.getOneCategoryByName(mockFindName);
       expect(categoryRepository.findOne).toHaveBeenCalledTimes(1);
       try{
-        await service.patchCategory(mockedFindName, mockedErrorUpdateCategoryDto as UpdateCategoryDto);
+        await service.patchCategory(mockFindName, mockErrorUpdateCategoryDto as UpdateCategoryDto);
       }catch(e){
         expect(e).toBeInstanceOf(BadRequestException);
       }
