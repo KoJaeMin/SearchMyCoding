@@ -62,12 +62,15 @@ export class CourseCategoryService {
     }
 
     async createCourseCategory(createCourseCategory : CreateCourseCategoryDto) : Promise<void>{
+        const course : Course = await this.courseService.getOneCourseById(createCourseCategory.courseId);
+        const category : Category = await this.categoryService.getOneCategoryById(createCourseCategory.categoryId);
+
         const newCourseCategory : CourseCategory = this.coursecategoryRepository.create({
-            course : createCourseCategory.courseId,
-            category : createCourseCategory.categoryId
-        })
+            course : course.id,
+            category : category.id
+        });
         
-        this.coursecategoryRepository.insert(newCourseCategory);
+        await this.coursecategoryRepository.insert(newCourseCategory);
     }
 
     async patchCourseId(updateCourseCategoryDto : UpdateCourseCategoryDto) : Promise<void>{
