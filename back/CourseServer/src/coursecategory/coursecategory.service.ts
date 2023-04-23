@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CategoryService } from 'src/category/category.service';
 import { CourseService } from 'src/course/course.service';
@@ -81,6 +81,12 @@ export class CourseCategoryService {
         const FoundCourse : Course = await this.courseService.getOneCourseById(updateCourseCategoryDto.courseId);
         const FoundCourseToModify : Course = await this.courseService.getOneCourseById(updateCourseCategoryDto.idToModify);
 
+        
+        const FoundCourseCategory : CourseCategory = await this.coursecategoryRepository.findOne({category : FoundCategory.id, course : FoundCourse.id});
+        if(!FoundCourseCategory)
+            throw new NotFoundException(`CourseCategory is not found.`);
+        
+
         await this.coursecategoryRepository.update({category : FoundCategory.id, course : FoundCourse.id}, {course : FoundCourseToModify.id});
     }
 
@@ -91,7 +97,11 @@ export class CourseCategoryService {
         const FoundCategory : Category = await this.categoryService.getOneCategoryById(updateCourseCategoryDto.categoryId);
         const FoundCourse : Course = await this.courseService.getOneCourseById(updateCourseCategoryDto.courseId);
         const FoundCategoryToModify : Category = await this.categoryService.getOneCategoryById(updateCourseCategoryDto.idToModify);
-    
+
+        const FoundCourseCategory : CourseCategory = await this.coursecategoryRepository.findOne({category : FoundCategory.id, course : FoundCourse.id});
+        if(!FoundCourseCategory)
+            throw new NotFoundException(`CourseCategory is not found.`);
+
         await this.coursecategoryRepository.update({category : FoundCategory.id, course : FoundCourse.id}, {course : FoundCategoryToModify.id});
     }
 }
