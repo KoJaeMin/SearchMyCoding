@@ -9,11 +9,11 @@ import { createMock } from '@golevelup/ts-jest';
 import { Category } from 'src/entities/category.entity';
 import { Course } from 'src/entities/course.entity';
 import { CreateCourseCategoryDto } from 'src/dto/CreateCourseCatgory.dto';
+import { UpdateCourseCategoryDto } from 'src/dto/UpdateCourseCatgory.dto';
 
 const MockRepository = {
   find: jest.fn(),
-  findBy : jest.fn(),
-  findOneBy: jest.fn(),
+  findOne : jest.fn(),
   create: jest.fn(),
   update: jest.fn(),
   insert: jest.fn(),
@@ -85,7 +85,7 @@ describe('CoursecategoryService', () => {
     it("should find category Id List", async ()=>{
       courseCategoryRepository.find.mockResolvedValue(mockCourseCategoryList);
 
-      const result = await service.getCategoryIdListByCourseId(mockCourseId);
+      const result : number[] = await service.getCategoryIdListByCourseId(mockCourseId);
 
       expect(courseCategoryRepository.find).toHaveBeenCalled();
       expect(result.length).toEqual(mockCategoryIdList.length);
@@ -109,7 +109,7 @@ describe('CoursecategoryService', () => {
     it("should find course Id List", async ()=>{
       courseCategoryRepository.find.mockResolvedValue(mockCourseCategoryList);
 
-      const result = await service.getCourseIdListByCategoryId(mockCategoryId);
+      const result : number[] = await service.getCourseIdListByCategoryId(mockCategoryId);
 
       expect(courseCategoryRepository.find).toHaveBeenCalled();
       expect(result.length).toEqual(mockCourseIdList.length);
@@ -207,7 +207,143 @@ describe('CoursecategoryService', () => {
     })
   });
 
-  it.todo('createCourseCategory');
-  it.todo('patchCourseId');
-  it.todo('patchCategoryId');
+  describe('createCourseCategory',()=>{
+    const mockCourseId : number = 1;
+    const mockCategoryId : number = 1;
+    const mockCourseCategoryId : number = 1;
+    const mockCourse : Course = {
+      id : mockCourseId,
+      link : 'https://localhost',
+      title : '웹 기초',
+      price : 0,
+    };
+    const mockCategory : Category = 
+    {
+      id: mockCategoryId,
+      name: 'web'
+    };
+    const mockCreateCourseCategoryDto : CreateCourseCategoryDto = {
+      courseId : mockCourseId,
+      categoryId: mockCategoryId
+    };
+    const mockCourseCategoryList : CourseCategory[] = [{
+      id : mockCourseCategoryId,
+      course : mockCourse.id,
+      category : mockCategory.id
+    }];
+
+    it('should create a coursecategory', async () => {
+      courseCategoryRepository.find.mockResolvedValue([]);
+      const BeforeUpdate = await service.getCategoryIdListByCourseId(mockCourseId);
+      expect(courseCategoryRepository.find).toHaveBeenCalled();
+      
+      const result = await service.createCourseCategory(mockCreateCourseCategoryDto);
+
+      courseCategoryRepository.find.mockResolvedValue(mockCourseCategoryList);
+      const AfterUpdate = await service.getCategoryIdListByCourseId(mockCourseId);
+      expect(courseCategoryRepository.find).toHaveBeenCalled();
+
+      expect(AfterUpdate.length).toEqual(BeforeUpdate.length + 1);
+    });
+  });
+
+  describe('patchCourseId', ()=>{
+    const mockCourseId : number = 1;
+    const mockCategoryId : number = 1;
+    const mockUpdateCourseId : number = 2;
+    const mockUpdateCourseCategoryDto : UpdateCourseCategoryDto = {
+      modified : 'course',
+      courseId : mockCourseId,
+      categoryId : mockCategoryId,
+      idToModify : mockUpdateCourseId
+    };
+
+    const mockCourseCategory : CourseCategory = {
+      id : 1,
+      course : mockCourseId,
+      category : mockCategoryId
+    };
+
+    const mockUpdateCourseCategory : CourseCategory = {
+      id : 1,
+      course : mockUpdateCourseId,
+      category : mockCategoryId
+    }
+    
+    it("should patch a courseId", async () => {
+      jest
+        .spyOn(courseCategoryRepository, 'findOne')
+        .mockResolvedValue(mockCourseCategory);
+      
+      jest
+        .spyOn(service, 'getCourseIdListByCategoryId')
+        .mockResolvedValue([mockCourseId]);
+      const BeforeUpdate = await service.getCourseIdListByCategoryId(mockCategoryId);
+      
+      const result = await service.patchCourseId(mockUpdateCourseCategoryDto);
+
+      jest
+        .spyOn(courseCategoryRepository, 'findOne')
+        .mockResolvedValue(mockUpdateCourseCategory);
+
+      jest
+        .spyOn(service, 'getCourseIdListByCategoryId')
+        .mockResolvedValue([mockUpdateCourseId]);
+      const AfterUpdate = await service.getCourseIdListByCategoryId(mockCategoryId);
+
+      expect(BeforeUpdate.length).toEqual(AfterUpdate.length);
+      expect(BeforeUpdate[0]).toEqual(mockCourseId);
+      expect(AfterUpdate[0]).toEqual(mockUpdateCourseId);
+    });
+  });
+
+  describe('patchCategoryId',()=>{
+    const mockCourseId : number = 1;
+    const mockCategoryId : number = 1;
+    const mockUpdateCategoryId : number = 2;
+    const mockUpdateCourseCategoryDto : UpdateCourseCategoryDto = {
+      modified : 'category',
+      courseId : mockCourseId,
+      categoryId : mockCategoryId,
+      idToModify : mockUpdateCategoryId
+    };
+
+    const mockCourseCategory : CourseCategory = {
+      id : 1,
+      course : mockCourseId,
+      category : mockCategoryId
+    };
+
+    const mockUpdateCourseCategory : CourseCategory = {
+      id : 1,
+      course : mockUpdateCategoryId,
+      category : mockCategoryId
+    }
+    
+    it("should patch a category id", async () => {
+      jest
+        .spyOn(courseCategoryRepository, 'findOne')
+        .mockResolvedValue(mockCourseCategory);
+      
+      jest
+        .spyOn(service, 'getCategoryIdListByCourseId')
+        .mockResolvedValue([mockCategoryId]);
+      const BeforeUpdate = await service.getCategoryIdListByCourseId(mockCourseId);
+      
+      const result = await service.patchCategoryId(mockUpdateCourseCategoryDto);
+
+      jest
+        .spyOn(courseCategoryRepository, 'findOne')
+        .mockResolvedValue(mockUpdateCourseCategory);
+
+      jest
+        .spyOn(service, 'getCategoryIdListByCourseId')
+        .mockResolvedValue([mockUpdateCategoryId]);
+      const AfterUpdate = await service.getCategoryIdListByCourseId(mockCourseId);
+
+      expect(BeforeUpdate.length).toEqual(AfterUpdate.length);
+      expect(BeforeUpdate[0]).toEqual(mockCourseId);
+      expect(AfterUpdate[0]).toEqual(mockUpdateCategoryId);
+    });
+  });
 });
