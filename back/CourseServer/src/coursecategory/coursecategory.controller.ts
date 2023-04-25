@@ -12,7 +12,7 @@ export class CoursecategoryController {
         private readonly coursecategoryService : CourseCategoryService
     ){}
 
-    @Get('/course/:categoryId')
+    @Get('/course/id/:categoryId')
     @ApiOperation({
         "summary" : "카테고리 id에 해당하는 강의 id 리스트를 조회하는 요청",
         "description" : "카테고리 id에 해당하는 강의들의 id를 배열 형태로 반환한다."
@@ -21,7 +21,7 @@ export class CoursecategoryController {
         return await this.coursecategoryService.getCourseIdListByCategoryId(categoryId);
     }
 
-    @Get('/category/:courseId')
+    @Get('/category/id/:courseId')
     @ApiOperation({
         "summary" : "강의 id에 해당하는 카테고리 id 리스트를 조회하는 요청",
         "description" : "강의 id에 해당하는 카테고리들의 id를 배열 형태로 반환한다."
@@ -30,7 +30,7 @@ export class CoursecategoryController {
         return await this.coursecategoryService.getCategoryIdListByCourseId(courseId);
     }
 
-    @Get('/course/:categoryName')
+    @Get('/course/name/:categoryName')
     @ApiOperation({
         "summary" : "카테고리 이름에 해당하는 강의 리스트를 조회하는 요청",
         "description" : "카테고리 이름에 해당하는 강의들을 배열 형태로 반환한다."
@@ -39,7 +39,7 @@ export class CoursecategoryController {
         return await this.coursecategoryService.getCourseListByCategoryName(categoryName, start, count);
     }
     
-    @Get('/category/:courseTitle')
+    @Get('/category/title/:courseTitle')
     @ApiOperation({
         "summary" : "강의 제목에 해당하는 카테고리 리스트를 조회하는 요청",
         "description" : "강의 제목에 해당하는 카테고리들을 배열 형태로 반환한다."
