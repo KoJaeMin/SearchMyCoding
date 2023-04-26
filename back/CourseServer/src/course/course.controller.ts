@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, ValidationPipe } from '@nestjs/common';
 import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { CreateCourseDto } from 'src/dto/CreateCourse.dto';
 import { SelectNumberArrayDto } from 'src/dto/SelectNumberArray.dto';
@@ -63,8 +63,8 @@ export class CourseController {
         "summary" : "Id List에 해당하는 강의 리스트를 조회하는 요청",
         "description" : "Id List에 해당하는 강의들을 배열 형태로 반환한다."
     })
-    async getCourseListByIdList(@Query('list') queryData : SelectNumberArrayDto) : Promise<Course[]>{
-        return await this.courseService.getCourseListByIdList(queryData.numberString);
+    async getCourseListByIdList(@Query(new ValidationPipe({ transform: true })) query : SelectNumberArrayDto){
+        return await this.courseService.getCourseListByIdList(query.numberString);
     }
 
     @Patch(':title')

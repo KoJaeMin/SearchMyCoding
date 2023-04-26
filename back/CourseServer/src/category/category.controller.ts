@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, ValidationPipe } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { CreateCategoryDto } from 'src/dto/CreateCategory.dto';
 import { SelectNumberArrayDto } from 'src/dto/SelectNumberArray.dto';
@@ -35,11 +35,11 @@ export class CategoryController {
         "summary" : "Id List에 해당하는 카테고리 리스트를 조회하는 요청",
         "description" : "Id List에 해당하는 카테고리들을 배열 형태로 반환한다."
     })
-    async getCategoryListByIdList(@Query('list') queryData : SelectNumberArrayDto) : Promise<Category[]>{
-        return await this.categoryService.getCategoryListByIdList(queryData.numberString);
+    async getCategoryListByIdList(@Query(new ValidationPipe({ transform: true })) query : SelectNumberArrayDto) : Promise<Category[]>{
+        return await this.categoryService.getCategoryListByIdList(query.numberString);
     }
 
-    @Get('.name/:name')
+    @Get('/name/:name')
     @ApiOperation({
         "summary" : "이름을 이용한 카테고리 조회하는 요청",
         "description" : "이름을 이용하여 카테고리을 조회하고 json 형태로 반환한다.(단, 이름에 맞는 카테고리을 찾지 못한다면 에러를 반환한다.)"
