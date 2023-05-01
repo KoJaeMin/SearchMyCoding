@@ -11,6 +11,9 @@ import { CourseModule } from 'src/course/course.module';
 import { CategoryModule } from 'src/category/category.module';
 import { CoursecategoryModule } from 'src/coursecategory/coursecategory.module';
 import { UpdateCourseDto } from 'src/dto/UpdateCourse.dto';
+import { CreateCategoryDto } from 'src/dto/CreateCategory.dto';
+import { UpdateCategoryDto } from 'src/dto/UpdateCategory.dto';
+import { CreateCourseCategoryDto } from 'src/dto/CreateCourseCatgory.dto';
 describe('AppController (e2e)', () => {
   let app: INestApplication;
 
@@ -56,7 +59,7 @@ describe('AppController (e2e)', () => {
         .expect(201);
     });
 
-    it("GET /:id (200)", ()=>{
+    it("GET /id/:id (200)", ()=>{
       const courseId : number = 1;
 
       return request(app.getHttpServer())
@@ -64,7 +67,7 @@ describe('AppController (e2e)', () => {
         .expect(200);
     });
 
-    it("GET /:id (404)", ()=>{
+    it("GET /id/:id (404)", ()=>{
       const errorCourseId : number = 999;
 
       return request(app.getHttpServer())
@@ -122,14 +125,145 @@ describe('AppController (e2e)', () => {
     });
 
     it("PATCH /:title (404)", ()=>{
-      const updateCourseTitle: string = 'basic-fasf';
-      const updateCourseDto : UpdateCourseDto = {
+      const errorUpdateCourseTitle: string = 'basic-fasf';
+      const errorUpdateCourseDto : UpdateCourseDto = {
         price : 100
       };
       return request(app.getHttpServer())
-        .patch(defaultPath+`/${updateCourseTitle}`)
-        .send(updateCourseDto)
+        .patch(defaultPath+`/${errorUpdateCourseTitle}`)
+        .send(errorUpdateCourseDto)
         .expect(404);
+    });
+  });
+  
+  describe('/category', ()=>{
+    const defaultPath = '/category';
+
+    it("POST / (201)", ()=>{
+      const createCategoryDto : CreateCategoryDto = {
+        name : "web"
+      }
+
+      return request(app.getHttpServer())
+        .post(defaultPath)
+        .send(createCategoryDto)
+        .expect(201);
+    });
+
+    it("GET / (200)", ()=>{
+      return request(app.getHttpServer())
+        .get(defaultPath)
+        .expect(200);
+    });
+
+    it("GET /id/:id (200)", ()=>{
+      const categoryId : number = 1;
+
+      return request(app.getHttpServer())
+        .get(defaultPath+`/id/${categoryId}`)
+        .expect(200);
+    });
+
+    it("GET /id/:id (404)", ()=>{
+      const errorCategoryId : number = 999;
+
+      return request(app.getHttpServer())
+        .get(defaultPath+`/id/${errorCategoryId}`)
+        .expect(404);
+    });
+
+    it("GET /list (200)", ()=>{
+      const numberList : number[] = [1,2,3,4,5,6];
+      return request(app.getHttpServer())
+        .get(defaultPath+`/list?numberString=${numberList.join(',')}`)
+        .expect(200);
+    });
+    
+    it("GET /name/:name (200)", ()=>{
+      const categoryName : string = 'web';
+
+      return request(app.getHttpServer())
+        .get(defaultPath+`/name/${categoryName}`)
+        .expect(200);
+    });
+
+    it("GET /name/:name (404)", ()=>{
+      const errorCategoryName : string = 'app';
+
+      return request(app.getHttpServer())
+        .get(defaultPath+`/name/${errorCategoryName}`)
+        .expect(404);
+    });
+
+    it("PATCH /:name (200)", ()=>{
+      const updateCategoryName: string = 'web';
+      const updateCategoryDto : UpdateCategoryDto = {
+        name : 'web'
+      };
+      return request(app.getHttpServer())
+        .patch(defaultPath+`/${updateCategoryName}`)
+        .send(updateCategoryDto)
+        .expect(200);
+    });
+
+    it("PATCH /:name (404)", ()=>{
+      const errorUpdateCategoryName: string = 'app';
+      const errorUpdateCategoryDto : UpdateCategoryDto = {
+        name : 'web'
+      };
+
+      return request(app.getHttpServer())
+        .patch(defaultPath+`/${errorUpdateCategoryName}`)
+        .send(errorUpdateCategoryDto)
+        .expect(404);
+    });
+  });
+
+  describe('/coursecategory', ()=>{
+    const defaultPath = '/coursecategory';
+
+    it("POST / (201)", ()=>{
+      const createCourseCategoryDto : CreateCourseCategoryDto = {
+        courseId : 1,
+        categoryId : 1
+      }
+
+      return request(app.getHttpServer())
+        .post(defaultPath)
+        .send(createCourseCategoryDto)
+        .expect(201);
+    });
+
+    it("GET /course/id/:categoryId (200)", ()=>{
+      const categoryId : number = 1;
+
+      return request(app.getHttpServer())
+        .get(defaultPath+`/course/id/${categoryId}`)
+        .expect(200);
+    });
+
+    it("GET /course/id/:categoryId (404)", ()=>{
+      const errorCategoryId : number = 999;
+
+      return request(app.getHttpServer())
+        .get(defaultPath+`/course/id/${errorCategoryId}`)
+        .expect(200);
+    });
+
+    it("GET /category/id/:courseId (200)", ()=>{
+      const courseId : number = 1;
+
+      return request(app.getHttpServer())
+        .get(defaultPath+`/category/id/${courseId}`)
+        .expect(200);
+    });
+
+    it("GET /category/id/:courseId (404)", ()=>{
+      const errorCourseId : number = 999;
+
+      return request(app.getHttpServer())
+        .get(defaultPath+`/category/id/${errorCourseId}`)
+        .expect(200);
     });
   });
   
