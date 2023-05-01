@@ -62,7 +62,7 @@ export class CategoryController {
         "summary" : "이름을 이용하여 카테고리의 일부를 수정하는 요청",
         "description" : "카테고리가 존재하여야 하며 body를 UpdateCategoryDto에 맞춰 요청해야한다."
     })
-    async patchCategory(@Param('name') categoryName : string,@Body() updateCategoryDto : UpdateCategoryDto){
+    async patchCategory(@Param('name') categoryName : string, @Body() updateCategoryDto : UpdateCategoryDto){
         return this.categoryService.patchCategory(categoryName, updateCategoryDto);
     }
 }
