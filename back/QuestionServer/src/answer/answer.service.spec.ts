@@ -6,6 +6,7 @@ import { Answer } from '../entities/answer.entity';
 import { Repository } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AnswerService } from './answer.service';
+import { Question } from '../entities/question.entity';
 
 const mockAnswerRepository = () => ({
   find: jest.fn(),
@@ -15,12 +16,18 @@ const mockAnswerRepository = () => ({
   insert: jest.fn()
 });
 
+const mockQuestionRepository = () => ({
+  findOne: jest.fn(),
+  save: jest.fn()
+});
+
 type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 
 
 describe('AnswersService', () => {
   let service: AnswerService;
   let answerRepository: MockRepository<Answer>;
+  let questionRepository: MockRepository<Question>;
   let mockedAnswer : Answer;
 
   beforeEach(async () => {
@@ -31,12 +38,19 @@ describe('AnswersService', () => {
           provide : getRepositoryToken(Answer),
           useValue : mockAnswerRepository()
         },
+        {
+          provide : getRepositoryToken(Question),
+          useValue : mockQuestionRepository()
+        }
       ],
     }).compile();
 
     service = module.get<AnswerService>(AnswerService);
     answerRepository = module.get<MockRepository<Answer>>(
       getRepositoryToken(Answer),
+    );
+    questionRepository = module.get<MockRepository<Question>>(
+      getRepositoryToken(Question)
     );
     mockedAnswer = {
       id : 1,
@@ -84,15 +98,23 @@ describe('AnswersService', () => {
   });
 
   describe("getAnswerAboutQuestion", () =>{
-    const temp = null;
     const mockedQuestionId : number = 1;
     const mockedErrorQuestionId : number = 999;
+    const mockQuestion : Question = {
+      id : 1,
+      questionType : 'EI',
+      contents : "한 달 동안 공부, 프로젝트에 매진해 있어서 제대로 쉰 날이 하루도 없다... <br/>가까스로 다 끝낸 뒤 나는?",
+      activate : true,
+      answer : [1]
+    };
 
-    it("should find answers anbout question",async () => {
-      answerRepository.find.mockResolvedValue(mockedAnswer);
+    it("should find answers about question",async () => {
+      questionRepository.findOne.mockResolvedValue(mockQuestion);
+      answerRepository.findOne.mockResolvedValue(mockedAnswer);
       const result = await service.getAnswerAboutQuestion(mockedQuestionId);
-      expect(answerRepository.find).toHaveBeenCalledTimes(1);
-      expect(result).toEqual(mockedAnswer);
+      expect(answerRepository.findOne).toHaveBeenCalled();
+      expect(questionRepository.findOne).toHaveBeenCalled();
+      expect(result).toEqual([mockedAnswer]);
     });
     
     it("should return a NotFoundException", async () => {
@@ -109,32 +131,36 @@ describe('AnswersService', () => {
       answerType : 'E',
       contents : '한 달 동안 못 논 게 한이다! 친구들과 만나 파워 수다!',
       questionId : 1
-    }
+    };
+
+    const mockQuestion : Question = {
+      id : 1,
+      questionType : 'EI',
+      contents : "한 달 동안 공부, 프로젝트에 매진해 있어서 제대로 쉰 날이 하루도 없다... <br/>가까스로 다 끝낸 뒤 나는?",
+      activate : true,
+      answer : []
+    };
 
     const mockedErrorCreateAnswerDto = {
       contents : '한 달 동안 못 논 게 한이다! 친구들과 만나 파워 수다!',
       questionId : 1
-    }
+    };
 
     it("should create an answer", async () => {
       answerRepository.find.mockResolvedValue([]);
       const BeforeCreate = (await service.getAllAnswer()).length;
       expect(answerRepository.find).toHaveBeenCalledTimes(1);
-      
+
+      questionRepository.findOne.mockResolvedValue(mockQuestion);
+      answerRepository.findOne.mockResolvedValue([mockedAnswer]);
       const result = await service.createAnswer(mockedCreateAnswerDto);
+      expect(questionRepository.findOne).toHaveBeenCalled();
+      expect(answerRepository.findOne).toHaveBeenCalledTimes(1);
 
       answerRepository.find.mockResolvedValue([mockedAnswer]);
       const AfterCreate = (await service.getAllAnswer()).length;
       expect(answerRepository.find).toHaveBeenCalledTimes(2);
       expect(AfterCreate).toEqual(BeforeCreate + 1);
-    });
-
-    it("should return a BadRequestException", async () => {
-      try{
-        await service.createAnswer(mockedErrorCreateAnswerDto as CreateAnswerDto);
-      }catch(e){
-        expect(e).toBeInstanceOf(BadRequestException);
-      }
     });
   });
 

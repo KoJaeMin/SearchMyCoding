@@ -41,7 +41,8 @@ describe('QuestionsService', () => {
       id : 1,
       questionType : 'EI',
       contents : '한 달 동안 공부, 프로젝트에 매진해 있어서 제대로 쉰 날이 하루도 없다... <br/>가까스로 다 끝낸 뒤 나는?',
-      activate : true
+      activate : true,
+      answer : []
     };
   });
 
@@ -148,7 +149,8 @@ describe('QuestionsService', () => {
       id : 1,
       questionType : "EI",
       contents : '한 달 동안 공부, 프로젝트에 매진해 있어서 제대로 쉰 날이 하루도 없다... <br/>가까스로 다 끝낸 뒤 나는?',
-      activate : false
+      activate : false,
+      answer : []
     };
     const mockedErrorUpdateQuestionDto = {
       author : "noname"
