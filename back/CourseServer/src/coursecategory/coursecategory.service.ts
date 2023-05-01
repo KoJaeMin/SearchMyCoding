@@ -34,14 +34,15 @@ export class CourseCategoryService {
         return FoundCourseIdList;
     }
 
-    async getCourseListByCategoryName(categoryName : string, start : number, count : number) : Promise<Course[]>{
-        const FoundCourse : Category = await this.categoryService.getOneCategoryByName(categoryName);
+    async getCourseListByCategoryName(categoryName : string, page : number = 10, perPage : number = 10) : Promise<Course[]>{
+        const FoundCategory : Category = await this.categoryService.getOneCategoryByName(categoryName);
+
         const CourseList : CourseCategory[] = await this.coursecategoryRepository
                             .createQueryBuilder('cil')
-                            .where(`category = ${FoundCourse.id}`)
+                            .where(`category = ${FoundCategory.id}`)
                             .distinct()
-                            .skip(start - 1)
-                            .take(count)
+                            .take(perPage)
+                            .skip(perPage * (page - 1))
                             .getMany();
         
         //// courseIdList에서 나온 아이디들을 course 배열로 전환
@@ -50,12 +51,18 @@ export class CourseCategoryService {
         return FoundCourseList;
     }
 
-    async getCategoryListByCourseTitle(courseTitle : string) : Promise<Category[]>{
+    async getCategoryListByCourseTitle(courseTitle : string, page : number = 10, perPage : number = 10) : Promise<Category[]>{
         const FoundCourse : Course = await this.courseService.getOneCourseByTitle(courseTitle);
-        const FoundOption : FindManyOptions<CourseCategory> = {
-            where : {course : FoundCourse.id}
-        };
-        const CategoryList : CourseCategory[] = await this.coursecategoryRepository.find(FoundOption);
+
+        const CategoryList : CourseCategory[] = await this.coursecategoryRepository
+                            .createQueryBuilder('cil')
+                            .where(`course = ${FoundCourse.id}`)
+                            .distinct()
+                            .take(perPage)
+                            .skip(perPage * (page - 1))
+                            .getMany();
+
+        console.log(CategoryList)
         const FoundCategoryIdList : number[] = CategoryList.map((categoryObj)=>categoryObj.category);
         const FoundCategoryList : Category[] = await this.categoryService.getCategoryListByIdList(FoundCategoryIdList);
         return FoundCategoryList;

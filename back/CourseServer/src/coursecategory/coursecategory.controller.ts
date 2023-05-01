@@ -35,8 +35,8 @@ export class CoursecategoryController {
         "summary" : "카테고리 이름에 해당하는 강의 리스트를 조회하는 요청",
         "description" : "카테고리 이름에 해당하는 강의들을 배열 형태로 반환한다."
     })
-    async getCourseListByCategoryName(@Param('categoryName') categoryName : string, @Query('start') start : number,@Query('count') count : number) : Promise<Course[]>{
-        return await this.coursecategoryService.getCourseListByCategoryName(categoryName, start, count);
+    async getCourseListByCategoryName(@Param('categoryName') categoryName : string) : Promise<Course[]>{
+        return await this.coursecategoryService.getCourseListByCategoryName(categoryName);
     }
     
     @Get('/category/title/:courseTitle')
