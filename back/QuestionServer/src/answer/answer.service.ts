@@ -33,11 +33,7 @@ export class AnswerService {
         if(!FoundQuestion)
             throw new NotFoundException(`Question with Id ${questionId} is not found`);
         
-        const FoundAnswer : Answer[] = [];
-        for(const answerId of FoundQuestion.answer)
-            FoundAnswer.push(await this.getOneAnswer(answerId));
-        
-        return FoundAnswer;
+        return FoundQuestion.answer;
     }
 
     async createAnswer(createAnswerDto : CreateAnswerDto) : Promise<void>{
@@ -53,7 +49,7 @@ export class AnswerService {
         await this.answerRepository.insert(newAnswer);
         const answer : Answer = await this.answerRepository.findOne({contents : contents});
         
-        question.answer.push(answer.id);
+        question.answer.push(answer);
         await this.questionRepository.save(question);
     }
 

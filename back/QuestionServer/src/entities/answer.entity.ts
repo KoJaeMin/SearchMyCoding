@@ -6,7 +6,7 @@ export class Answer{
     @PrimaryGeneratedColumn()
     id : number;
 
-    @ManyToOne((type) => Question, (question : Question) => question.id)
+    @ManyToOne((type) => Question, (question : Question) => question.answer)
     question : number;
 
     @Column({

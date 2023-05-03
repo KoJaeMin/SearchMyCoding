@@ -24,7 +24,7 @@ const mockQuestionRepository = () => ({
 type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 
 
-describe('AnswersService', () => {
+describe('AnswerService', () => {
   let service: AnswerService;
   let answerRepository: MockRepository<Answer>;
   let questionRepository: MockRepository<Question>;
@@ -100,19 +100,18 @@ describe('AnswersService', () => {
   describe("getAnswerAboutQuestion", () =>{
     const mockedQuestionId : number = 1;
     const mockedErrorQuestionId : number = 999;
-    const mockQuestion : Question = {
-      id : 1,
-      questionType : 'EI',
-      contents : "한 달 동안 공부, 프로젝트에 매진해 있어서 제대로 쉰 날이 하루도 없다... <br/>가까스로 다 끝낸 뒤 나는?",
-      activate : true,
-      answer : [1]
-    };
-
+    
     it("should find answers about question",async () => {
+      const mockQuestion : Question = {
+        id : 1,
+        questionType : 'EI',
+        contents : "한 달 동안 공부, 프로젝트에 매진해 있어서 제대로 쉰 날이 하루도 없다... <br/>가까스로 다 끝낸 뒤 나는?",
+        activate : true,
+        answer : [mockedAnswer]
+      };
+
       questionRepository.findOne.mockResolvedValue(mockQuestion);
-      answerRepository.findOne.mockResolvedValue(mockedAnswer);
       const result = await service.getAnswerAboutQuestion(mockedQuestionId);
-      expect(answerRepository.findOne).toHaveBeenCalled();
       expect(questionRepository.findOne).toHaveBeenCalled();
       expect(result).toEqual([mockedAnswer]);
     });

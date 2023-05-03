@@ -26,5 +26,5 @@ export class Question{
     activate : boolean;
 
     @OneToMany((type) => Answer, (answer : Answer) => answer.question)
-    answer : number[]
+    answer : Answer[]
 }
