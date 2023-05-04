@@ -1,5 +1,5 @@
 import { ApiProperty, PartialType } from "@nestjs/swagger";
-import { IsString } from "class-validator";
+import { IsNumber, IsString } from "class-validator";
 import { CreateCourseCategoryDto } from "./CreateCourseCatgory.dto";
 
 export class UpdateCourseCategoryDto extends PartialType(CreateCourseCategoryDto){
@@ -12,6 +12,6 @@ export class UpdateCourseCategoryDto extends PartialType(CreateCourseCategoryDto
     @ApiProperty({
         description : "수정할 번호, course와 category는 찾는 번호"
     })
-    @IsString()
+    @IsNumber()
     readonly idToModify : number;
 }

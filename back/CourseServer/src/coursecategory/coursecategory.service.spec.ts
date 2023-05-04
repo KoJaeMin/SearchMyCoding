@@ -145,10 +145,6 @@ describe('CoursecategoryService', () => {
       jest
         .spyOn(categoryService, 'getOneCategoryByName')
         .mockResolvedValue(mockCategory);
-
-      jest
-        .spyOn(courseCategoryRepository.createQueryBuilder(),'getMany')
-        .mockResolvedValue(mockCourseCategory)
       
       jest
         .spyOn(courseService, 'getCourseListByIdList')
@@ -157,7 +153,6 @@ describe('CoursecategoryService', () => {
       const result : Course[] = await service.getCourseListByCategoryName(mockCategoryName, mockStartNumber, mockCountNumber);
       
       expect(categoryService.getOneCategoryByName).toHaveBeenCalledTimes(1);
-      expect(courseCategoryRepository.createQueryBuilder().getMany).toHaveBeenCalledTimes(1);
       expect(courseService.getCourseListByIdList).toHaveBeenCalledTimes(1);
       
       expect(result).toBeInstanceOf(Array);

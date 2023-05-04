@@ -12,7 +12,7 @@ export class CategoryController {
         private readonly categoryService : CategoryService
     ){}
 
-    @Get()
+    @Get('/all')
     @ApiOperation({
         "summary" : "모든 카테고리 조회하는 요청",
         "description" : "모든 카테고리 배열 형태로 반환한다."

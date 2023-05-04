@@ -20,50 +20,64 @@ export class CourseCategoryService {
 
     async getCategoryIdListByCourseId(courseId : number) : Promise<number[]> {
         const FoundList : CourseCategory[] = await this.coursecategoryRepository.find({
-            where : {course : courseId}
+            select: ["id", "course", "category"],
+            where : {course : courseId},
+            loadRelationIds : {
+                relations: ["course", "category"]
+            }
         });
-        const FoundCategoryIdList : number[] = FoundList.map((coursecategoryObj)=>coursecategoryObj.category);
+
+        const FoundCategoryIdList : number[] = FoundList.map((coursecategoryObj)=>coursecategoryObj.category).sort((a,b)=>a-b);
         return FoundCategoryIdList;
     }
 
     async getCourseIdListByCategoryId(categoryId : number) : Promise<number[]> {
         const FoundList : CourseCategory[] = await this.coursecategoryRepository.find({
-            where : {course : categoryId}
+            select: ["id", "course", "category"],
+            where : {category : categoryId},
+            loadRelationIds : {
+                relations: ["course", "category"]
+            }
         });
-        const FoundCourseIdList : number[] = FoundList.map((coursecategoryObj)=>coursecategoryObj.course);
+
+        const FoundCourseIdList : number[] = FoundList.map((coursecategoryObj)=>coursecategoryObj.course).sort((a,b)=>a-b);
         return FoundCourseIdList;
     }
 
-    async getCourseListByCategoryName(categoryName : string, page : number = 10, perPage : number = 10) : Promise<Course[]>{
+    async getCourseListByCategoryName(categoryName : string, page : number = 1, perPage : number = 10) : Promise<Course[]>{
         const FoundCategory : Category = await this.categoryService.getOneCategoryByName(categoryName);
 
-        const CourseList : CourseCategory[] = await this.coursecategoryRepository
-                            .createQueryBuilder('cil')
-                            .where(`category = ${FoundCategory.id}`)
-                            .distinct()
-                            .take(perPage)
-                            .skip(perPage * (page - 1))
-                            .getMany();
+        const CourseList : CourseCategory[] = await this.coursecategoryRepository.find({
+            select: ["id", "course", "category"],
+            where : {category : FoundCategory.id},
+            loadRelationIds : {
+                relations: ["course", "category"]
+            },
+            take : perPage,
+            skip : perPage * (page - 1)
+        });
         
-        //// courseIdList에서 나온 아이디들을 course 배열로 전환
-        const FoundCourseIdList : number[] = CourseList.map((courseObj)=>courseObj.course);
+
+        const FoundCourseIdList : number[] = CourseList.map((coursecategoryObj)=> coursecategoryObj.course).sort((a,b)=>a-b);
         const FoundCourseList : Course[] = await this.courseService.getCourseListByIdList(FoundCourseIdList);
         return FoundCourseList;
     }
 
-    async getCategoryListByCourseTitle(courseTitle : string, page : number = 10, perPage : number = 10) : Promise<Category[]>{
+    async getCategoryListByCourseTitle(courseTitle : string, page : number = 1, perPage : number = 10) : Promise<Category[]>{
         const FoundCourse : Course = await this.courseService.getOneCourseByTitle(courseTitle);
 
-        const CategoryList : CourseCategory[] = await this.coursecategoryRepository
-                            .createQueryBuilder('cil')
-                            .where(`course = ${FoundCourse.id}`)
-                            .distinct()
-                            .take(perPage)
-                            .skip(perPage * (page - 1))
-                            .getMany();
+        const CategoryList : CourseCategory[] = await this.coursecategoryRepository.find({
+            select: ["id", "course", "category"],
+            where : {course : FoundCourse.id},
+            loadRelationIds : {
+                relations: ["course", "category"]
+            },
+            take : perPage,
+            skip : perPage * (page - 1)
+        });
+        
 
-        console.log(CategoryList)
-        const FoundCategoryIdList : number[] = CategoryList.map((categoryObj)=>categoryObj.category);
+        const FoundCategoryIdList : number[] = CategoryList.map((categoryObj)=>categoryObj.category).sort((a,b)=>a-b);
         const FoundCategoryList : Category[] = await this.categoryService.getCategoryListByIdList(FoundCategoryIdList);
         return FoundCategoryList;
     }
