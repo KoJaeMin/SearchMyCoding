@@ -14,6 +14,7 @@ import { UpdateCourseDto } from 'src/dto/UpdateCourse.dto';
 import { CreateCategoryDto } from 'src/dto/CreateCategory.dto';
 import { UpdateCategoryDto } from 'src/dto/UpdateCategory.dto';
 import { CreateCourseCategoryDto } from 'src/dto/CreateCourseCatgory.dto';
+import { UpdateCourseCategoryDto } from 'src/dto/UpdateCourseCatgory.dto';
 describe('AppController (e2e)', () => {
   let app: INestApplication;
 
@@ -150,9 +151,9 @@ describe('AppController (e2e)', () => {
         .expect(201);
     });
 
-    it("GET / (200)", ()=>{
+    it("GET /a;; (200)", ()=>{
       return request(app.getHttpServer())
-        .get(defaultPath)
+        .get(defaultPath+'/all')
         .expect(200);
     });
 
@@ -263,6 +264,66 @@ describe('AppController (e2e)', () => {
 
       return request(app.getHttpServer())
         .get(defaultPath+`/category/id/${errorCourseId}`)
+        .expect(200);
+    });
+    
+    it("GET /course/name/:categoryName (200)", ()=>{
+      const categoryName : string = 'web';
+
+      return request(app.getHttpServer())
+        .get(defaultPath+`/course/name/${categoryName}`)
+        .expect(200);
+    });
+
+    it("GET /course/name/:categoryName (404)", ()=>{
+      const errorCategoryName : string = 'app';
+
+      return request(app.getHttpServer())
+        .get(defaultPath+`/course/name/${errorCategoryName}`)
+        .expect(404);
+    });
+
+    it("GET /category/title/:courseTitle (200)", ()=>{
+      const courseTitle : string = 'basic-web';
+
+      return request(app.getHttpServer())
+        .get(defaultPath+`/category/title/${courseTitle}`)
+        .expect(200);
+    });
+
+    it("GET /category/title/:courseTitle (404)", ()=>{
+      const errorCourseTitle : string = 'basic-app';
+
+      return request(app.getHttpServer())
+        .get(defaultPath+`/category/title/${errorCourseTitle}`)
+        .expect(404);
+    });
+
+    it("PATCH /course (200)", ()=>{
+      const updateCourseCategoryDto : UpdateCourseCategoryDto = {
+        courseId : 1,
+        categoryId: 1,
+        modified:'course',
+        idToModify : 1
+      };
+      
+      return request(app.getHttpServer())
+        .patch(defaultPath+'/course')
+        .send(updateCourseCategoryDto)
+        .expect(200);
+    });
+
+    it("PATCH /category (200)", ()=>{
+      const updateCourseCategoryDto : UpdateCourseCategoryDto = {
+        courseId : 1,
+        categoryId: 1,
+        modified:'category',
+        idToModify : 1
+      };
+
+      return request(app.getHttpServer())
+        .patch(defaultPath+'/category')
+        .send(updateCourseCategoryDto)
         .expect(200);
     });
   });
