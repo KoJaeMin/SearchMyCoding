@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { CreateUserDto } from "src/dto/CreateUser.dto";
+import { GetUserDto } from "src/dto/GetUser.dto";
 import { UpdateUserDto } from "src/dto/UpdateUser.dto";
 import { User, UserDocument } from "src/schemas/user.schema";
 
@@ -13,8 +14,8 @@ export class UserRepository{
   ) {}
 
   async findOne(email : string, password : string): Promise<User> {
-    const User : User = await this.userModel.findOne({email:email, password:password});
-    return User;
+    const FoundUser : User = await this.userModel.findOne({email:email, password:password});
+    return FoundUser;
   }
 
   async creaateOne(createUserDto : CreateUserDto) : Promise<void>{
@@ -22,18 +23,14 @@ export class UserRepository{
     await createdUser.save();
   }
 
-  async updatePassword(updateUserDto : UpdateUserDto){
-    await this.userModel.findOneAndUpdate({
-      name : updateUserDto.name,
-      email : updateUserDto.email
-    },
-    {
-      password: updateUserDto.password
-    },
-    {
-      new: true,
-      upsert: true
-    }
+  async updatePassword(GetUserDto : GetUserDto, updateUserDto : UpdateUserDto){
+    await this.userModel.findOneAndUpdate(
+      GetUserDto,
+      updateUserDto,
+      {
+        new: true,
+        upsert: true
+      }
     );
   }
 }
