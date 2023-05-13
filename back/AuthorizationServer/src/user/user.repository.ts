@@ -18,6 +18,11 @@ export class UserRepository{
     return FoundUser;
   }
 
+  async findOneWithoutPassword(email : string, name : string) : Promise<User>{
+    const FoundUser : User = await this.userModel.findOne({email:email, name:name});
+    return FoundUser;
+  }
+
   async creaateOne(createUserDto : CreateUserDto) : Promise<void>{
     const createdUser = new this.userModel(createUserDto);
     await createdUser.save();
