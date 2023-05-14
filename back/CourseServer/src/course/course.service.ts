@@ -4,7 +4,7 @@ import { FindManyOptions, Repository } from 'typeorm';
 import { Course } from 'src/entities/course.entity';
 import { CreateCourseDto } from 'src/dto/CreateCourse.dto';
 import { UpdateCourseDto } from 'src/dto/UpdateCourse.dto';
-import { convertValidURI, IsValidRating, IsValidURI } from 'src/utils/format';
+import { convertFormat, convertValidURI, IsValidRating, IsValidURI } from 'src/utils/format';
 
 @Injectable()
 export class CourseService {
@@ -51,7 +51,7 @@ export class CourseService {
     }
 
     async createCourse(createCourseDto : CreateCourseDto) : Promise<void>{
-        const [validURI, validIMG_URI] = await this.convertFormat(createCourseDto.link, createCourseDto.img_link);
+        const [validURI, validIMG_URI] = convertFormat(createCourseDto.link, createCourseDto.img_link);
 
         if(!IsValidURI(validURI))
             throw new BadRequestException(`Bad Format`);
@@ -74,7 +74,7 @@ export class CourseService {
         }catch(err){
             throw err;
         }
-        const [validURI, validIMG_URI] = await this.convertFormat(updateCourseDto.link, updateCourseDto.img_link);
+        const [validURI, validIMG_URI] = convertFormat(updateCourseDto.link, updateCourseDto.img_link);
         
         if(validURI !== null && !IsValidURI(validURI))
             throw new BadRequestException(`Bad Format`);
@@ -83,11 +83,5 @@ export class CourseService {
             throw new BadRequestException(`Bad Format`);
 
         await this.courseRepository.update({title : courseTitle},updateCourseDto);
-    }
-
-    async convertFormat(link : string | null, img_link : string | null){
-        const validURI = !!link ? convertValidURI(link) : null;
-        const validIMG_URI = !!img_link ? convertValidURI(img_link) : null;
-        return [validURI, validIMG_URI];
     }
 }
