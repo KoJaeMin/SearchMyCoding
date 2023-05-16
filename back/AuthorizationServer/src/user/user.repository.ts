@@ -23,7 +23,7 @@ export class UserRepository{
     return FoundUser;
   }
 
-  async creaateOne(createUserDto : CreateUserDto) : Promise<void>{
+  async createOne(createUserDto : CreateUserDto) : Promise<void>{
     const createdUser = new this.userModel(createUserDto);
     await createdUser.save();
   }

@@ -39,11 +39,11 @@ export class UserService {
     async changeDefaultPassword(user : User) : Promise<string>{
         const toHash : string = `${Date.now()}${salt}${user.password}`;
         const hashedPassword : string = crypto.createHash(hash_algorithm).update(toHash).digest('hex').slice(0, 9);
-        const userInfo = {
+        const userInfo : GetUserDto = {
             email : user.email,
             password : user.password
         };
-        const updatePassword = {
+        const updatePassword : UpdateUserDto = {
             name : user.name,
             password : hashedPassword
         };
@@ -62,7 +62,7 @@ export class UserService {
             throw new BadRequestException(`Bad Email Format`);
         const toHash : string = `${createUserDto.password}${salt}`;
         const hashedPassword : string = crypto.createHash(hash_algorithm).update(toHash).digest('hex');
-        await this.userRepository.creaateOne({
+        await this.userRepository.createOne({
             email: createUserDto.email,
             password : hashedPassword,
             name: createUserDto.name
