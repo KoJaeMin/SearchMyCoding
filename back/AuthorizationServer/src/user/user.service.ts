@@ -1,7 +1,7 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { User } from 'src/schemas/user.schema';
 import { IsValidEmail } from 'src/utils/format';
-import crypto from 'crypto';
+import * as crypto from 'node:crypto';
 import { hash_algorithm, salt } from 'src/config/crypto.config';
 import { UserRepository } from './user.repository';
 import { CreateUserDto } from 'src/dto/CreateUser.dto';

@@ -1,4 +1,5 @@
 import { ConfigService } from "@nestjs/config";
+import 'dotenv/config';
 
 const config : ConfigService = new ConfigService();
 
