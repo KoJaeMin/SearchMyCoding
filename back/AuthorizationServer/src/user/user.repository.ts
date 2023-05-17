@@ -24,8 +24,7 @@ export class UserRepository{
   }
 
   async createOne(createUserDto : CreateUserDto) : Promise<void>{
-    const createdUser = new this.userModel(createUserDto);
-    await createdUser.save();
+    await this.userModel.create(createUserDto);
   }
 
   async updatePassword(GetUserDto : GetUserDto, updateUserDto : UpdateUserDto){
