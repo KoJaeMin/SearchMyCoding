@@ -3,6 +3,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateUserDto } from 'src/dto/CreateUser.dto';
 import { GetUserDto } from 'src/dto/GetUser.dto';
+import { GetUserWithoutPasswordDto } from 'src/dto/GetUserWithoutPassword.dto';
 import { UpdateUserDto } from 'src/dto/UpdateUser.dto';
 import { User } from 'src/schemas/user.schema';
 import { UserRepository } from './user.repository';
@@ -77,6 +78,14 @@ describe('UserService', () => {
     const mockEmail : string = 'example@abc.abc';
     const mockName : string = 'test';
     const mockErrorEmail : string = 'helloworld';
+    const mockGetUserWithoutPasswordDto : GetUserWithoutPasswordDto = {
+      email : mockEmail,
+      name : mockName
+    }
+    const mockErrorGetUserWithoutPasswordDto : GetUserWithoutPasswordDto = {
+      email : mockErrorEmail,
+      name : mockName
+    }
 
 
     it('should find a user without password', async ()=>{
@@ -84,7 +93,7 @@ describe('UserService', () => {
       /// 그러므로 findOneWithoutPassword에서 findOne을 사용하기에 findOneWithoutPassword 대신 findOne을 사용해야 한다.
       userRepository.findOne.mockResolvedValue(mockUser);
       
-      const result : User = await service.getUserWithoutPassword(mockEmail, mockName);
+      const result : User = await service.getUserWithoutPassword(mockGetUserWithoutPasswordDto);
       
       expect(userRepository.findOne).toHaveBeenCalled();
       expect(result.email).toEqual(mockEmail);
@@ -93,7 +102,7 @@ describe('UserService', () => {
 
     it("should return a BadRequestException", async () => {
       try{
-        await service.getUserWithoutPassword(mockErrorEmail, mockName);
+        await service.getUserWithoutPassword(mockErrorGetUserWithoutPasswordDto);
       }catch(e){
         expect(e).toBeInstanceOf(BadRequestException);
       }
@@ -103,6 +112,11 @@ describe('UserService', () => {
   describe('changeDefaultPassword', ()=>{
     const mockEmail : string = 'example@abc.abc';
     const mockName : string = 'test';
+    const mockErrorEmail : string = 'helloworld';
+    const mockGetUserWithoutPasswordDto : GetUserWithoutPasswordDto = {
+      email : mockEmail,
+      name : mockName
+    }
 
     const mockUpdateUserWithDefaultPassword : User = {
       email : 'example@abc.abc',
@@ -112,13 +126,13 @@ describe('UserService', () => {
 
     it("should update user password to default password", async()=>{
       userRepository.findOne.mockResolvedValue(mockUser);
-      const BeforeUpdate : User = await service.getUserWithoutPassword(mockEmail, mockName);
+      const BeforeUpdate : User = await service.getUserWithoutPassword(mockGetUserWithoutPasswordDto);
       expect(userRepository.findOne).toHaveBeenCalled();
 
       const result = await service.changeDefaultPassword(BeforeUpdate);
 
       userRepository.findOne.mockResolvedValue(mockUpdateUserWithDefaultPassword);
-      const AfterUpdate : User = await service.getUserWithoutPassword(mockEmail, mockName);
+      const AfterUpdate : User = await service.getUserWithoutPassword(mockGetUserWithoutPasswordDto);
       expect(userRepository.findOne).toHaveBeenCalled();
 
       expect(BeforeUpdate.email).toEqual(AfterUpdate.email);
@@ -134,12 +148,16 @@ describe('UserService', () => {
       email: mockEmail,
       password : "test"
     };
+    const mockGetUserWithoutPasswordDto : GetUserWithoutPasswordDto = {
+      email : mockEmail,
+      name : mockName
+    }
 
     it("should create a user", async () => {
-      const result = await service.SignUp(mockcreateUserDto);
+      const result = await service.signUp(mockcreateUserDto);
 
       userRepository.findOne.mockResolvedValue(mockUser);
-      const AfterCreate : User = await service.getUserWithoutPassword(mockEmail, mockName);
+      const AfterCreate : User = await service.getUserWithoutPassword(mockGetUserWithoutPasswordDto);
       expect(userRepository.findOne).toHaveBeenCalled();
 
       expect(AfterCreate.email).toEqual(mockcreateUserDto.email);
@@ -149,16 +167,12 @@ describe('UserService', () => {
 
   describe("UpdatePassword", ()=>{
     const mockEmail : string = 'example@abc.abc';
-    const mockName : string = 'test';
     const mockPassword : string = 'test';
     const mockUpdatePassword : string = 'test';
-    const mockGetUserDto : GetUserDto = {
-      email : mockEmail,
-      password : mockPassword
-    };
     const mockUpdateUserDto : UpdateUserDto = {
-      name : mockName,
-      password : mockUpdatePassword
+      email : mockEmail,
+      password : mockPassword,
+      modifyPassword : mockUpdatePassword
     };
     const mockUpdateUser : User = {
       email : 'example@abc.abc',
@@ -170,7 +184,7 @@ describe('UserService', () => {
       const BeforeUpdate : User = await service.getUser(mockEmail, mockPassword);
       expect(userRepository.findOne).toHaveBeenCalled();
 
-      const result = await service.UpdatePassword(mockGetUserDto, mockUpdateUserDto);
+      const result = await service.updatePassword(mockUpdateUserDto);
 
       userRepository.findOne.mockResolvedValue(mockUpdateUser);
       const AfterUpdate : User = await service.getUser(mockEmail, mockUpdatePassword);

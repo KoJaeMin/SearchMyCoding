@@ -27,10 +27,17 @@ export class UserRepository{
     await this.userModel.create(createUserDto);
   }
 
-  async updatePassword(GetUserDto : GetUserDto, updateUserDto : UpdateUserDto){
+  async updatePassword(updateUserDto : UpdateUserDto){
+    const getUserOption = {
+      email : updateUserDto.email,
+      password : updateUserDto.password
+    };
+    const updateUserOption = {
+      password : updateUserDto.modifyPassword
+    }
     await this.userModel.findOneAndUpdate(
-      GetUserDto,
-      updateUserDto,
+      getUserOption,
+      updateUserOption,
       {
         new: true,
         upsert: true
