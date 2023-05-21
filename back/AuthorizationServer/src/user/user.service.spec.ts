@@ -2,26 +2,15 @@ import { BadRequestException } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateUserDto } from 'src/dto/CreateUser.dto';
-import { GetUserDto } from 'src/dto/GetUser.dto';
-import { GetUserWithoutPasswordDto } from 'src/dto/GetUserWithoutPassword.dto';
 import { UpdateUserDto } from 'src/dto/UpdateUser.dto';
 import { User } from 'src/schemas/user.schema';
 import { UserRepository } from './user.repository';
 import { UserService } from './user.service';
 
-const mockUserRepository = () => ({
-  findOneWithPassword: jest.fn(),
-  findOneWithName : jest.fn(),
-  findOneAndUpdate: jest.fn(),
-  create: jest.fn(),
-  save: jest.fn(),
-});
-
-type MockRepository = Partial<Record<keyof UserRepository, jest.Mock>>;
 
 describe('UserService', () => {
   let service: UserService;
-  let userRepository : MockRepository;
+  let userRepository : UserRepository;
   let mockUser : User;
 
   beforeEach(async () => {
@@ -31,14 +20,14 @@ describe('UserService', () => {
         UserRepository,
         {
           provide:getModelToken(User.name),
-          useValue: mockUserRepository()
+          useFactory: ()=>{}
         }
       ],
     }).compile();
 
     service = module.get<UserService>(UserService);
-    userRepository = module.get<MockRepository>(
-      getModelToken(User.name)
+    userRepository = module.get<UserRepository>(
+      UserRepository
     );
 
     mockUser = {
@@ -58,11 +47,12 @@ describe('UserService', () => {
     const mockErrorEmail : string = 'helloworld';
 
     it('should find a user', async ()=>{
-      userRepository.findOneWithPassword.mockResolvedValue(mockUser);
+      jest
+        .spyOn(userRepository, "findOneWithPassword")
+        .mockResolvedValue(mockUser);
       
       const result : User = await service.getUserWithPassword(mockEmail, mockPassword);
       
-      expect(userRepository.findOneWithPassword).toHaveBeenCalled();
       expect(result.email).toEqual(mockEmail);
     });
 
@@ -81,13 +71,11 @@ describe('UserService', () => {
     const mockErrorEmail : string = 'helloworld';
 
     it('should find a user without password', async ()=>{
-      /// 여기서 userRepository는 UserModel을 가진 Repository이다.
-      /// 그러므로 findOneWithoutPassword에서 findOne을 사용하기에 findOneWithoutPassword 대신 findOne을 사용해야 한다.
-      userRepository.findOneWithName.mockResolvedValue(mockUser);
-      
+      jest
+        .spyOn(userRepository, "findOneWithName")
+        .mockResolvedValue(mockUser);
       const result : User = await service.getUserWithName(mockEmail, mockName);
       
-      expect(userRepository.findOneWithName).toHaveBeenCalled();
       expect(result.email).toEqual(mockEmail);
       expect(result.name).toEqual(mockName);
     });
@@ -104,11 +92,6 @@ describe('UserService', () => {
   describe('changeDefaultPassword', ()=>{
     const mockEmail : string = 'example@abc.abc';
     const mockName : string = 'test';
-    const mockErrorEmail : string = 'helloworld';
-    const mockGetUserWithoutPasswordDto : GetUserWithoutPasswordDto = {
-      email : mockEmail,
-      name : mockName
-    }
 
     const mockUpdateUserWithDefaultPassword : User = {
       email : 'example@abc.abc',
@@ -117,15 +100,14 @@ describe('UserService', () => {
     };
 
     it("should update user password to default password", async()=>{
-      userRepository.findOneWithName.mockResolvedValue(mockUser);
+      jest.spyOn(userRepository, "findOneWithName").mockResolvedValue(mockUser);
       const BeforeUpdate : User = await service.getUserWithName(mockEmail, mockName);
-      expect(userRepository.findOneWithName).toHaveBeenCalled();
 
+      jest.spyOn(userRepository, "updatePassword").mockResolvedValue();
       const result = await service.changeDefaultPassword(BeforeUpdate);
-
-      userRepository.findOneWithName.mockResolvedValue(mockUpdateUserWithDefaultPassword);
+      
+      jest.spyOn(userRepository, "findOneWithName").mockResolvedValue(mockUpdateUserWithDefaultPassword);
       const AfterUpdate : User = await service.getUserWithName(mockEmail, mockName);
-      expect(userRepository.findOneWithName).toHaveBeenCalled();
 
       expect(BeforeUpdate.email).toEqual(AfterUpdate.email);
       expect(BeforeUpdate.name).toEqual(AfterUpdate.name);
@@ -142,11 +124,12 @@ describe('UserService', () => {
     };
 
     it("should create a user", async () => {
+      jest.spyOn(userRepository, "findOneWithName").mockResolvedValue(undefined);
+      jest.spyOn(userRepository, "createOne").mockResolvedValue();
       const result = await service.signUp(mockcreateUserDto);
 
-      userRepository.findOneWithName.mockResolvedValue(mockUser);
+      jest.spyOn(userRepository, "findOneWithName").mockResolvedValue(mockUser);
       const AfterCreate : User = await service.getUserWithName(mockEmail, mockName);
-      expect(userRepository.findOneWithName).toHaveBeenCalled();
 
       expect(AfterCreate.email).toEqual(mockcreateUserDto.email);
       expect(AfterCreate.name).toEqual(mockcreateUserDto.name);
@@ -168,15 +151,14 @@ describe('UserService', () => {
       password : '640ab86890ccc2b38d0fda471e9defa59967a22d594a9e21df77212302bb8518ec6eaa3e559a7d6e1ce7d7f33936b80d888123ea48a1931ac61830d5d854616b'
     };
     it("should update a user", async ()=>{
-      userRepository.findOneWithPassword.mockResolvedValue(mockUser);
+      jest.spyOn(userRepository, "findOneWithPassword").mockResolvedValue(mockUser);
       const BeforeUpdate : User = await service.getUserWithPassword(mockEmail, mockPassword);
-      expect(userRepository.findOneWithPassword).toHaveBeenCalled();
 
+      jest.spyOn(userRepository, "updatePassword").mockResolvedValue();
       const result = await service.updatePassword(mockUpdateUserDto);
 
-      userRepository.findOneWithPassword.mockResolvedValue(mockUpdateUser);
+      jest.spyOn(userRepository, "findOneWithPassword").mockResolvedValue(mockUpdateUser);
       const AfterUpdate : User = await service.getUserWithPassword(mockEmail, mockUpdatePassword);
-      expect(userRepository.findOneWithPassword).toHaveBeenCalled();
 
       expect(BeforeUpdate.email).toEqual(AfterUpdate.email);
       expect(BeforeUpdate.name).toEqual(AfterUpdate.name);

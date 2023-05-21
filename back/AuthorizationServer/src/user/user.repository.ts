@@ -26,7 +26,7 @@ export class UserRepository{
     await this.userModel.create(createUserDto);
   }
 
-  async updatePassword(updateUserDto : UpdateUserDto){
+  async updatePassword(updateUserDto : UpdateUserDto) : Promise<void>{
     const getUserOption = {
       email : updateUserDto.email,
       password : updateUserDto.password
