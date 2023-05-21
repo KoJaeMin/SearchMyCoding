@@ -1,11 +1,10 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { User } from 'src/schemas/user.schema';
 import { IsValidEmail } from 'src/utils/format';
-import * as crypto from 'node:crypto';
-import { hash_algorithm, salt } from 'src/config/crypto.config';
 import { UserRepository } from './user.repository';
 import { CreateUserDto } from 'src/dto/CreateUser.dto';
 import { UpdateUserDto } from 'src/dto/UpdateUser.dto';
+import { createHashPassword } from 'src/utils/hash';
 
 @Injectable()
 export class UserService {
@@ -13,11 +12,19 @@ export class UserService {
         private readonly userRepository : UserRepository
     ){}
 
+    async getUser(email : string) : Promise<User>{
+        if(!IsValidEmail(email))
+            throw new BadRequestException(`Bad Email Format`);
+        const User : User = await this.userRepository.findOne(email);
+        if(!User)
+            throw new NotFoundException(`User does not exist or the password is incorrect.`);
+        return User;
+    }
+
     async getUserWithPassword(email : string, password : string) : Promise<User>{
         if(!IsValidEmail(email))
             throw new BadRequestException(`Bad Email Format`);
-        const toHash = `${password}${salt}`;
-        const hashedPassword = crypto.createHash(hash_algorithm).update(toHash).digest('hex');
+        const hashedPassword : string = createHashPassword(password);
         const User : User = await this.userRepository.findOneWithPassword(email=email, password=hashedPassword);
 
         if(!User)
@@ -36,8 +43,7 @@ export class UserService {
     }
 
     async changeDefaultPassword(user : User) : Promise<string>{
-        const toHash : string = `${Date.now()}${salt}${user.password}`;
-        const hashedPassword : string = crypto.createHash(hash_algorithm).update(toHash).digest('hex').slice(0, 9);
+        const hashedPassword : string = createHashPassword(user.password);
         const updatePassword : UpdateUserDto = {
             email : user.email,
             password : user.password,
@@ -59,12 +65,12 @@ export class UserService {
         
         const name : string = createUserDto.name;
         const email : string = createUserDto.email;
+        const passeord : string = createUserDto.password;
         
         const user : User = await this.userRepository.findOneWithName(email, name);
         if(!!user)
             throw new BadRequestException(`User is exist.`);
-        const toHash : string = `${createUserDto.password}${salt}`;
-        const hashedPassword : string = crypto.createHash(hash_algorithm).update(toHash).digest('hex');
+        const hashedPassword : string = createHashPassword(passeord);
         await this.userRepository.createOne({
             email: createUserDto.email,
             password : hashedPassword,
@@ -73,10 +79,13 @@ export class UserService {
     }
 
     async updatePassword(updateUserDto : UpdateUserDto){
-        const toHash = `${updateUserDto.password}${salt}`;
-        const hashedPassword = crypto.createHash(hash_algorithm).update(toHash).digest('hex');
+        const updateUser : UpdateUserDto = {
+            email : updateUserDto.email,
+            password : createHashPassword(updateUserDto.password),
+            modifyPassword : createHashPassword(updateUserDto.modifyPassword)
+        };
         try{
-            await this.userRepository.updatePassword(updateUserDto);
+            await this.userRepository.updatePassword(updateUser);
         }catch(err){
             throw err;
         }

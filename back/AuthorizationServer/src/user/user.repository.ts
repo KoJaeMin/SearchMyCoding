@@ -12,6 +12,10 @@ export class UserRepository{
     private readonly userModel : Model<UserDocument>
   ) {}
 
+  async findOne(email : string) : Promise<User>{
+    return await this.userModel.findOne({email : email});
+  }
+
   async findOneWithPassword(email : string, password : string): Promise<User> {
     const FoundUser : User = await this.userModel.findOne({email:email, password:password});
     return FoundUser;

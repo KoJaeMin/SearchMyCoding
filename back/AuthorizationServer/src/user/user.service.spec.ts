@@ -43,10 +43,31 @@ describe('UserService', () => {
 
   describe('getUser',()=>{
     const mockEmail : string = 'example@abc.abc';
-    const mockPassword : string = 'test';
     const mockErrorEmail : string = 'helloworld';
 
     it('should find a user', async ()=>{
+      jest.spyOn(userRepository, "findOne").mockResolvedValue(mockUser);
+      
+      const result : User = await service.getUser(mockEmail);
+      
+      expect(result.email).toEqual(mockEmail);
+    });
+
+    it("should return a BadRequestException", async () => {
+      try{
+        await service.getUser(mockErrorEmail);
+      }catch(e){
+        expect(e).toBeInstanceOf(BadRequestException);
+      }
+    });
+  });
+
+  describe('getUserWithPassword',()=>{
+    const mockEmail : string = 'example@abc.abc';
+    const mockPassword : string = 'test';
+    const mockErrorEmail : string = 'helloworld';
+
+    it('should find a user with password', async ()=>{
       jest
         .spyOn(userRepository, "findOneWithPassword")
         .mockResolvedValue(mockUser);
@@ -65,12 +86,12 @@ describe('UserService', () => {
     });
   });
 
-  describe('getUserWithoutPassword', ()=>{
+  describe('getUserWithName', ()=>{
     const mockEmail : string = 'example@abc.abc';
     const mockName : string = 'test';
     const mockErrorEmail : string = 'helloworld';
 
-    it('should find a user without password', async ()=>{
+    it('should find a user with name', async ()=>{
       jest
         .spyOn(userRepository, "findOneWithName")
         .mockResolvedValue(mockUser);
