@@ -1,7 +1,6 @@
 import { Body, Controller, Get, Patch, Post, Query } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { CreateUserDto } from 'src/dto/CreateUser.dto';
-import { GetUserDto } from 'src/dto/GetUser.dto';
 import { GetUserWithoutPasswordDto } from 'src/dto/GetUserWithoutPassword.dto';
 import { UpdateUserDto } from 'src/dto/UpdateUser.dto';
 import { User } from 'src/schemas/user.schema';
@@ -13,26 +12,22 @@ export class UserController {
         private readonly userService : UserService
     ){}
 
-    @Get('/User')
+    @Get('/password')
     @ApiOperation({
         "summary" : "유저 정보 가져오기",
         "description" : "email과 password를 이용하여 유저 정보를 가져온다."
     })
-    async getUser(@Query("email") email : string, @Query("password") password : string) : Promise<User>{
-        return await this.userService.getUser(email, password);
+    async getUserWithPassword(@Query("email") email : string, @Query("password") password : string) : Promise<User>{
+        return await this.userService.getUserWithPassword(email, password);
     };
 
-    @Get('/UserWitoutPassword')
+    @Get('/name')
     @ApiOperation({
         "summary" : "유저 정보 가져오기",
         "description" : "email과 name을 이용하여 유저 정보를 가져온다."
     })
-    async getUserWithoutPassword(@Query("email") email : string, @Query("name") name : string) : Promise<User>{
-        const getUserWithoutPasswordDto : GetUserWithoutPasswordDto = {
-            email : email,
-            name : name
-        }
-        return await this.userService.getUserWithoutPassword(getUserWithoutPasswordDto);
+    async getUserWithName(@Query("email") email : string, @Query("name") name : string) : Promise<User>{
+        return await this.userService.getUserWithName(email, name);
     };
 
     @Post("")
@@ -59,7 +54,8 @@ export class UserController {
         "description" : "GetUserWithoutPasswordDto를 이용하여 유저의 비밀번호를 초기화한다."
     })
     async changeDefaultPassword(@Body() getUserWithoutPasswordDto : GetUserWithoutPasswordDto) : Promise<string>{
-        const user : User = await this.userService.getUserWithoutPassword(getUserWithoutPasswordDto);
+        const {email, name} = getUserWithoutPasswordDto;
+        const user : User = await this.userService.getUserWithName(email, name);
         return await this.userService.changeDefaultPassword(user);
     }
 }

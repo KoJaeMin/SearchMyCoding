@@ -10,7 +10,8 @@ import { UserRepository } from './user.repository';
 import { UserService } from './user.service';
 
 const mockUserRepository = () => ({
-  findOne: jest.fn(),
+  findOneWithPassword: jest.fn(),
+  findOneWithName : jest.fn(),
   findOneAndUpdate: jest.fn(),
   create: jest.fn(),
   save: jest.fn(),
@@ -57,17 +58,17 @@ describe('UserService', () => {
     const mockErrorEmail : string = 'helloworld';
 
     it('should find a user', async ()=>{
-      userRepository.findOne.mockResolvedValue(mockUser);
+      userRepository.findOneWithPassword.mockResolvedValue(mockUser);
       
-      const result : User = await service.getUser(mockEmail, mockPassword);
+      const result : User = await service.getUserWithPassword(mockEmail, mockPassword);
       
-      expect(userRepository.findOne).toHaveBeenCalled();
+      expect(userRepository.findOneWithPassword).toHaveBeenCalled();
       expect(result.email).toEqual(mockEmail);
     });
 
     it("should return a BadRequestException", async () => {
       try{
-        await service.getUser(mockErrorEmail, mockPassword);
+        await service.getUserWithPassword(mockErrorEmail, mockPassword);
       }catch(e){
         expect(e).toBeInstanceOf(BadRequestException);
       }
@@ -78,31 +79,22 @@ describe('UserService', () => {
     const mockEmail : string = 'example@abc.abc';
     const mockName : string = 'test';
     const mockErrorEmail : string = 'helloworld';
-    const mockGetUserWithoutPasswordDto : GetUserWithoutPasswordDto = {
-      email : mockEmail,
-      name : mockName
-    }
-    const mockErrorGetUserWithoutPasswordDto : GetUserWithoutPasswordDto = {
-      email : mockErrorEmail,
-      name : mockName
-    }
-
 
     it('should find a user without password', async ()=>{
       /// 여기서 userRepository는 UserModel을 가진 Repository이다.
       /// 그러므로 findOneWithoutPassword에서 findOne을 사용하기에 findOneWithoutPassword 대신 findOne을 사용해야 한다.
-      userRepository.findOne.mockResolvedValue(mockUser);
+      userRepository.findOneWithName.mockResolvedValue(mockUser);
       
-      const result : User = await service.getUserWithoutPassword(mockGetUserWithoutPasswordDto);
+      const result : User = await service.getUserWithName(mockEmail, mockName);
       
-      expect(userRepository.findOne).toHaveBeenCalled();
+      expect(userRepository.findOneWithName).toHaveBeenCalled();
       expect(result.email).toEqual(mockEmail);
       expect(result.name).toEqual(mockName);
     });
 
     it("should return a BadRequestException", async () => {
       try{
-        await service.getUserWithoutPassword(mockErrorGetUserWithoutPasswordDto);
+        await service.getUserWithName(mockErrorEmail, mockName);
       }catch(e){
         expect(e).toBeInstanceOf(BadRequestException);
       }
@@ -125,15 +117,15 @@ describe('UserService', () => {
     };
 
     it("should update user password to default password", async()=>{
-      userRepository.findOne.mockResolvedValue(mockUser);
-      const BeforeUpdate : User = await service.getUserWithoutPassword(mockGetUserWithoutPasswordDto);
-      expect(userRepository.findOne).toHaveBeenCalled();
+      userRepository.findOneWithName.mockResolvedValue(mockUser);
+      const BeforeUpdate : User = await service.getUserWithName(mockEmail, mockName);
+      expect(userRepository.findOneWithName).toHaveBeenCalled();
 
       const result = await service.changeDefaultPassword(BeforeUpdate);
 
-      userRepository.findOne.mockResolvedValue(mockUpdateUserWithDefaultPassword);
-      const AfterUpdate : User = await service.getUserWithoutPassword(mockGetUserWithoutPasswordDto);
-      expect(userRepository.findOne).toHaveBeenCalled();
+      userRepository.findOneWithName.mockResolvedValue(mockUpdateUserWithDefaultPassword);
+      const AfterUpdate : User = await service.getUserWithName(mockEmail, mockName);
+      expect(userRepository.findOneWithName).toHaveBeenCalled();
 
       expect(BeforeUpdate.email).toEqual(AfterUpdate.email);
       expect(BeforeUpdate.name).toEqual(AfterUpdate.name);
@@ -148,17 +140,13 @@ describe('UserService', () => {
       email: mockEmail,
       password : "test"
     };
-    const mockGetUserWithoutPasswordDto : GetUserWithoutPasswordDto = {
-      email : mockEmail,
-      name : mockName
-    }
 
     it("should create a user", async () => {
       const result = await service.signUp(mockcreateUserDto);
 
-      userRepository.findOne.mockResolvedValue(mockUser);
-      const AfterCreate : User = await service.getUserWithoutPassword(mockGetUserWithoutPasswordDto);
-      expect(userRepository.findOne).toHaveBeenCalled();
+      userRepository.findOneWithName.mockResolvedValue(mockUser);
+      const AfterCreate : User = await service.getUserWithName(mockEmail, mockName);
+      expect(userRepository.findOneWithName).toHaveBeenCalled();
 
       expect(AfterCreate.email).toEqual(mockcreateUserDto.email);
       expect(AfterCreate.name).toEqual(mockcreateUserDto.name);
@@ -180,15 +168,15 @@ describe('UserService', () => {
       password : '640ab86890ccc2b38d0fda471e9defa59967a22d594a9e21df77212302bb8518ec6eaa3e559a7d6e1ce7d7f33936b80d888123ea48a1931ac61830d5d854616b'
     };
     it("should update a user", async ()=>{
-      userRepository.findOne.mockResolvedValue(mockUser);
-      const BeforeUpdate : User = await service.getUser(mockEmail, mockPassword);
-      expect(userRepository.findOne).toHaveBeenCalled();
+      userRepository.findOneWithPassword.mockResolvedValue(mockUser);
+      const BeforeUpdate : User = await service.getUserWithPassword(mockEmail, mockPassword);
+      expect(userRepository.findOneWithPassword).toHaveBeenCalled();
 
       const result = await service.updatePassword(mockUpdateUserDto);
 
-      userRepository.findOne.mockResolvedValue(mockUpdateUser);
-      const AfterUpdate : User = await service.getUser(mockEmail, mockUpdatePassword);
-      expect(userRepository.findOne).toHaveBeenCalled();
+      userRepository.findOneWithPassword.mockResolvedValue(mockUpdateUser);
+      const AfterUpdate : User = await service.getUserWithPassword(mockEmail, mockUpdatePassword);
+      expect(userRepository.findOneWithPassword).toHaveBeenCalled();
 
       expect(BeforeUpdate.email).toEqual(AfterUpdate.email);
       expect(BeforeUpdate.name).toEqual(AfterUpdate.name);

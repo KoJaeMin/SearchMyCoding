@@ -6,8 +6,6 @@ import { hash_algorithm, salt } from 'src/config/crypto.config';
 import { UserRepository } from './user.repository';
 import { CreateUserDto } from 'src/dto/CreateUser.dto';
 import { UpdateUserDto } from 'src/dto/UpdateUser.dto';
-import { GetUserDto } from 'src/dto/GetUser.dto';
-import { GetUserWithoutPasswordDto } from 'src/dto/GetUserWithoutPassword.dto';
 
 @Injectable()
 export class UserService {
@@ -15,23 +13,22 @@ export class UserService {
         private readonly userRepository : UserRepository
     ){}
 
-    async getUser(email : string, password : string) : Promise<User>{
+    async getUserWithPassword(email : string, password : string) : Promise<User>{
         if(!IsValidEmail(email))
             throw new BadRequestException(`Bad Email Format`);
         const toHash = `${password}${salt}`;
         const hashedPassword = crypto.createHash(hash_algorithm).update(toHash).digest('hex');
-        const User : User = await this.userRepository.findOne(email=email, password=hashedPassword);
+        const User : User = await this.userRepository.findOneWithPassword(email=email, password=hashedPassword);
 
         if(!User)
             throw new NotFoundException(`User does not exist or the password is incorrect.`);
         return User;
     }
 
-    async getUserWithoutPassword(getUserWithoutPasswordDto : GetUserWithoutPasswordDto) : Promise<User>{
-        const {email, name} =getUserWithoutPasswordDto;
+    async getUserWithName(email : string, name : string) : Promise<User>{
         if(!IsValidEmail(email))
             throw new BadRequestException(`Bad Email Format`);
-        const User : User = await this.userRepository.findOneWithoutPassword(email, name);
+        const User : User = await this.userRepository.findOneWithName(email, name);
 
         if(!User)
             throw new NotFoundException(`User does not exist or the password is incorrect.`);
@@ -63,7 +60,7 @@ export class UserService {
         const name : string = createUserDto.name;
         const email : string = createUserDto.email;
         
-        const user : User = await this.userRepository.findOneWithoutPassword(email, name);
+        const user : User = await this.userRepository.findOneWithName(email, name);
         if(!!user)
             throw new BadRequestException(`User is exist.`);
         const toHash : string = `${createUserDto.password}${salt}`;
