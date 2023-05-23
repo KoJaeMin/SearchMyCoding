@@ -5,10 +5,19 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { SwaggerConfig } from './config/swagger.config';
+import * as session from 'express-session';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
+
+  app.use(
+    session({
+      secret: 'MY_SESSION_ID',
+      resave: false,
+      saveUninitialized: false,
+    }),
+  );
 
   app.useGlobalPipes(new ValidationPipe(validationConfig));
   
