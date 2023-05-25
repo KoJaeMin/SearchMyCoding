@@ -147,7 +147,7 @@ describe('UserService', () => {
     it("should create a user", async () => {
       jest.spyOn(userRepository, "findOneWithName").mockResolvedValue(undefined);
       jest.spyOn(userRepository, "createOne").mockResolvedValue();
-      const result = await service.signUp(mockcreateUserDto);
+      const result = await service.addUser(mockcreateUserDto);
 
       jest.spyOn(userRepository, "findOneWithName").mockResolvedValue(mockUser);
       const AfterCreate : User = await service.getUserWithName(mockEmail, mockName);
@@ -176,7 +176,7 @@ describe('UserService', () => {
       const BeforeUpdate : User = await service.getUserWithPassword(mockEmail, mockPassword);
 
       jest.spyOn(userRepository, "updatePassword").mockResolvedValue();
-      const result = await service.updatePassword(mockUpdateUserDto);
+      const result = await service.updateUser(mockUpdateUserDto);
 
       jest.spyOn(userRepository, "findOneWithPassword").mockResolvedValue(mockUpdateUser);
       const AfterUpdate : User = await service.getUserWithPassword(mockEmail, mockUpdatePassword);

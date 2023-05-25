@@ -36,7 +36,7 @@ export class UserController {
         "description" : "CreateUserDto를 이용하여 회원가입을 진행한다."
     })
     async SignUp(@Body() createUserDto: CreateUserDto) : Promise<void>{
-        return await this.userService.signUp(createUserDto);
+        return await this.userService.addUser(createUserDto);
     };
 
     @Patch("/password")
@@ -45,7 +45,7 @@ export class UserController {
         "description" : "UpdateUserDto를 이용하여 유저의 비밀번호를 변경한다."
     })
     async updatePassword(@Body() updateUserDto: UpdateUserDto) : Promise<void>{
-        return await this.userService.updatePassword(updateUserDto);
+        return await this.userService.updateUser(updateUserDto);
     }
 
     @Patch("/password/default")

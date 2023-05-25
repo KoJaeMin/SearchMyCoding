@@ -59,7 +59,7 @@ export class UserService {
         return hashedPassword;
     }
 
-    async signUp(createUserDto : CreateUserDto) : Promise<void>{
+    async addUser(createUserDto : CreateUserDto) : Promise<void>{
         if(!IsValidEmail(createUserDto.email))
             throw new BadRequestException(`Bad Email Format`);
         
@@ -78,7 +78,7 @@ export class UserService {
         });
     }
 
-    async updatePassword(updateUserDto : UpdateUserDto){
+    async updateUser(updateUserDto : UpdateUserDto){
         const updateUser : UpdateUserDto = {
             email : updateUserDto.email,
             password : createHashPassword(updateUserDto.password),
