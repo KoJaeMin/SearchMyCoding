@@ -13,16 +13,16 @@ export class UserRepository{
   ) {}
 
   async findOne(email : string) : Promise<User>{
-    return await this.userModel.findOne({email : email});
+    return await this.userModel.findOne({id : email});
   }
 
   async findOneWithPassword(email : string, password : string): Promise<User> {
-    const FoundUser : User = await this.userModel.findOne({email:email, password:password});
+    const FoundUser : User = await this.userModel.findOne({id:email, password:password});
     return FoundUser;
   }
 
   async findOneWithName(email : string, name : string) : Promise<User>{
-    const FoundUser : User = await this.userModel.findOne({email:email, name:name});
+    const FoundUser : User = await this.userModel.findOne({id:email, name:name});
     return FoundUser;
   }
 
@@ -32,17 +32,17 @@ export class UserRepository{
 
   async updatePassword(updateUserDto : UpdateUserDto) : Promise<void>{
     const getUserOption = {
-      email : updateUserDto.email,
+      id : updateUserDto.id,
       password : updateUserDto.password
     };
     const updateUserOption = {
       password : updateUserDto.modifyPassword
-    }
+    };
     await this.userModel.findOneAndUpdate(
       getUserOption,
       updateUserOption,
       {
-        new: true,
+        new: false,
         upsert: true
       }
     );

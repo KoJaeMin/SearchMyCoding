@@ -12,30 +12,30 @@ export class UserService {
         private readonly userRepository : UserRepository
     ){}
 
-    async getUser(email : string) : Promise<User>{
-        if(!IsValidEmail(email))
+    async getUser(id : string) : Promise<User>{
+        if(!IsValidEmail(id))
             throw new BadRequestException(`Bad Email Format`);
-        const User : User = await this.userRepository.findOne(email);
+        const User : User = await this.userRepository.findOne(id);
         if(!User)
             throw new NotFoundException(`User does not exist or the password is incorrect.`);
         return User;
     }
 
-    async getUserWithPassword(email : string, password : string) : Promise<User>{
-        if(!IsValidEmail(email))
+    async getUserWithPassword(id : string, password : string) : Promise<User>{
+        if(!IsValidEmail(id))
             throw new BadRequestException(`Bad Email Format`);
         const hashedPassword : string = createHashPassword(password);
-        const User : User = await this.userRepository.findOneWithPassword(email=email, password=hashedPassword);
+        const User : User = await this.userRepository.findOneWithPassword(id=id, password=hashedPassword);
 
         if(!User)
             throw new NotFoundException(`User does not exist or the password is incorrect.`);
         return User;
     }
 
-    async getUserWithName(email : string, name : string) : Promise<User>{
-        if(!IsValidEmail(email))
+    async getUserWithName(id : string, name : string) : Promise<User>{
+        if(!IsValidEmail(id))
             throw new BadRequestException(`Bad Email Format`);
-        const User : User = await this.userRepository.findOneWithName(email, name);
+        const User : User = await this.userRepository.findOneWithName(id, name);
 
         if(!User)
             throw new NotFoundException(`User does not exist or the password is incorrect.`);
@@ -45,7 +45,7 @@ export class UserService {
     async changeDefaultPassword(user : User) : Promise<string>{
         const hashedPassword : string = createHashPassword(user.password);
         const updatePassword : UpdateUserDto = {
-            email : user.email,
+            id : user.id,
             password : user.password,
             modifyPassword : hashedPassword
         };
@@ -72,6 +72,7 @@ export class UserService {
             throw new BadRequestException(`User is exist.`);
         const hashedPassword : string = createHashPassword(passeord);
         await this.userRepository.createOne({
+            id : createUserDto.id,
             email: createUserDto.email,
             password : hashedPassword,
             name: createUserDto.name
@@ -80,7 +81,7 @@ export class UserService {
 
     async updateUser(updateUserDto : UpdateUserDto){
         const updateUser : UpdateUserDto = {
-            email : updateUserDto.email,
+            id : updateUserDto.id,
             password : createHashPassword(updateUserDto.password),
             modifyPassword : createHashPassword(updateUserDto.modifyPassword)
         };
@@ -90,4 +91,6 @@ export class UserService {
             throw err;
         }
     }
+
+    async updateUserSchema(){}
 }

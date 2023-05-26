@@ -15,19 +15,19 @@ export class UserController {
     @Get('/password')
     @ApiOperation({
         "summary" : "유저 정보 가져오기",
-        "description" : "email과 password를 이용하여 유저 정보를 가져온다."
+        "description" : "id과 password를 이용하여 유저 정보를 가져온다."
     })
-    async getUserWithPassword(@Query("email") email : string, @Query("password") password : string) : Promise<User>{
-        return await this.userService.getUserWithPassword(email, password);
+    async getUserWithPassword(@Query("id") id : string, @Query("password") password : string) : Promise<User>{
+        return await this.userService.getUserWithPassword(id, password);
     };
 
     @Get('/name')
     @ApiOperation({
         "summary" : "유저 정보 가져오기",
-        "description" : "email과 name을 이용하여 유저 정보를 가져온다."
+        "description" : "id과 name을 이용하여 유저 정보를 가져온다."
     })
-    async getUserWithName(@Query("email") email : string, @Query("name") name : string) : Promise<User>{
-        return await this.userService.getUserWithName(email, name);
+    async getUserWithName(@Query("id") id : string, @Query("name") name : string) : Promise<User>{
+        return await this.userService.getUserWithName(id, name);
     };
 
     @Post("")
@@ -54,8 +54,8 @@ export class UserController {
         "description" : "GetUserWithoutPasswordDto를 이용하여 유저의 비밀번호를 초기화한다."
     })
     async changeDefaultPassword(@Body() getUserWithoutPasswordDto : GetUserWithoutPasswordDto) : Promise<string>{
-        const {email, name} = getUserWithoutPasswordDto;
-        const user : User = await this.userService.getUserWithName(email, name);
+        const {id, name} = getUserWithoutPasswordDto;
+        const user : User = await this.userService.getUserWithName(id, name);
         return await this.userService.changeDefaultPassword(user);
     }
 }

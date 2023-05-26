@@ -31,7 +31,7 @@ describe('UserService', () => {
     );
 
     mockUser = {
-      email : 'example@abc.abc',
+      id : 'example@abc.abc',
       name : 'test',
       password : '125d6d03b32c84d492747f79cf0bf6e179d287f341384eb5d6d3197525ad6be8e6df0116032935698f99a09e265073d1d6c32c274591bf1d0a20ad67cba921bc'
     }
@@ -50,7 +50,7 @@ describe('UserService', () => {
       
       const result : User = await service.getUser(mockEmail);
       
-      expect(result.email).toEqual(mockEmail);
+      expect(result.id).toEqual(mockEmail);
     });
 
     it("should return a BadRequestException", async () => {
@@ -74,7 +74,7 @@ describe('UserService', () => {
       
       const result : User = await service.getUserWithPassword(mockEmail, mockPassword);
       
-      expect(result.email).toEqual(mockEmail);
+      expect(result.id).toEqual(mockEmail);
     });
 
     it("should return a BadRequestException", async () => {
@@ -97,7 +97,7 @@ describe('UserService', () => {
         .mockResolvedValue(mockUser);
       const result : User = await service.getUserWithName(mockEmail, mockName);
       
-      expect(result.email).toEqual(mockEmail);
+      expect(result.id).toEqual(mockEmail);
       expect(result.name).toEqual(mockName);
     });
 
@@ -115,7 +115,7 @@ describe('UserService', () => {
     const mockName : string = 'test';
 
     const mockUpdateUserWithDefaultPassword : User = {
-      email : 'example@abc.abc',
+      id : 'example@abc.abc',
       name : 'test',
       password : '640ab86890ccc2b38d0fda471e9defa59967a22d594a9e21df77212302bb8518ec6eaa3e559a7d6e1ce7d7f33936b80d888123ea48a1931ac61830d5d854616b'
     };
@@ -130,7 +130,7 @@ describe('UserService', () => {
       jest.spyOn(userRepository, "findOneWithName").mockResolvedValue(mockUpdateUserWithDefaultPassword);
       const AfterUpdate : User = await service.getUserWithName(mockEmail, mockName);
 
-      expect(BeforeUpdate.email).toEqual(AfterUpdate.email);
+      expect(BeforeUpdate.id).toEqual(AfterUpdate.id);
       expect(BeforeUpdate.name).toEqual(AfterUpdate.name);
     })
   });
@@ -152,7 +152,7 @@ describe('UserService', () => {
       jest.spyOn(userRepository, "findOneWithName").mockResolvedValue(mockUser);
       const AfterCreate : User = await service.getUserWithName(mockEmail, mockName);
 
-      expect(AfterCreate.email).toEqual(mockcreateUserDto.email);
+      expect(AfterCreate.id).toEqual(mockcreateUserDto.email);
       expect(AfterCreate.name).toEqual(mockcreateUserDto.name);
     });
   });
@@ -162,12 +162,12 @@ describe('UserService', () => {
     const mockPassword : string = 'test';
     const mockUpdatePassword : string = 'test';
     const mockUpdateUserDto : UpdateUserDto = {
-      email : mockEmail,
+      id : mockEmail,
       password : mockPassword,
       modifyPassword : mockUpdatePassword
     };
     const mockUpdateUser : User = {
-      email : 'example@abc.abc',
+      id : 'example@abc.abc',
       name : 'test',
       password : '640ab86890ccc2b38d0fda471e9defa59967a22d594a9e21df77212302bb8518ec6eaa3e559a7d6e1ce7d7f33936b80d888123ea48a1931ac61830d5d854616b'
     };
@@ -181,7 +181,7 @@ describe('UserService', () => {
       jest.spyOn(userRepository, "findOneWithPassword").mockResolvedValue(mockUpdateUser);
       const AfterUpdate : User = await service.getUserWithPassword(mockEmail, mockUpdatePassword);
 
-      expect(BeforeUpdate.email).toEqual(AfterUpdate.email);
+      expect(BeforeUpdate.id).toEqual(AfterUpdate.id);
       expect(BeforeUpdate.name).toEqual(AfterUpdate.name);
     })
   })

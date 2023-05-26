@@ -7,7 +7,7 @@ export class UpdateUserDto{
     })
     @IsString()
     @IsNotEmpty()
-    readonly email : string;
+    readonly id : string;
 
     @ApiProperty({
         description : "비밀번호"
