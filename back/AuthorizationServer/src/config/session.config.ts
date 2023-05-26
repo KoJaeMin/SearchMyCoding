@@ -7,5 +7,9 @@ const config : ConfigService = new ConfigService();
 export const sessionOption : session.SessionOptions = {
     secret : config.get<string>('SESSION_SECRET'),
     resave : false,
-    saveUninitialized : false
+    saveUninitialized : true,
+    cookie : {
+        httpOnly: true,
+        maxAge : 60000
+    }
 }
