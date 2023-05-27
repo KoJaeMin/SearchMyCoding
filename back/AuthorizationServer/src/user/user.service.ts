@@ -1,6 +1,6 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { User } from 'src/schemas/user.schema';
-import { IsValidEmail } from 'src/utils/format';
+import { concatObject, getPropertyOfDifferenceSet, IsValidEmail } from 'src/utils/format';
 import { UserRepository } from './user.repository';
 import { CreateUserDto } from 'src/dto/CreateUser.dto';
 import { UpdateUserDto } from 'src/dto/UpdateUser.dto';
@@ -44,14 +44,14 @@ export class UserService {
 
     async changeDefaultPassword(user : User) : Promise<string>{
         const hashedPassword : string = createHashPassword(user.password);
-        const updatePassword : UpdateUserDto = {
+        const updateUser : UpdateUserDto = {
             id : user.id,
             password : user.password,
             modifyPassword : hashedPassword
         };
         //// user 비번 바꾸기
         try{
-            await this.userRepository.updatePassword(updatePassword);
+            await this.userRepository.updateUser(updateUser);
         }catch(err){
             throw err;
         }
@@ -82,11 +82,14 @@ export class UserService {
     async updateUser(updateUserDto : UpdateUserDto){
         const updateUser : UpdateUserDto = {
             id : updateUserDto.id,
-            password : createHashPassword(updateUserDto.password),
-            modifyPassword : createHashPassword(updateUserDto.modifyPassword)
+            password : createHashPassword(updateUserDto.password)
         };
+        if(updateUserDto.modifyPassword)
+            Object.assign(updateUserDto, {modifyPassword : createHashPassword(updateUserDto.modifyPassword)});
+        concatObject(updateUser, getPropertyOfDifferenceSet(updateUserDto, updateUser));
+
         try{
-            await this.userRepository.updatePassword(updateUser);
+            await this.userRepository.updateUser(updateUser);
         }catch(err){
             throw err;
         }

@@ -4,6 +4,7 @@ import { Model } from "mongoose";
 import { CreateUserDto } from "src/dto/CreateUser.dto";
 import { UpdateUserDto } from "src/dto/UpdateUser.dto";
 import { User, UserDocument } from "src/schemas/user.schema";
+import { getPropertyOfDifferenceSet } from "src/utils/format";
 
 @Injectable()
 export class UserRepository{
@@ -30,14 +31,12 @@ export class UserRepository{
     await this.userModel.create(createUserDto);
   }
 
-  async updatePassword(updateUserDto : UpdateUserDto) : Promise<void>{
+  async updateUser(updateUserDto : UpdateUserDto) : Promise<void>{
     const getUserOption = {
       id : updateUserDto.id,
       password : updateUserDto.password
     };
-    const updateUserOption = {
-      password : updateUserDto.modifyPassword
-    };
+    const updateUserOption = getPropertyOfDifferenceSet(updateUserDto, getUserOption);
     await this.userModel.findOneAndUpdate(
       getUserOption,
       updateUserOption,
