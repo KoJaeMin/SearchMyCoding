@@ -20,6 +20,17 @@ export class UpdateUserDto{
         description : "바꿀 비밀번호"
     })
     @IsString()
-    @IsNotEmpty()
-    readonly modifyPassword : string;
+    readonly modifyPassword? : string;
+
+    @ApiProperty({
+        description : "바꿀 이메일"
+    })
+    @IsString()
+    readonly modifyEmail? : string;
+
+    @ApiProperty({
+        description : "바꿀 이름"
+    })
+    @IsString()
+    readonly modifyName? : string;
 }
