@@ -17,7 +17,7 @@ const clientOptions = new Redis({
 export const sessionOption : session.SessionOptions = {
     secret : config.get<string>('SESSION_SECRET'),
     resave : false,
-    saveUninitialized : true,
+    saveUninitialized : false,
     cookie : {
         httpOnly: true,
         maxAge : 60000 /// 단위는 ms
