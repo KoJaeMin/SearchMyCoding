@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Patch, Post, Query } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { CreateUserDto } from 'src/dto/CreateUser.dto';
-import { GetUserWithoutPasswordDto } from 'src/dto/GetUserWithoutPassword.dto';
+import { GetUserWithNameDto } from 'src/dto/GetUserWithName.dto';
 import { UpdateUserDto } from 'src/dto/UpdateUser.dto';
 import { User } from 'src/schemas/user.schema';
 import { UserService } from './user.service';
@@ -53,8 +53,8 @@ export class UserController {
         "summary" : "유저의 비밀번호 초기화",
         "description" : "GetUserWithoutPasswordDto를 이용하여 유저의 비밀번호를 초기화한다."
     })
-    async changeDefaultPassword(@Body() getUserWithoutPasswordDto : GetUserWithoutPasswordDto) : Promise<string>{
-        const {id, name} = getUserWithoutPasswordDto;
+    async changeDefaultPassword(@Body() getUserWithNameDto : GetUserWithNameDto) : Promise<string>{
+        const {id, name} = getUserWithNameDto;
         const user : User = await this.userService.getUserWithName(id, name);
         return await this.userService.changeDefaultPassword(user);
     }
