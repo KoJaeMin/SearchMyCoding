@@ -5,7 +5,7 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { SwaggerConfig } from './config/swagger.config';
-import { SessionMiddleware } from './middleware/session.middleware';
+import { SessionMiddleware } from './middlewares/session.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
