@@ -1,17 +1,16 @@
 import session from "express-session";
 import 'dotenv/config';
 import { ConfigService } from "@nestjs/config";
-import * as RedisStore from "connect-redis";
+import * as connectRedis from 'connect-redis';
 import { Redis } from "ioredis";
 
 const config : ConfigService = new ConfigService();
 
+const RedisStore = connectRedis(session);
+
 const clientOptions = new Redis({
     host : config.get<string>('REDIS_HOST'),
-    port : config.get<number>('REDIS_PORT'),
-    tls : {
-        timeout : 60
-    }
+    port : config.get<number>('REDIS_PORT')
 });
 
 export const sessionOption : session.SessionOptions = {
@@ -22,8 +21,8 @@ export const sessionOption : session.SessionOptions = {
         httpOnly: true,
         maxAge : 60000 /// 단위는 ms
     },
-    store : new (RedisStore(session))({
+    store : new RedisStore({
         client : clientOptions,
-        ttl : 60 /// 단위 s
+        ttl : 60
     })
 }
