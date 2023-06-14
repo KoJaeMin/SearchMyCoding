@@ -4,17 +4,11 @@ import { User } from 'src/schemas/user.schema';
 
 @Injectable()
 export class SessionSerializer extends PassportSerializer {
-    serializeUser(
-        user: User,
-        done: (err: Error | null, id?: User) => void,
-    ): void {
+    serializeUser(user: User, done: (err: Error | null, id?: User) => void): void {
         done(null, user);
     }
 
-    deserializeUser(
-        payload: unknown,
-        done: (err: Error | null, payload?: unknown) => void,
-    ): void {
+    deserializeUser(payload: unknown,done: (err: Error | null, payload?: unknown) => void): void {
         done(null, payload);
     }
 }
