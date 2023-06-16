@@ -13,17 +13,17 @@ export class UserRepository{
     private readonly userModel : Model<UserDocument>
   ) {}
 
-  async findOne(email : string) : Promise<User>{
-    return await this.userModel.findOne({id : email});
+  async findOne(id : string) : Promise<User>{
+    return await this.userModel.findOne({id : id});
   }
 
-  async findOneWithPassword(email : string, password : string): Promise<User> {
-    const FoundUser : User = await this.userModel.findOne({id:email, password:password});
+  async findOneWithPassword(id : string, password : string): Promise<User> {
+    const FoundUser : User = await this.userModel.findOne({id:id, password:password});
     return FoundUser;
   }
 
-  async findOneWithName(email : string, name : string) : Promise<User>{
-    const FoundUser : User = await this.userModel.findOne({id:email, name:name});
+  async findOneWithName(id : string, name : string) : Promise<User>{
+    const FoundUser : User = await this.userModel.findOne({id:id, name:name});
     return FoundUser;
   }
 
