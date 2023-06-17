@@ -9,10 +9,14 @@ export class LocalStrategy extends PassportStrategy(Strategy){
     constructor(
         private readonly authService : AuthService
     ){
-        super();
+        super({
+            usernameField: 'id'
+          });
     }
 
-    async validate(id : string, password : string){
+    async validate(
+        id: string, password: string
+    ){
         const user : User = await this.authService.validateUser(id, password);
         if (!user) {
           throw new UnauthorizedException(`You are an unvalid user`);
