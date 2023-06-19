@@ -8,20 +8,13 @@ export class AuthService {
     constructor(private readonly usersService: UserService) {}
     async validateUser(id: string, password: string) : Promise<User> {
         try{
-            const user : User = await this.usersService.getUserWithPassword(id, password);
+            const user : User = await this.usersService.getUser(id);
+            if(!compareHash(password, user.password)){
+                throw new UnauthorizedException(`Password is wrong`);
+            }
             return user;
         }catch(err){
-            throw new BadRequestException("User doesn't exist or Enter wrong information");
+            throw new err;
         }
-    }
-
-    async logIn(id : string, password : string){
-        const user : User = await this.usersService.getUser(id);
-        if(!compareHash(password, user.password)){
-            throw new UnauthorizedException(`password is wrong`);
-        }
-        /// 비림 번호를 제외한 정보 반환
-        const {password : pw, ...result} = user;
-        return result;
     }
 }
