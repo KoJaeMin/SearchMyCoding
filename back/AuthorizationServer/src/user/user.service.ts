@@ -13,32 +13,17 @@ export class UserService {
     ){}
 
     async getUser(id : string) : Promise<User>{
-        if(!IsValidEmail(id))
-            throw new BadRequestException(`Bad Email Format`);
         const User : User = await this.userRepository.findOne(id);
         if(!User)
-            throw new NotFoundException(`User does not exist or the password is incorrect.`);
-        return User;
-    }
-
-    async getUserWithPassword(id : string, password : string) : Promise<User>{
-        if(!IsValidEmail(id))
-            throw new BadRequestException(`Bad Email Format`);
-        const hashedPassword : string = createHashPassword(password);
-        const User : User = await this.userRepository.findOneWithPassword(id=id, password=hashedPassword);
-
-        if(!User)
-            throw new NotFoundException(`User does not exist or the password is incorrect.`);
+            throw new NotFoundException(`User does not exist.`);
         return User;
     }
 
     async getUserWithName(id : string, name : string) : Promise<User>{
-        if(!IsValidEmail(id))
-            throw new BadRequestException(`Bad Email Format`);
         const User : User = await this.userRepository.findOneWithName(id, name);
 
         if(!User)
-            throw new NotFoundException(`User does not exist or the password is incorrect.`);
+            throw new NotFoundException(`User does not exist.`);
         return User;
     }
 
