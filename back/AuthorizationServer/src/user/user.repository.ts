@@ -13,13 +13,12 @@ export class UserRepository{
     private readonly userModel : Model<UserDocument>
   ) {}
 
-  async findOne(id : string) : Promise<User>{
+  async findOneWithId(id : string) : Promise<User>{
     return await this.userModel.findOne({id : id});
   }
 
-  async findOneWithName(id : string, name : string) : Promise<User>{
-    const FoundUser : User = await this.userModel.findOne({id:id, name:name});
-    return FoundUser;
+  async findOneWithEmail(email : string) : Promise<User>{
+    return await this.userModel.findOne({email:email});
   }
 
   async createOne(createUserDto : CreateUserDto) : Promise<void>{
