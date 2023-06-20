@@ -20,6 +20,8 @@ export class UserService {
     }
 
     async getUserId(name : string, email : string) : Promise<string>{
+        if(!IsValidEmail(email))
+            throw new BadRequestException(`Bad Email Format`);
         const user : User = await this.userRepository.findOneWithEmail(email);
         if(!user || user.name !== name)
             throw new NotFoundException(`User does not exist.`);
