@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateUserDto } from 'src/dto/CreateUser.dto';
@@ -31,9 +31,10 @@ describe('UserService', () => {
     );
 
     mockUser = {
-      id : 'example@abc.abc',
+      id : "test",
+      email : 'test1234@test.test',
       name : 'test',
-      password : '125d6d03b32c84d492747f79cf0bf6e179d287f341384eb5d6d3197525ad6be8e6df0116032935698f99a09e265073d1d6c32c274591bf1d0a20ad67cba921bc'
+      password : '9f86d081884c7d659a2feaa0c55ad015'
     }
   });
 
@@ -42,93 +43,77 @@ describe('UserService', () => {
   });
 
   describe('getUser',()=>{
-    const mockEmail : string = 'example@abc.abc';
-    const mockErrorEmail : string = 'helloworld';
+    const mockId : string = 'test';
+    const mockErrorId : string = 'helloworld';
 
     it('should find a user', async ()=>{
-      jest.spyOn(userRepository, "findOne").mockResolvedValue(mockUser);
+      jest.spyOn(userRepository, "findOneWithId").mockResolvedValue(mockUser);
       
-      const result : User = await service.getUser(mockEmail);
+      const result : User = await service.getUser(mockId);
       
-      expect(result.id).toEqual(mockEmail);
-    });
-
-    it("should return a BadRequestException", async () => {
-      try{
-        await service.getUser(mockErrorEmail);
-      }catch(e){
-        expect(e).toBeInstanceOf(BadRequestException);
-      }
+      expect(result.id).toEqual(mockId);
     });
   });
 
-  describe('getUserWithPassword',()=>{
-    const mockEmail : string = 'example@abc.abc';
-    const mockPassword : string = 'test';
-    const mockErrorEmail : string = 'helloworld';
-
-    it('should find a user with password', async ()=>{
-      jest
-        .spyOn(userRepository, "findOneWithPassword")
-        .mockResolvedValue(mockUser);
-      
-      const result : User = await service.getUserWithPassword(mockEmail, mockPassword);
-      
-      expect(result.id).toEqual(mockEmail);
-    });
-
-    it("should return a BadRequestException", async () => {
-      try{
-        await service.getUserWithPassword(mockErrorEmail, mockPassword);
-      }catch(e){
-        expect(e).toBeInstanceOf(BadRequestException);
-      }
-    });
-  });
-
-  describe('getUserWithName', ()=>{
-    const mockEmail : string = 'example@abc.abc';
+  describe('getUserId', ()=>{
+    const mockEmail : string = 'test1234@test.test';
     const mockName : string = 'test';
     const mockErrorEmail : string = 'helloworld';
+    const mockNotFoundEmail : string = "test@test.test"
 
-    it('should find a user with name', async ()=>{
+    it('should find a userId', async ()=>{
       jest
-        .spyOn(userRepository, "findOneWithName")
+        .spyOn(userRepository, "findOneWithEmail")
         .mockResolvedValue(mockUser);
-      const result : User = await service.getUserWithName(mockEmail, mockName);
+      const result : string = await service.getUserId(mockName, mockEmail);
       
-      expect(result.id).toEqual(mockEmail);
-      expect(result.name).toEqual(mockName);
+      expect(result).toEqual(mockUser.id);
     });
 
     it("should return a BadRequestException", async () => {
       try{
-        await service.getUserWithName(mockErrorEmail, mockName);
-      }catch(e){
-        expect(e).toBeInstanceOf(BadRequestException);
+        await service.getUserId(mockName, mockErrorEmail);
+      }catch(err){
+        expect(err).toBeInstanceOf(BadRequestException);
+      }
+    });
+
+    it("should return a NotFoundException", async () => {
+      jest
+        .spyOn(userRepository, "findOneWithEmail")
+        .mockResolvedValue(undefined);
+      try{
+        await service.getUserId(mockName, mockNotFoundEmail);
+      }catch(err){
+        expect(err).toBeInstanceOf(NotFoundException);
       }
     });
   });
 
   describe('changeDefaultPassword', ()=>{
-    const mockEmail : string = 'example@abc.abc';
+    const mockEmail : string = 'test1234@test.test';
     const mockName : string = 'test';
 
     const mockUpdateUserWithDefaultPassword : User = {
-      id : 'example@abc.abc',
+      id : "test",
+      email : 'test1234@test.test',
       name : 'test',
       password : '640ab86890ccc2b38d0fda471e9defa59967a22d594a9e21df77212302bb8518ec6eaa3e559a7d6e1ce7d7f33936b80d888123ea48a1931ac61830d5d854616b'
     };
 
     it("should update user password to default password", async()=>{
-      jest.spyOn(userRepository, "findOneWithName").mockResolvedValue(mockUser);
-      const BeforeUpdate : User = await service.getUserWithName(mockEmail, mockName);
+      jest.spyOn(userRepository, "findOneWithEmail").mockResolvedValue(mockUser);
+      const BeforeFoundUser : string = await service.getUserId(mockName,mockEmail);
+      jest.spyOn(userRepository, "findOneWithId").mockResolvedValue(mockUser);
+      const BeforeUpdate : User = await service.getUser(BeforeFoundUser);
 
-      jest.spyOn(userRepository, "updatePassword").mockResolvedValue();
+      jest.spyOn(userRepository, "updateUser").mockResolvedValue();
       const result = await service.changeDefaultPassword(BeforeUpdate);
       
-      jest.spyOn(userRepository, "findOneWithName").mockResolvedValue(mockUpdateUserWithDefaultPassword);
-      const AfterUpdate : User = await service.getUserWithName(mockEmail, mockName);
+      jest.spyOn(userRepository, "findOneWithEmail").mockResolvedValue(mockUpdateUserWithDefaultPassword);
+      const AfterFoundUser : string = await service.getUserId(mockName,mockEmail);
+      jest.spyOn(userRepository, "findOneWithId").mockResolvedValue(mockUpdateUserWithDefaultPassword);
+      const AfterUpdate : User = await service.getUser(AfterFoundUser);
 
       expect(BeforeUpdate.id).toEqual(AfterUpdate.id);
       expect(BeforeUpdate.name).toEqual(AfterUpdate.name);
@@ -136,29 +121,36 @@ describe('UserService', () => {
   });
 
   describe("SignUp", ()=>{
-    const mockEmail : string = 'example@abc.abc';
+    const mockEmail : string = 'test1234@test.test';
     const mockName : string = 'test';
+    const mockId : string = "test";
     const mockcreateUserDto : CreateUserDto = {
       name : mockName,
       email: mockEmail,
+      id : mockId,
       password : "test"
     };
 
     it("should create a user", async () => {
-      jest.spyOn(userRepository, "findOneWithName").mockResolvedValue(undefined);
+      jest.spyOn(userRepository, "findOneWithId").mockResolvedValue(undefined);
+      jest.spyOn(userRepository, "findOneWithEmail").mockResolvedValue(undefined);
       jest.spyOn(userRepository, "createOne").mockResolvedValue();
+      
       const result = await service.addUser(mockcreateUserDto);
 
-      jest.spyOn(userRepository, "findOneWithName").mockResolvedValue(mockUser);
-      const AfterCreate : User = await service.getUserWithName(mockEmail, mockName);
+      jest.spyOn(userRepository, "findOneWithId").mockResolvedValue(mockUser);
+      jest.spyOn(userRepository, "findOneWithEmail").mockResolvedValue(mockUser);
+      const AfterCreate : User = await service.getUser(mockId);
 
-      expect(AfterCreate.id).toEqual(mockcreateUserDto.email);
+      expect(AfterCreate.id).toEqual(mockcreateUserDto.id);
       expect(AfterCreate.name).toEqual(mockcreateUserDto.name);
     });
   });
 
   describe("UpdatePassword", ()=>{
-    const mockEmail : string = 'example@abc.abc';
+    const mockId : string = "test";
+    const mockEmail : string = 'test1234@test.test';
+    const mockName : string = "test";
     const mockPassword : string = 'test';
     const mockUpdatePassword : string = 'test';
     const mockUpdateUserDto : UpdateUserDto = {
@@ -167,19 +159,20 @@ describe('UserService', () => {
       modifyPassword : mockUpdatePassword
     };
     const mockUpdateUser : User = {
-      id : 'example@abc.abc',
-      name : 'test',
-      password : '640ab86890ccc2b38d0fda471e9defa59967a22d594a9e21df77212302bb8518ec6eaa3e559a7d6e1ce7d7f33936b80d888123ea48a1931ac61830d5d854616b'
+      id : mockId,
+      email : mockEmail,
+      name : mockName,
+      password : '9f86d081884c7d659a2feaa0c55ad015'
     };
     it("should update a user", async ()=>{
-      jest.spyOn(userRepository, "findOneWithPassword").mockResolvedValue(mockUser);
-      const BeforeUpdate : User = await service.getUserWithPassword(mockEmail, mockPassword);
+      jest.spyOn(userRepository, "findOneWithId").mockResolvedValue(mockUser);
+      const BeforeUpdate : User = await service.getUser(mockId);
 
-      jest.spyOn(userRepository, "updatePassword").mockResolvedValue();
+      jest.spyOn(userRepository, "updateUser").mockResolvedValue();
       const result = await service.updateUser(mockUpdateUserDto);
 
-      jest.spyOn(userRepository, "findOneWithPassword").mockResolvedValue(mockUpdateUser);
-      const AfterUpdate : User = await service.getUserWithPassword(mockEmail, mockUpdatePassword);
+      jest.spyOn(userRepository, "findOneWithId").mockResolvedValue(mockUpdateUser);
+      const AfterUpdate : User = await service.getUser(mockId);
 
       expect(BeforeUpdate.id).toEqual(AfterUpdate.id);
       expect(BeforeUpdate.name).toEqual(AfterUpdate.name);
