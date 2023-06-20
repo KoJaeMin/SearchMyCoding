@@ -1,4 +1,4 @@
-import { Body, Controller, Patch, Post, Session, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, Query, Session, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOperation } from '@nestjs/swagger';
 import { CreateUserDto } from 'src/dto/CreateUser.dto';
 import { GetUserWithNameDto } from 'src/dto/GetUserWithName.dto';
@@ -14,6 +14,15 @@ export class UserController {
     constructor(
         private readonly userService : UserService
     ){}
+
+    @Get('/id')
+    @ApiOperation({
+        "summary" : "아이디 찾기",
+        "description" : "이름과 email을 이용하여 유저 아이디를 가져온다."
+    })
+    async getUserId(@Query("name") name : string, @Query("email") email : string) : Promise<string>{
+        return await this.userService.getUserId(name, email);
+    }
 
     @UseGuards(LocalAuthGuard)
     @Post('/info')
@@ -54,7 +63,8 @@ export class UserController {
     })
     async changeDefaultPassword(@Body() getUserWithNameDto : GetUserWithNameDto) : Promise<string>{
         const {id, name} = getUserWithNameDto;
-        const user : User = await this.userService.getUserWithName(id, name);
+        const userId : string = await this.userService.getUserId(id, name);
+        const user : User = await this.userService.getUser(userId);
         return await this.userService.changeDefaultPassword(user);
     }
 }

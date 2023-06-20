@@ -13,18 +13,17 @@ export class UserService {
     ){}
 
     async getUser(id : string) : Promise<User>{
-        const User : User = await this.userRepository.findOne(id);
+        const User : User = await this.userRepository.findOneWithId(id);
         if(!User)
             throw new NotFoundException(`User does not exist.`);
         return User;
     }
 
-    async getUserWithName(id : string, name : string) : Promise<User>{
-        const User : User = await this.userRepository.findOneWithName(id, name);
-
-        if(!User)
+    async getUserId(name : string, email : string) : Promise<string>{
+        const user : User = await this.userRepository.findOneWithEmail(email);
+        if(!user || user.name !== name)
             throw new NotFoundException(`User does not exist.`);
-        return User;
+        return user.id;
     }
 
     async changeDefaultPassword(user : User) : Promise<string>{
@@ -48,12 +47,13 @@ export class UserService {
         if(!IsValidEmail(createUserDto.email))
             throw new BadRequestException(`Bad Email Format`);
         
-        const name : string = createUserDto.name;
+        const id : string = createUserDto.id;
         const email : string = createUserDto.email;
         const passeord : string = createUserDto.password;
         
-        const user : User = await this.userRepository.findOneWithName(email, name);
-        if(!!user)
+        const userWithId : User = await this.userRepository.findOneWithId(id);
+        const userWithEmail : User = await this.userRepository.findOneWithEmail(email);
+        if(userWithId || userWithEmail)
             throw new BadRequestException(`User is exist.`);
         const hashedPassword : string = createHashPassword(passeord);
         await this.userRepository.createOne({
@@ -80,5 +80,8 @@ export class UserService {
         }
     }
 
-    async updateUserSchema(){}
+    /**
+     * todo : User schema 변경하는 기능 추가
+     */
+    // async updateUserSchema(){}
 }
