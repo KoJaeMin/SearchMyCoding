@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Post, Query, Session, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, Query, Req, Res, Session, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOperation } from '@nestjs/swagger';
 import { CreateUserDto } from 'src/dto/CreateUser.dto';
 import { GetUserWithNameDto } from 'src/dto/GetUserWithName.dto';
@@ -8,6 +8,7 @@ import { UserService } from './user.service';
 import { LocalAuthGuard } from 'src/guards/local.auth.guard';
 import { GetUserDto } from 'src/dto/GetUser.dto';
 import { DUser } from 'src/decorators/user.decorator';
+import { LoggedInGuard } from 'src/guards/logged-in.guard';
 
 @Controller('/user')
 export class UserController {
@@ -25,10 +26,20 @@ export class UserController {
     }
 
     @UseGuards(LocalAuthGuard)
-    @Post('/info')
+    @Post('/login')
     @ApiBody({
         type: GetUserDto,
     })
+    @ApiOperation({
+        "summary" : "유저 정보 가져오기",
+        "description" : "id과 password를 이용하여 유저 정보를 가져온다."
+    })
+    async logIn(@DUser() user : User,@Session() session: Record<string, any>){
+        return {user, SID : session.id};
+    };
+
+    @UseGuards(LoggedInGuard)
+    @Get('/info')
     @ApiOperation({
         "summary" : "유저 정보 가져오기",
         "description" : "id과 password를 이용하여 유저 정보를 가져온다."
@@ -46,7 +57,7 @@ export class UserController {
         return await this.userService.addUser(createUserDto);
     };
 
-    @UseGuards(LocalAuthGuard)
+    @UseGuards(LoggedInGuard)
     @Patch("/password")
     @ApiOperation({
         "summary" : "유저의 비밀번호 변경",
@@ -66,5 +77,14 @@ export class UserController {
         const userId : string = await this.userService.getUserId(id, name);
         const user : User = await this.userService.getUser(userId);
         return await this.userService.changeDefaultPassword(user);
+    }
+
+    @UseGuards(LoggedInGuard)
+    @Get('logout')
+    async logOut(@Req() req){
+        await req.logOut((e)=>{if(e)throw e});
+        return {
+            msg : "Bye"
+        }
     }
 }
