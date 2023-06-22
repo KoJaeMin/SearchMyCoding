@@ -14,7 +14,7 @@ export class AuthService {
             }
             return user;
         }catch(err){
-            throw new err;
+            throw err;
         }
     }
 }
