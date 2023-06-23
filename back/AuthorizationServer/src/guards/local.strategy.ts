@@ -18,7 +18,7 @@ export class LocalStrategy extends PassportStrategy(Strategy){
         id: string, password: string
     ){
         const user : User = await this.authService.validateUser(id, password);
-        if (!user) {
+        if (!user || ["blacked", "sleep"].includes(user.role)) {
           throw new UnauthorizedException(`You are an unvalid user`);
         }
         return user;
