@@ -9,8 +9,8 @@ export function IsValidEmail(email : string) : boolean{
  * @param obj 
  * @returns
  */
-export function getPropertyOfDifferenceSet(target : Object, obj : Object) : Object {
-    let result : Object = {};
+export function getPropertyOfDifferenceSet<T extends Object>(target : T, obj : T) : T {
+    let result : T = <T>{};
     const keySet = new Set<string>();
 
     for(const key of Object.keys(target))
@@ -30,8 +30,9 @@ export function getPropertyOfDifferenceSet(target : Object, obj : Object) : Obje
 /**
  * target 객체에 obj 객체를 할당하는 함수
  * @param target 
- * @param obj 
+ * @param obj
+ * @returns 
  */
-export function concatObject(target : Object, obj : Object) : void{
-    Object.assign(target, obj);
+export function toConcatObject<T>(target : T, obj : T) : T{
+    return Object.assign({}, target, obj);
 }
