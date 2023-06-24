@@ -17,8 +17,17 @@ export class User {
   @Prop({required : true})
   password : string;
 
-  @Prop({required:true, default:"user"})
+  @Prop({required : true})
   role : string;
+
+  @Prop({required : true, unique : true})
+  dataId : string;
+
+  @Prop({required : true})
+  createAt : Date;
+
+  @Prop({required : false})
+  lastLogIn? : Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
