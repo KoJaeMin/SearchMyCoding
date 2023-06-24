@@ -65,8 +65,8 @@ export class UserController {
         "summary" : "유저의 비밀번호 변경",
         "description" : "UpdateUserDto를 이용하여 유저의 비밀번호를 변경한다."
     })
-    async updatePassword(@Body() updateUserDto: UpdateUserDto) : Promise<void>{
-        return await this.userService.updateUser(updateUserDto);
+    async updatePassword(@DUser() user : User, @Body() updateUserDto: UpdateUserDto) : Promise<void>{
+        return await this.userService.updateUser(user, updateUserDto, "password");
     }
 
     @Patch("/password/default")

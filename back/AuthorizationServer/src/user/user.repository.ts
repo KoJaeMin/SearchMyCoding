@@ -5,6 +5,7 @@ import { CreateUserDto } from "src/dto/CreateUser.dto";
 import { UpdateUserDto } from "src/dto/UpdateUser.dto";
 import { User, UserDocument } from "src/schemas/user.schema";
 import { getPropertyOfDifferenceSet } from "src/utils/format";
+import { Role } from "./user.type";
 
 @Injectable()
 export class UserRepository{
@@ -21,16 +22,25 @@ export class UserRepository{
     return await this.userModel.findOne({email:email});
   }
 
-  async createOne(createUserDto : CreateUserDto) : Promise<void>{
-    await this.userModel.create(createUserDto);
+  async updateLastLogIn(id : string){
+    await this.userModel.findOneAndUpdate({id : id}, {lastLogin : new Date((new Date()).toUTCString())})
   }
 
-  async updateUser(updateUserDto : UpdateUserDto) : Promise<void>{
+  async createOne(createUserDto : CreateUserDto, role : Role, dataId : string) : Promise<void>{
+    const user : User = Object.assign({}, createUserDto, {
+      role : role,
+      dataId : dataId,
+      createAt : new Date((new Date()).toUTCString())
+    });
+    await this.userModel.create(user);
+  }
+
+  async updateUser(id : string, updateUserDto : UpdateUserDto) : Promise<void>{
     const getUserOption = {
-      id : updateUserDto.id,
+      id : id,
       password : updateUserDto.password
     };
-    const updateUserOption = getPropertyOfDifferenceSet(updateUserDto, getUserOption);
+    const updateUserOption = Object.assign(getPropertyOfDifferenceSet(updateUserDto, getUserOption));
     await this.userModel.findOneAndUpdate(
       getUserOption,
       updateUserOption,

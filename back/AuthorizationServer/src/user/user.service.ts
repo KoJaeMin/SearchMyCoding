@@ -1,16 +1,21 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { User } from 'src/schemas/user.schema';
-import { concatObject, getPropertyOfDifferenceSet, IsValidEmail } from 'src/utils/format';
+import { toConcatObject, getPropertyOfDifferenceSet, IsValidEmail } from 'src/utils/format';
 import { UserRepository } from './user.repository';
 import { CreateUserDto } from 'src/dto/CreateUser.dto';
 import { UpdateUserDto } from 'src/dto/UpdateUser.dto';
 import { createHashPassword } from 'src/utils/hash';
+import { Key, Role } from './user.type';
 
 @Injectable()
 export class UserService {
     constructor(
         private readonly userRepository : UserRepository
     ){}
+
+    async updateLastLogIn(id : string) : Promise<void>{
+        this.userRepository.updateLastLogIn(id);
+    }
 
     async getUser(id : string) : Promise<User>{
         const User : User = await this.userRepository.findOneWithId(id);
@@ -31,13 +36,12 @@ export class UserService {
     async changeDefaultPassword(user : User) : Promise<string>{
         const hashedPassword : string = createHashPassword(user.password);
         const updateUser : UpdateUserDto = {
-            id : user.id,
             password : user.password,
             modifyPassword : hashedPassword
         };
         //// user 비번 바꾸기
         try{
-            await this.userRepository.updateUser(updateUser);
+            await this.userRepository.updateUser(user.id, updateUser);
         }catch(err){
             throw err;
         }
@@ -45,38 +49,51 @@ export class UserService {
         return hashedPassword;
     }
 
-    async addUser(createUserDto : CreateUserDto) : Promise<void>{
+    async addUser(createUserDto : CreateUserDto, role : Role = "user") : Promise<void>{
         if(!IsValidEmail(createUserDto.email))
             throw new BadRequestException(`Bad Email Format`);
         
-        const id : string = createUserDto.id;
-        const email : string = createUserDto.email;
-        const passeord : string = createUserDto.password;
+        const {id, email, password, name} = createUserDto;
         
         const userWithId : User = await this.userRepository.findOneWithId(id);
         const userWithEmail : User = await this.userRepository.findOneWithEmail(email);
         if(userWithId || userWithEmail)
             throw new BadRequestException(`User is exist.`);
-        const hashedPassword : string = createHashPassword(passeord);
+        const hashedPassword : string = createHashPassword(password);
+        const dataId : string = createHashPassword(id);
         await this.userRepository.createOne({
-            id : createUserDto.id,
-            email: createUserDto.email,
+            id : id,
+            email: email,
             password : hashedPassword,
-            name: createUserDto.name
-        });
+            name: name
+        }, role, dataId);
     }
 
-    async updateUser(updateUserDto : UpdateUserDto){
+    async updateUser(user : User, updateUserDto : UpdateUserDto, key : Key){
         const updateUser : UpdateUserDto = {
-            id : updateUserDto.id,
             password : createHashPassword(updateUserDto.password)
         };
-        if(updateUserDto.modifyPassword)
-            Object.assign(updateUserDto, {modifyPassword : createHashPassword(updateUserDto.modifyPassword)});
-        concatObject(updateUser, getPropertyOfDifferenceSet(updateUserDto, updateUser));
+        if(key === "id")
+            throw new BadRequestException(`You cannot change id.`);
+        
+        const updateKey = key !== "all" ? "modify" + key[0].toUpperCase() + key.slice(1) : key;
+        if(key !== "all")
+            if(!updateUserDto[updateKey])
+                throw new BadRequestException(`You miss something`);
+        if(["password", "all"].includes(key))
+            Object.assign(updateUser, {modifyPassword : createHashPassword(updateUserDto.modifyPassword)});
+        else{
+            let temp = {};
+            temp[updateKey] = updateUserDto[updateKey];
+            if(key === 'email')
+                if(!IsValidEmail(temp[updateKey]))
+                    throw new BadRequestException(`Bad Email Format`);
+            Object.assign(updateUser, temp);
+        }
+        const newUpdateUser : UpdateUserDto = updateKey === "all" ? toConcatObject(updateUser, getPropertyOfDifferenceSet<UpdateUserDto>(updateUserDto, updateUser)) : updateUser;
 
         try{
-            await this.userRepository.updateUser(updateUser);
+            await this.userRepository.updateUser(user.id, newUpdateUser);
         }catch(err){
             throw err;
         }
