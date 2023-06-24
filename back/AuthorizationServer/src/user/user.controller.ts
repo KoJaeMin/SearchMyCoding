@@ -9,6 +9,8 @@ import { LocalAuthGuard } from 'src/guards/local.auth.guard';
 import { GetUserDto } from 'src/dto/GetUser.dto';
 import { DUser } from 'src/decorators/user.decorator';
 import { LoggedInGuard } from 'src/guards/logged-in.guard';
+import { promisify } from 'util';
+import { Request } from 'express';
 
 @Controller('/user')
 export class UserController {
@@ -39,7 +41,7 @@ export class UserController {
     };
 
     @UseGuards(LoggedInGuard)
-    @Get('/info')
+    @Post('/info')
     @ApiOperation({
         "summary" : "유저 정보 가져오기",
         "description" : "id과 password를 이용하여 유저 정보를 가져온다."
@@ -81,10 +83,10 @@ export class UserController {
 
     @UseGuards(LoggedInGuard)
     @Get('logout')
-    async logOut(@Req() req){
-        await req.logOut((e)=>{if(e)throw e});
+    async logOut(@Req() req : Request, @DUser() user : User){
+        await promisify(req.session.destroy.bind(req.session))();
         return {
-            msg : "Bye"
+            msg : `Bye ${user.id}`
         }
     }
 }
