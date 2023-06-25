@@ -17,6 +17,7 @@ export class SessionSerializer extends PassportSerializer {
     async deserializeUser(userId: string, done: (err: Error | null, user?: User) => void) {
         try{
             const user = await this.userService.getUser(userId);
+            this.userService.updateLastLogIn(user.id);
             done(null, user);
         }catch(error){
             done(error);
