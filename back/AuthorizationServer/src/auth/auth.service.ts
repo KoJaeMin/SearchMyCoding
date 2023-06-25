@@ -5,10 +5,10 @@ import { compareHash } from 'src/utils/hash';
 
 @Injectable()
 export class AuthService {
-    constructor(private readonly usersService: UserService) {}
+    constructor(private readonly userService: UserService) {}
     async validateUser(id: string, password: string) : Promise<User> {
         try{
-            const user : User = await this.usersService.getUser(id);
+            const user : User = await this.userService.getUser(id);
             if(!compareHash(password, user.password)){
                 throw new UnauthorizedException(`Password is wrong`);
             }
