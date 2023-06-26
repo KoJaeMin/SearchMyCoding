@@ -9,6 +9,7 @@ import { Role } from "./user.type";
 
 @Injectable()
 export class UserRepository{
+  private offset : number = 1000 * 60 * 60 * 9;
   constructor(
     @InjectModel(User.name)
     private readonly userModel : Model<UserDocument>
@@ -23,7 +24,7 @@ export class UserRepository{
   }
 
   async updateLastLogIn(id : string){
-    await this.userModel.findOneAndUpdate({id : id}, {lastLogin : new Date((new Date()).toUTCString())})
+    await this.userModel.findOneAndUpdate({id : id}, {lastLogin : new Date(((new Date()).getTime() + this.offset)).toISOString()})
   }
 
   async createOne(createUserDto : CreateUserDto, role : Role, dataId : string) : Promise<void>{
