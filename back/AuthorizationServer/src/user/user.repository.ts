@@ -24,14 +24,14 @@ export class UserRepository{
   }
 
   async updateLastLogIn(id : string){
-    await this.userModel.findOneAndUpdate({id : id}, {lastLogin : new Date(((new Date()).getTime() + this.offset)).toISOString()})
+    await this.userModel.findOneAndUpdate({id : id}, {lastLogin : new Date(((new Date()).getTime() + this.offset))})
   }
 
   async createOne(createUserDto : CreateUserDto, role : Role, dataId : string) : Promise<void>{
     const user : User = Object.assign({}, createUserDto, {
       role : role,
       dataId : dataId,
-      createAt : new Date((new Date()).toUTCString())
+      createAt : new Date(((new Date()).getTime() + this.offset))
     });
     await this.userModel.create(user);
   }
