@@ -37,6 +37,7 @@ export class UserController {
         "description" : "id과 password를 이용하여 유저 정보를 가져온다."
     })
     async logIn(@DUser() user : User,@Session() session: Record<string, any>){
+        this.userService.updateLastLogIn(user.id);
         return {user, SID : session.id};
     };
 
