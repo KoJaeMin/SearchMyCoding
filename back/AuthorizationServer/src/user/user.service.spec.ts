@@ -34,7 +34,10 @@ describe('UserService', () => {
       id : "test",
       email : 'test1234@test.test',
       name : 'test',
-      password : '9f86d081884c7d659a2feaa0c55ad015'
+      password : '9f86d081884c7d659a2feaa0c55ad015',
+      role : "user",
+      dataId : '9f86d081884c7d659a2feaa0c55ad015',
+      createAt : new Date()
     }
   });
 
@@ -98,7 +101,10 @@ describe('UserService', () => {
       id : "test",
       email : 'test1234@test.test',
       name : 'test',
-      password : '640ab86890ccc2b38d0fda471e9defa59967a22d594a9e21df77212302bb8518ec6eaa3e559a7d6e1ce7d7f33936b80d888123ea48a1931ac61830d5d854616b'
+      password : '640ab86890ccc2b38d0fda471e9defa59967a22d594a9e21df77212302bb8518ec6eaa3e559a7d6e1ce7d7f33936b80d888123ea48a1931ac61830d5d854616b',
+      role : "user",
+      dataId : '9f86d081884c7d659a2feaa0c55ad015',
+      createAt : mockUser.createAt
     };
 
     it("should update user password to default password", async()=>{
@@ -147,29 +153,50 @@ describe('UserService', () => {
     });
   });
 
-  describe("UpdatePassword", ()=>{
+  describe("updateUser", ()=>{
     const mockId : string = "test";
     const mockEmail : string = 'test1234@test.test';
+    const mockUpdateEmail : string = 'test1234@test.test';
     const mockName : string = "test";
     const mockPassword : string = 'test';
     const mockUpdatePassword : string = 'test';
-    const mockUpdateUserDto : UpdateUserDto = {
-      id : mockEmail,
+    const mockUpdatePasswordUserDto : UpdateUserDto = {
       password : mockPassword,
       modifyPassword : mockUpdatePassword
+    };
+    const mockUpdateEmailUserDto : UpdateUserDto = {
+      password : mockPassword,
+      modifyEmail : mockUpdateEmail
     };
     const mockUpdateUser : User = {
       id : mockId,
       email : mockEmail,
       name : mockName,
-      password : '9f86d081884c7d659a2feaa0c55ad015'
+      password : '9f86d081884c7d659a2feaa0c55ad015',
+      role : "user",
+      dataId : '9f86d081884c7d659a2feaa0c55ad015',
+      createAt : mockUser.createAt
     };
-    it("should update a user", async ()=>{
+    it("should update a password", async ()=>{
       jest.spyOn(userRepository, "findOneWithId").mockResolvedValue(mockUser);
       const BeforeUpdate : User = await service.getUser(mockId);
 
       jest.spyOn(userRepository, "updateUser").mockResolvedValue();
-      const result = await service.updateUser(mockUpdateUserDto);
+      const result = await service.updateUser(BeforeUpdate, mockUpdatePasswordUserDto, "password");
+
+      jest.spyOn(userRepository, "findOneWithId").mockResolvedValue(mockUpdateUser);
+      const AfterUpdate : User = await service.getUser(mockId);
+
+      expect(BeforeUpdate.id).toEqual(AfterUpdate.id);
+      expect(BeforeUpdate.name).toEqual(AfterUpdate.name);
+    })
+
+    it("should update a email", async ()=>{
+      jest.spyOn(userRepository, "findOneWithId").mockResolvedValue(mockUser);
+      const BeforeUpdate : User = await service.getUser(mockId);
+
+      jest.spyOn(userRepository, "updateUser").mockResolvedValue();
+      const result = await service.updateUser(BeforeUpdate, mockUpdateEmailUserDto, "email");
 
       jest.spyOn(userRepository, "findOneWithId").mockResolvedValue(mockUpdateUser);
       const AfterUpdate : User = await service.getUser(mockId);
