@@ -1,6 +1,27 @@
 version: '3.7'
 
 services:
+  postgres:
+    container_name: postgres
+    image: db
+    build:
+      context: .
+    networks:
+      - postgres
+    # restart: always
+    ports:
+      - "${DATABASE_PORT}:${DATABASE_PORT}"
+    environment:
+      DATABASE_HOST: ${DATABASE_HOST}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_DB: ${DATABASE_DATABASE}
+      PG_DATA: /usr/local/var/postgresql@14
+    env_file:
+      - .env
+    volumes:
+      - pgdata:/usr/local/var/postgresql@14
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
   main:
     container_name: main
     build:
@@ -16,7 +37,7 @@ services:
     env_file:
       - .env
     networks:
-      - webnet
+      - postgres
     depends_on:
       # - redis
       - postgres
@@ -25,21 +46,7 @@ services:
   #   image: redis:5
   #   networks:
   #     - webnet
-  postgres:
-    container_name: postgres
-    image: postgres:14
-    networks:
-      - webnet
-    environment:
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
-      POSTGRES_USER: ${DATABASE_USERNAME}
-      POSTGRES_DB: ${DATABASE_DATABASE}
-      PG_DATA: /var/lib/postgresql/data
-    ports:
-      - 5432:5432
-    volumes:
-      - pgdata:/var/lib/postgresql/data
 networks:
-  webnet:
+  postgres:
 volumes:
   pgdata:
