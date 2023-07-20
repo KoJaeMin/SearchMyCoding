@@ -47,6 +47,7 @@ describe('CoursesService', () => {
 
     mockCourse = {
       id : 1,
+      author : "test",
       title : "웹의 이해",
       link : "https://www.example.link",
       img_link : "https://www.examplelink.link",
@@ -150,6 +151,7 @@ describe('CoursesService', () => {
   describe('createCourse',()=>{
     const mockCreateCourseDto : CreateCourseDto = {
       title : "웹의 이해",
+      author : "test",
       link : "https://www.example.link",
       img_link : "https://www.examplelink.link",
       rating : 0,
@@ -192,6 +194,7 @@ describe('CoursesService', () => {
     }
     const mockUpdateCourse : Course = {
       id : 1,
+      author : "test",
       title : "앱의 이해",
       link : "https://www.example.link",
       img_link : "https://www.examplelink.link",

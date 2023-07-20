@@ -58,6 +58,7 @@ export class CourseService {
         
         const newCreateCourseDto : CreateCourseDto = {
             title : createCourseDto.title,
+            author : createCourseDto.author,
             link : validURI,
             price : createCourseDto.price,
             img_link : IsValidURI(validIMG_URI) ? validIMG_URI : null,

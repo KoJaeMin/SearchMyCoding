@@ -9,6 +9,12 @@ export class CreateCourseDto{
     readonly title : string;
 
     @ApiProperty({
+        description : "제작자"
+    })
+    @IsString()
+    readonly author : string;
+
+    @ApiProperty({
         description : "강의 uri"
     })
     @IsString()

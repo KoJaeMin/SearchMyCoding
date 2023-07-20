@@ -14,6 +14,14 @@ export class Course{
         nullable : false
     })
     title : string;
+    
+    @Column({
+        type : "varchar",
+        length : 2000,
+        unique: true,
+        nullable : false
+    })
+    author : string;
 
     @Column({
         type : "varchar",
