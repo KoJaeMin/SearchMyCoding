@@ -136,6 +136,7 @@ describe('CoursecategoryService', () => {
     const mockCourseList : Course[] = [
       {
         id : mockCourseId,
+        author : 'test',
         link : 'https://localhost',
         title : '웹 기초',
         price : 0,
@@ -165,6 +166,7 @@ describe('CoursecategoryService', () => {
     const mockCategoryId : number = 1;
     const mockCourse : Course = {
       id : mockCourseId,
+      author : 'test',
       link : 'https://localhost',
       title : '웹 기초',
       price : 0,
@@ -208,6 +210,7 @@ describe('CoursecategoryService', () => {
     const mockCourseCategoryId : number = 1;
     const mockCourse : Course = {
       id : mockCourseId,
+      author : 'test',
       link : 'https://localhost',
       title : '웹 기초',
       price : 0,
