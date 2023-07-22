@@ -5,6 +5,8 @@ import { typeORMConfig } from './config/typeorm.config';
 import { CourseModule } from './course/course.module';
 import { CategoryModule } from './category/category.module';
 import { CoursecategoryModule } from './coursecategory/coursecategory.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { BatchModule } from './batch/batch.module';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { CoursecategoryModule } from './coursecategory/coursecategory.module';
     CourseModule,
     CategoryModule,
     CoursecategoryModule,
+    ScheduleModule.forRoot(),
+    BatchModule
   ],
   controllers: [],
   providers: [],

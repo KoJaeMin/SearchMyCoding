@@ -15,6 +15,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, SwaggerConfig);
   SwaggerModule.setup(configService.get('SWAGGER_PATH'), app, document);
 
+  await app.init();
   await app.listen(configService.get('SERVER_PORT'));
 }
 bootstrap();
