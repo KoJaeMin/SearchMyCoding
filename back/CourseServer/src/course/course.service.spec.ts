@@ -83,14 +83,6 @@ describe('CoursesService', () => {
 
       expect(result).toEqual(mockCourse);
     });
-
-    it("should return a NotFoundException", async () => {
-      try{
-        await service.getOneCourseById(findErrorId);
-      }catch(e){
-        expect(e).toBeInstanceOf(NotFoundException);
-      }
-    });
   });
 
   describe('getCourseList',()=>{
@@ -137,14 +129,6 @@ describe('CoursesService', () => {
       expect(courseRepository.findOne).toHaveBeenCalledTimes(1);
 
       expect(result).toEqual(mockCourse);
-    });
-
-    it("should return a NotFoundException", async () => {
-      try{
-        await service.getOneCourseByTitle(findErrorTitle);
-      }catch(e){
-        expect(e).toBeInstanceOf(NotFoundException);
-      }
     });
   });
 

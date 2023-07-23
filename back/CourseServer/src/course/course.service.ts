@@ -18,9 +18,7 @@ export class CourseService {
     }
 
     async getOneCourseById(courseId : number) : Promise<Course>{
-        const FoundCourse : Course = await this.courseRepository.findOne({id : courseId})
-        if(!FoundCourse)
-            throw new NotFoundException(`Course with Id ${courseId} is not found.`);
+        const FoundCourse : Course = await this.courseRepository.findOne({id : courseId});
         return FoundCourse;
     }
 
@@ -44,9 +42,7 @@ export class CourseService {
     }
 
     async getOneCourseByTitle(courseTitle : string) : Promise<Course>{
-        const FoundCourse : Course = await this.courseRepository.findOne({title : courseTitle})
-        if(!FoundCourse)
-            throw new NotFoundException(`Course with Title ${courseTitle} is not found.`);
+        const FoundCourse : Course = await this.courseRepository.findOne({title : courseTitle});
         return FoundCourse;
     }
 
@@ -65,16 +61,18 @@ export class CourseService {
             rating : IsValidRating(createCourseDto.rating) ? Math.floor(createCourseDto.rating) : null
         }
 
+        const course : Course = await this.getOneCourseByTitle(newCreateCourseDto.title);
+        if(course)
+            throw new BadRequestException(`Course with Title ${newCreateCourseDto.title} exists.`)
+
         const newCourse : Course = this.courseRepository.create(newCreateCourseDto);
         await this.courseRepository.insert(newCourse);
     }
 
     async patchCourse(courseTitle : string, updateCourseDto : UpdateCourseDto) : Promise<void>{
-        try{
-            await this.getOneCourseByTitle(courseTitle);
-        }catch(err){
-            throw err;
-        }
+        const course : Course = await this.getOneCourseByTitle(courseTitle);
+        if(!course)
+            throw new NotFoundException(`Course with Title ${courseTitle} does not exists`);
         const [validURI, validIMG_URI] = convertFormat(updateCourseDto.link, updateCourseDto.img_link);
         
         if(validURI !== null && !IsValidURI(validURI))
