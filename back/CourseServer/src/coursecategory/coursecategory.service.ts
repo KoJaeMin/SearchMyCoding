@@ -84,8 +84,15 @@ export class CourseCategoryService {
 
     async createCourseCategory(createCourseCategory : CreateCourseCategoryDto) : Promise<void>{
         const course : Course = await this.courseService.getOneCourseById(createCourseCategory.courseId);
+        if(!course)
+            throw new NotFoundException(`Course with Id ${createCourseCategory.courseId} does not exists`);
         const category : Category = await this.categoryService.getOneCategoryById(createCourseCategory.categoryId);
+        if(!category)
+            throw new NotFoundException(`Category with Id ${createCourseCategory.categoryId} does not exists`);
 
+        const FoundCourseCategory : CourseCategory = await this.coursecategoryRepository.findOne({category : createCourseCategory.categoryId, course : createCourseCategory.courseId});
+        if(!!FoundCourseCategory)
+            throw new BadRequestException(`CourseCategory exists.`);
         const newCourseCategory : CourseCategory = this.coursecategoryRepository.create({
             course : course.id,
             category : category.id
@@ -106,7 +113,6 @@ export class CourseCategoryService {
         const FoundCourseCategory : CourseCategory = await this.coursecategoryRepository.findOne({category : FoundCategory.id, course : FoundCourse.id});
         if(!FoundCourseCategory)
             throw new NotFoundException(`CourseCategory is not found.`);
-        
 
         await this.coursecategoryRepository.update({category : FoundCategory.id, course : FoundCourse.id}, {course : FoundCourseToModify.id});
     }
