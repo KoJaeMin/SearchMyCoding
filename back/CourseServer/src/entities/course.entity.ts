@@ -18,7 +18,6 @@ export class Course{
     @Column({
         type : "varchar",
         length : 2000,
-        unique: true,
         nullable : false
     })
     author : string;
