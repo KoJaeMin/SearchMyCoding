@@ -74,14 +74,6 @@ describe('CategoryService', () => {
 
       expect(result).toEqual(mockCategory);
     });
-
-    it("should return a NotFoundException", async () => {
-      try{
-        await service.getOneCategoryById(findErrorId);
-      }catch(e){
-        expect(e).toBeInstanceOf(NotFoundException);
-      }
-    });
   });
 
   describe('getCategoryListByIdList', ()=>{
@@ -112,14 +104,6 @@ describe('CategoryService', () => {
       expect(categoryRepository.findOne).toHaveBeenCalledTimes(1);
 
       expect(result).toEqual(mockCategory);
-    });
-
-    it("should return a NotFoundException", async () => {
-      try{
-        await service.getOneCategoryByName(findErrorName);
-      }catch(e){
-        expect(e).toBeInstanceOf(NotFoundException);
-      }
     });
   });
   
