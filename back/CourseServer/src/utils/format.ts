@@ -1,5 +1,5 @@
 export function IsValidURI(uri : string) : boolean{
-    const URIFormatChecker : RegExp = /^(https|http):\/\/[^\s$.?#].[^\s]*$/g;
+    const URIFormatChecker : RegExp = /^(https|http):\/\/[^\s$.?#].*$/g;
     return URIFormatChecker.test(uri);
 }
 
