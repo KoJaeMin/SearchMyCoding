@@ -26,6 +26,7 @@ export class InflearnScrapper implements ScrapperType{
         const rootUrl : string = 'https://www.inflearn.com/';
         const subUrl : string = 'courses';
         const pageNumberListElemnt : string = '.pagination-link';
+        const classList : string = '.course_card_item';
 
         for(let i : number = 1; i <= this.max; i++){
             const result : HTTPResponse = await page.goto(`${rootUrl}${subUrl}?page=${i}`);
@@ -37,7 +38,12 @@ export class InflearnScrapper implements ScrapperType{
                     this.max = num;
                 }
             });
-            const courseList : CourseType[] = this.extractCourseInfoFromHTML(api);
+            
+            const courseElement = api(classList) as Cheerio<Element>;
+            if (courseElement.length === 0) {
+                continue;
+            }
+            const courseList : CourseType[] = this.extractCourseInfo(api, courseElement);
             for(const newCourse of courseList){
                 const createCourseDto: CreateCourseDto = {
                     title : newCourse["title"].trim(),
@@ -72,18 +78,6 @@ export class InflearnScrapper implements ScrapperType{
         }
     }
 
-    extractCourseInfoFromHTML(api : CheerioAPI) : CourseType[]{
-        const classList : string = '.course_card_item';
-        const courseElement = api(classList) as Cheerio<Element>;
-    
-        if (courseElement.length === 0) {
-            console.log('No course data found in the HTML.');
-            return null;
-        }
-    
-        return this.extractCourseInfo(api, courseElement);
-    }
-
     extractCourseInfo(api: CheerioAPI, courseElement: Cheerio<Element>) : CourseType[]{
         const result : CourseType[] = [];
         courseElement.find('.course-data').each((i : number, el : Element)=>{
@@ -109,11 +103,7 @@ export class InflearnScrapper implements ScrapperType{
                 const temp : Cheerio<Element> = api(el);
                 const img_link : string = temp.attr('data-src');
                 result[i]["img_link"] += img_link??"";
-            }catch(err){
-                console.log(err.message);
-                console.log(result[i]);
-                console.log(i, result.length);
-            }
+            }catch(err){}
         })
 
         courseElement.find('.course_card_front').each((i : number, el : Element)=>{
@@ -121,11 +111,7 @@ export class InflearnScrapper implements ScrapperType{
                 const temp = api(el);
                 const link : string = temp.attr('href');
                 result[i]["link"] += (link??"");
-            }catch(err){
-                console.log(err.message);
-                console.log(result[i]);
-                console.log(i, result.length);
-            }
+            }catch(err){}
         })
         return result;
     }

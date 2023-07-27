@@ -4,6 +4,5 @@ import { CourseType } from "./course";
 
 export interface ScrapperType {
     scrapping(page : Page) : void;
-    extractCourseInfoFromHTML(api : CheerioAPI): CourseType[];
     extractCourseInfo(api: CheerioAPI, courseElement: Cheerio<Element>) : CourseType[];
 }
