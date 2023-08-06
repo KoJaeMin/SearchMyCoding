@@ -80,9 +80,15 @@ export class InflearnScrapper implements ScrapperType{
 
     extractCourseInfo(api: CheerioAPI, courseElement: Cheerio<Element>) : CourseType[]{
         const result : CourseType[] = [];
-        courseElement.find('.course-data').each((i : number, el : Element)=>{
+        courseElement.each((i : number, el : Element)=>{
             const temp : Cheerio<Element> = api(el);
-            const dataString : string = temp.attr('fxd-data');
+            const dataChild : Cheerio<Element> = temp.find('.course-data');
+            const imgChild : Cheerio<Element> = temp.find('.swiper-lazy');
+            const linkChild : Cheerio<Element> = temp.find('.course_card_front');
+            const dataString : string = dataChild.attr('fxd-data');
+            const img_link : string = imgChild.attr('data-src');
+            const link : string = linkChild.attr('href');
+
             try{
                 const data : object = JSON.parse(dataString);
                 let course : CourseType = {
@@ -91,26 +97,10 @@ export class InflearnScrapper implements ScrapperType{
                     categorys : [...(data["second_category"]??"").split(',').map((str : string)=>str.trim())],
                     rating : Math.round(Number(data["star_rate"]) * 20),
                     price : Number(data["selling_price"]),
-                    link : 'https://www.inflearn.com',
-                    img_link : ''
+                    link : 'https://www.inflearn.com' + link,
+                    img_link : img_link
                 }
                 result.push(course);
-            }catch(err){}
-        })
-
-        courseElement.find('.swiper-lazy').each((i : number, el : Element)=>{
-            try{
-                const temp : Cheerio<Element> = api(el);
-                const img_link : string = temp.attr('data-src');
-                result[i]["img_link"] += img_link??"";
-            }catch(err){}
-        })
-
-        courseElement.find('.course_card_front').each((i : number, el : Element)=>{
-            try{
-                const temp = api(el);
-                const link : string = temp.attr('href');
-                result[i]["link"] += (link??"");
             }catch(err){}
         })
         return result;
