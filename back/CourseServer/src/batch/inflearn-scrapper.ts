@@ -66,13 +66,18 @@ export class InflearnScrapper implements ScrapperType{
                     try{
                         (!category) ? await this.categoryService.createCategory(createCategoryDto) : await this.categoryService.patchCategory(categoryName, createCategoryDto);
                     }catch(err){}
-                    const createCourseCategory: CreateCourseCategoryDto = {
-                        courseId : (await this.courseService.getOneCourseByTitle(createCourseDto.title)).id,
-                        categoryId : (await this.categoryService.getOneCategoryByName(createCategoryDto.name)).id
-                    };
-                    try{
-                        await this.courseCategoryService.createCourseCategory(createCourseCategory);
-                    }catch(err){}
+                    const createCourse : Course= await this.courseService.getOneCourseByTitle(createCourseDto.title);
+                    const createCategory : Category = await this.categoryService.getOneCategoryByName(createCategoryDto.name);
+                    
+                    if(!!createCourse && !!createCategory){
+                        const createCourseCategory: CreateCourseCategoryDto = {
+                            courseId : createCourse.id,
+                            categoryId : createCategory.id
+                        };
+                        try{
+                            await this.courseCategoryService.createCourseCategory(createCourseCategory);
+                        }catch(err){}
+                    }
                 }
             }
         }
