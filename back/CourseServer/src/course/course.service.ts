@@ -61,11 +61,13 @@ export class CourseService {
             rating : IsValidRating(createCourseDto.rating) ? Math.floor(createCourseDto.rating) : null
         }
 
-        const course : Course = await this.getOneCourseByTitle(newCreateCourseDto.title);
-        if(course)
-            throw new BadRequestException(`Course with Title ${newCreateCourseDto.title} exists.`)
-
-        const newCourse : Course = this.courseRepository.create(newCreateCourseDto);
+        const [course, newCourse] : Course[] = await Promise.all([
+            this.getOneCourseByTitle(newCreateCourseDto.title),
+            this.courseRepository.create(newCreateCourseDto)
+        ]);
+        if(course){
+            throw new BadRequestException(`Course with Title ${newCreateCourseDto.title} exists.`);
+        }
         await this.courseRepository.insert(newCourse);
     }
 
@@ -75,10 +77,10 @@ export class CourseService {
             throw new NotFoundException(`Course with Title ${courseTitle} does not exists`);
         const [validURI, validIMG_URI] = convertFormat(updateCourseDto.link, updateCourseDto.img_link);
         
-        if(validURI !== null && !IsValidURI(validURI))
-            throw new BadRequestException(`Bad Format`);
-
-        if(validIMG_URI !== null && !IsValidURI(validIMG_URI))
+        if(
+            (validURI !== null && !IsValidURI(validURI)) ||
+            (validIMG_URI !== null && !IsValidURI(validIMG_URI))
+        )
             throw new BadRequestException(`Bad Format`);
 
         await this.courseRepository.update({title : courseTitle},updateCourseDto);

@@ -36,12 +36,14 @@ export class CategoryService {
 
     async createCategory(createCategoryDto : CreateCategoryDto) : Promise<void>{
         const {name} = createCategoryDto;
-        const category : Category = await this.getOneCategoryByName(name);
+        const [category, newCategory] : Category[] = await Promise.all([
+            this.getOneCategoryByName(name),
+            this.categoryRepository.create({
+                name : name
+            })
+        ]);
         if(category)
             throw new BadRequestException(`Category with Name ${name} exists.`);
-        const newCategory : Category = this.categoryRepository.create({
-            name : name
-        })
         await this.categoryRepository.insert(newCategory);
     }
 

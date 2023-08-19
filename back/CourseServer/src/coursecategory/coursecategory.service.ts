@@ -83,10 +83,12 @@ export class CourseCategoryService {
     }
 
     async createCourseCategory(createCourseCategory : CreateCourseCategoryDto) : Promise<void>{
-        const course : Course = await this.courseService.getOneCourseById(createCourseCategory.courseId);
+        const [course, category] : [Course, Category] = await Promise.all([
+            this.courseService.getOneCourseById(createCourseCategory.courseId),
+            this.categoryService.getOneCategoryById(createCourseCategory.categoryId)
+        ]);
         if(!course)
             throw new NotFoundException(`Course with Id ${createCourseCategory.courseId} does not exists`);
-        const category : Category = await this.categoryService.getOneCategoryById(createCourseCategory.categoryId);
         if(!category)
             throw new NotFoundException(`Category with Id ${createCourseCategory.categoryId} does not exists`);
 
@@ -105,9 +107,11 @@ export class CourseCategoryService {
         if(updateCourseCategoryDto.modified !== 'course')
             throw new BadRequestException(`It's wrong request. You cannot modify ${updateCourseCategoryDto.modified}.`);
         
-        const FoundCategory : Category = await this.categoryService.getOneCategoryById(updateCourseCategoryDto.categoryId);
-        const FoundCourse : Course = await this.courseService.getOneCourseById(updateCourseCategoryDto.courseId);
-        const FoundCourseToModify : Course = await this.courseService.getOneCourseById(updateCourseCategoryDto.idToModify);
+        const [FoundCategory, FoundCourse, FoundCourseToModify] : [Category, Course, Course] = await Promise.all([
+            this.categoryService.getOneCategoryById(updateCourseCategoryDto.categoryId),
+            this.courseService.getOneCourseById(updateCourseCategoryDto.courseId),
+            this.courseService.getOneCourseById(updateCourseCategoryDto.idToModify)
+        ]);
 
         
         const FoundCourseCategory : CourseCategory = await this.coursecategoryRepository.findOne({category : FoundCategory.id, course : FoundCourse.id});
@@ -121,10 +125,12 @@ export class CourseCategoryService {
         if(updateCourseCategoryDto.modified !== 'category')
             throw new BadRequestException(`It's wrong request. You cannot modify ${updateCourseCategoryDto.modified}.`);
 
-        const FoundCategory : Category = await this.categoryService.getOneCategoryById(updateCourseCategoryDto.categoryId);
-        const FoundCourse : Course = await this.courseService.getOneCourseById(updateCourseCategoryDto.courseId);
-        const FoundCategoryToModify : Category = await this.categoryService.getOneCategoryById(updateCourseCategoryDto.idToModify);
-
+        const [FoundCategory, FoundCourse, FoundCategoryToModify] : [Category, Course, Category] = await Promise.all([
+            this.categoryService.getOneCategoryById(updateCourseCategoryDto.categoryId),
+            this.courseService.getOneCourseById(updateCourseCategoryDto.courseId),
+            this.categoryService.getOneCategoryById(updateCourseCategoryDto.idToModify)
+        ]);
+        
         const FoundCourseCategory : CourseCategory = await this.coursecategoryRepository.findOne({category : FoundCategory.id, course : FoundCourse.id});
         if(!FoundCourseCategory)
             throw new NotFoundException(`CourseCategory is not found.`);
